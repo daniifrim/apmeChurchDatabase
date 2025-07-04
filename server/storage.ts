@@ -96,7 +96,7 @@ export class DatabaseStorage implements IStorage {
     }
     
     if (filters?.engagementLevel) {
-      conditions.push(eq(churches.engagementLevel, filters.engagementLevel));
+      conditions.push(sql`${churches.engagementLevel} = ${filters.engagementLevel}`);
     }
     
     return db

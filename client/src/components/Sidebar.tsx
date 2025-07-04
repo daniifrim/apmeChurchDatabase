@@ -56,7 +56,13 @@ export default function Sidebar({
     retry: false,
   });
 
-  const { data: analytics } = useQuery({
+  const { data: analytics } = useQuery<{
+    totalChurches: number;
+    activeChurches: number;
+    pendingVisits: number;
+    newThisMonth: number;
+    engagementBreakdown: { level: string; count: number }[];
+  }>({
     queryKey: ["/api/analytics"],
     retry: false,
   });
@@ -100,12 +106,12 @@ export default function Sidebar({
           </div>
           
           <div className="flex space-x-2">
-            <Select value={selectedCounty} onValueChange={onCountyChange}>
+            <Select value={selectedCounty || "all-counties"} onValueChange={(value) => onCountyChange(value === "all-counties" ? "" : value)}>
               <SelectTrigger className="flex-1">
                 <SelectValue placeholder="All Counties" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Counties</SelectItem>
+                <SelectItem value="all-counties">All Counties</SelectItem>
                 {COUNTIES.map(county => (
                   <SelectItem key={county} value={county.toLowerCase()}>
                     {county}
@@ -114,12 +120,12 @@ export default function Sidebar({
               </SelectContent>
             </Select>
             
-            <Select value={selectedEngagementLevel} onValueChange={onEngagementLevelChange}>
+            <Select value={selectedEngagementLevel || "all-levels"} onValueChange={(value) => onEngagementLevelChange(value === "all-levels" ? "" : value)}>
               <SelectTrigger className="flex-1">
                 <SelectValue placeholder="All Levels" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Levels</SelectItem>
+                <SelectItem value="all-levels">All Levels</SelectItem>
                 {ENGAGEMENT_LEVELS.map(level => (
                   <SelectItem key={level.value} value={level.value}>
                     {level.label}
