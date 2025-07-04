@@ -9,11 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
-import { X } from "lucide-react";
+import { X, ArrowLeft, MapPin } from "lucide-react";
 import type { Church } from "@/types";
 
 interface ChurchFormProps {
@@ -24,8 +23,8 @@ interface ChurchFormProps {
 const formSchema = insertChurchSchema.extend({
   latitude: z.string().min(1, "Latitude is required"),
   longitude: z.string().min(1, "Longitude is required"),
-  memberCount: z.string().optional().transform(val => val ? parseInt(val) : undefined),
-  foundedYear: z.string().optional().transform(val => val ? parseInt(val) : undefined),
+  memberCount: z.string().optional().transform(val => val && val !== "" ? parseInt(val) : undefined),
+  foundedYear: z.string().optional().transform(val => val && val !== "" ? parseInt(val) : undefined),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -73,7 +72,7 @@ export default function ChurchForm({ onSave, onClose }: ChurchFormProps) {
         memberCount: data.memberCount,
         foundedYear: data.foundedYear,
       });
-      return response.json();
+      return response;
     },
     onSuccess: (church: Church) => {
       queryClient.invalidateQueries({ queryKey: ["/api/churches"] });
@@ -155,20 +154,38 @@ export default function ChurchForm({ onSave, onClose }: ChurchFormProps) {
   };
 
   return (
-    <div className="bg-white border-t border-gray-200 p-6">
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Add New Church</CardTitle>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end md:items-center md:justify-center">
+      <div className="bg-white w-full h-full md:max-w-2xl md:h-auto md:rounded-lg overflow-hidden flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-white flex-shrink-0">
+          <button 
+            onClick={onClose}
+            className="p-2 hover:bg-gray-100 rounded-lg"
+          >
+            <ArrowLeft className="h-6 w-6 text-gray-600" />
+          </button>
+          <h1 className="text-lg font-semibold text-gray-900">
+            Add New Church
+          </h1>
+          <button 
+            type="submit"
+            form="church-form"
+            disabled={createChurchMutation.isPending}
+            className="bg-[#228B22] hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm disabled:opacity-50"
+          >
+            {createChurchMutation.isPending ? "Saving..." : "Save"}
+          </button>
+        </div>
+
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto p-4 pb-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form id="church-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              
+              {/* Basic Information */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-900">Basic Information</h3>
+                
                 <FormField
                   control={form.control}
                   name="name"
@@ -190,13 +207,78 @@ export default function ChurchForm({ onSave, onClose }: ChurchFormProps) {
                     <FormItem>
                       <FormLabel>Pastor</FormLabel>
                       <FormControl>
-                        <Input placeholder="Pastor Ion Popescu" {...field} />
+                        <Input placeholder="Pastor Ion Popescu" {...field} value={field.value || ""} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="memberCount"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Member Count</FormLabel>
+                        <FormControl>
+                          <Input type="number" placeholder="50" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="foundedYear"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Founded Year</FormLabel>
+                        <FormControl>
+                          <Input type="number" placeholder="1995" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Phone</FormLabel>
+                        <FormControl>
+                          <Input placeholder="+40 21 234 5678" {...field} value={field.value || ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input type="email" placeholder="contact@church.ro" {...field} value={field.value || ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              {/* Location Information */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-900">Location</h3>
+                
                 <FormField
                   control={form.control}
                   name="address"
@@ -211,45 +293,98 @@ export default function ChurchForm({ onSave, onClose }: ChurchFormProps) {
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="city"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>City *</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Bucharest" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="county"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>County *</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="city"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>City *</FormLabel>
                         <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select county" />
-                          </SelectTrigger>
+                          <Input placeholder="Bucharest" {...field} />
                         </FormControl>
-                        <SelectContent>
-                          {COUNTIES.map((county) => (
-                            <SelectItem key={county} value={county}>
-                              {county}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
+                  <FormField
+                    control={form.control}
+                    name="county"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>County *</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select county" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {COUNTIES.map((county) => (
+                              <SelectItem key={county} value={county}>
+                                {county}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="font-medium text-gray-900">Coordinates</h4>
+                    <Button
+                      type="button"
+                      onClick={geocodeAddress}
+                      disabled={isGeocoding}
+                      variant="outline"
+                      size="sm"
+                    >
+                      <MapPin className="h-4 w-4 mr-2" />
+                      {isGeocoding ? "Finding..." : "Auto-locate"}
+                    </Button>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="latitude"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Latitude *</FormLabel>
+                          <FormControl>
+                            <Input placeholder="44.426767" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="longitude"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Longitude *</FormLabel>
+                          <FormControl>
+                            <Input placeholder="26.102538" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Engagement & Notes */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-900">Additional Information</h3>
+                
                 <FormField
                   control={form.control}
                   name="engagementLevel"
@@ -259,14 +394,14 @@ export default function ChurchForm({ onSave, onClose }: ChurchFormProps) {
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue />
+                            <SelectValue placeholder="Select engagement level" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="new">New Church</SelectItem>
-                          <SelectItem value="low">Low Engagement</SelectItem>
-                          <SelectItem value="medium">Medium Engagement</SelectItem>
-                          <SelectItem value="high">High Engagement</SelectItem>
+                          <SelectItem value="new">Not Contacted</SelectItem>
+                          <SelectItem value="low">Initial Contact</SelectItem>
+                          <SelectItem value="medium">Partnership Established</SelectItem>
+                          <SelectItem value="high">Actively Engaged</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -276,141 +411,27 @@ export default function ChurchForm({ onSave, onClose }: ChurchFormProps) {
 
                 <FormField
                   control={form.control}
-                  name="phone"
+                  name="notes"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Phone</FormLabel>
+                      <FormLabel>Notes</FormLabel>
                       <FormControl>
-                        <Input placeholder="+40 21 234 5678" {...field} />
+                        <Textarea 
+                          placeholder="Additional notes about the church..." 
+                          rows={3}
+                          {...field} 
+                          value={field.value || ""} 
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input type="email" placeholder="contact@church.ro" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="memberCount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Member Count</FormLabel>
-                      <FormControl>
-                        <Input type="number" placeholder="150" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="foundedYear"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Founded Year</FormLabel>
-                      <FormControl>
-                        <Input type="number" placeholder="1995" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              {/* Coordinates Section */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold">GPS Coordinates *</h3>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={geocodeAddress}
-                    disabled={isGeocoding}
-                  >
-                    {isGeocoding ? "Finding..." : "Find Coordinates"}
-                  </Button>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="latitude"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Latitude</FormLabel>
-                        <FormControl>
-                          <Input placeholder="44.4268" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="longitude"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Longitude</FormLabel>
-                        <FormControl>
-                          <Input placeholder="26.1025" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-
-              <FormField
-                control={form.control}
-                name="notes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Notes</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="Additional information about the church..."
-                        rows={3}
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="flex space-x-2 pt-4">
-                <Button
-                  type="submit"
-                  disabled={createChurchMutation.isPending}
-                  className="bg-ministry-blue hover:bg-blue-700"
-                >
-                  {createChurchMutation.isPending ? "Saving..." : "Save Church"}
-                </Button>
-                <Button type="button" variant="outline" onClick={onClose}>
-                  Cancel
-                </Button>
               </div>
             </form>
           </Form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }
