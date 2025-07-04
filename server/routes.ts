@@ -146,8 +146,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           role: 'administrator',
           region: 'Bucharest'
         });
-        
-        // Add sample churches for development
+      }
+      
+      // Add sample churches for development (check every time)
+      if (process.env.NODE_ENV === 'development') {
         await createSampleChurches(userId);
       }
       

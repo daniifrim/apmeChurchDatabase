@@ -65,23 +65,27 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <AppHeader />
       
-      <div className="flex h-screen pt-0">
-        <Sidebar
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          selectedCounty={selectedCounty}
-          onCountyChange={setSelectedCounty}
-          selectedEngagementLevel={selectedEngagementLevel}
-          onEngagementLevelChange={setSelectedEngagementLevel}
-          onChurchSelect={handleChurchSelect}
-          onAddChurch={handleAddChurch}
-          selectedChurchId={selectedChurch?.id}
-        />
+      <div className="flex flex-1 overflow-hidden">
+        {/* Mobile/Tablet: Sidebar takes full width on small screens */}
+        <div className="w-full md:w-80 bg-white border-r border-gray-200 flex flex-col overflow-hidden">
+          <Sidebar
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            selectedCounty={selectedCounty}
+            onCountyChange={setSelectedCounty}
+            selectedEngagementLevel={selectedEngagementLevel}
+            onEngagementLevelChange={setSelectedEngagementLevel}
+            onChurchSelect={handleChurchSelect}
+            onAddChurch={handleAddChurch}
+            selectedChurchId={selectedChurch?.id}
+          />
+        </div>
         
-        <div className="flex-1 flex flex-col">
+        {/* Map container - hidden on mobile when sidebar is shown */}
+        <div className="hidden md:flex flex-1 flex-col">
           <div className="flex-1 relative">
             <InteractiveMap
               searchQuery={searchQuery}
