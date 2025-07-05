@@ -123,6 +123,19 @@ export default function MapView() {
           />
         </div>
 
+        {/* Permanent Legend - Bottom Left */}
+        <div className="absolute bottom-4 left-4 z-20 bg-white rounded-lg shadow-lg border border-gray-200 p-3">
+          <h3 className="text-sm font-semibold text-gray-900 mb-2">Engagement Levels</h3>
+          <div className="space-y-2">
+            {engagementLevels.map((item) => (
+              <div key={item.level} className="flex items-center space-x-2">
+                <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
+                <span className="text-xs text-gray-700">{item.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Floating Action Buttons - Bottom Right of map */}
         <div className="absolute bottom-4 right-4 z-20 flex flex-col space-y-3">
           {/* Filter Button */}
@@ -216,19 +229,6 @@ export default function MapView() {
                   <option value="low">Initial Contact</option>
                   <option value="new">Not Contacted</option>
                 </select>
-              </div>
-
-              {/* Engagement Levels Legend */}
-              <div>
-                <h3 className="text-sm font-medium text-gray-900 mb-3">Map Legend</h3>
-                <div className="space-y-3">
-                  {engagementLevels.map((item) => (
-                    <div key={item.level} className="flex items-center space-x-3">
-                      <div className={`w-4 h-4 rounded-full ${item.color}`}></div>
-                      <span className="text-gray-700">{item.label}</span>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
             
