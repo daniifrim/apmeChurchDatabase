@@ -187,7 +187,7 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
         </div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-4 pb-6">
+        <div className="flex-1 overflow-y-auto p-4 pb-28">
           {/* Church Header */}
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">{church.name}</h2>

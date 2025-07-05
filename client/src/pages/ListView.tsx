@@ -96,7 +96,7 @@ export default function ListView() {
         </div>
       </div>
       {/* Church List */}
-      <div className="flex-1 overflow-y-auto pb-24">
+      <div className="flex-1 overflow-y-auto pb-28">
         <div className="divide-y divide-gray-200">
           {filteredChurches.map((church: Church) => {
             const badge = getEngagementBadge(church.engagementLevel);
