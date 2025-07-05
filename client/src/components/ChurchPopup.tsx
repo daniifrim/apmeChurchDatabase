@@ -43,7 +43,7 @@ export default function ChurchPopup({ church, onClose, onEdit, onViewDetails }: 
   };
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden z-[10000] max-w-sm mx-auto animate-in slide-in-from-bottom-3 duration-300">
+    <div className="fixed bottom-20 left-4 right-4 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden z-[10000] max-w-sm mx-auto animate-in slide-in-from-bottom-3 duration-300">
       {/* Header */}
       <div className="px-4 py-3 border-b border-gray-100">
         <div className="flex items-start justify-between">

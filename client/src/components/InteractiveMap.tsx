@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Church } from "@/types";
-import ChurchPopup from "./ChurchPopup";
 
 interface InteractiveMapProps {
   searchQuery: string;
@@ -12,6 +11,7 @@ interface InteractiveMapProps {
   selectedChurch: Church | null;
   onChurchSelect: (church: Church) => void;
   onChurchEdit?: (church: Church) => void;
+  onChurchPopup?: (church: Church | null) => void;
   userLocation?: {lat: number, lng: number} | null;
 }
 
@@ -29,12 +29,12 @@ export default function InteractiveMap({
   selectedChurch,
   onChurchSelect,
   onChurchEdit,
+  onChurchPopup,
   userLocation,
 }: InteractiveMapProps) {
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.LayerGroup | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [popupChurch, setPopupChurch] = useState<Church | null>(null);
 
   const { data: churches = [] } = useQuery<Church[]>({
     queryKey: ["/api/churches", searchQuery, selectedCounty, selectedEngagementLevel],
@@ -53,7 +53,9 @@ export default function InteractiveMap({
 
     // Close popup when clicking on map
     map.on('click', () => {
-      setPopupChurch(null);
+      if (onChurchPopup) {
+        onChurchPopup(null);
+      }
     });
 
     mapRef.current = map;
@@ -91,7 +93,9 @@ export default function InteractiveMap({
       const marker = L.marker([lat, lng], { icon: customIcon })
         .on('click', (e) => {
           e.originalEvent?.stopPropagation();
-          setPopupChurch(church);
+          if (onChurchPopup) {
+            onChurchPopup(church);
+          }
         });
 
       markersRef.current!.addLayer(marker);
@@ -189,31 +193,7 @@ export default function InteractiveMap({
         </div>
       </div>
 
-      {/* Church Popup */}
-      {popupChurch && (
-        <>
-          {/* Backdrop */}
-          <div 
-            className="fixed inset-0 bg-black bg-opacity-20 z-[9999]"
-            onClick={() => setPopupChurch(null)}
-          />
-          {/* Popup */}
-          <ChurchPopup
-            church={popupChurch}
-            onClose={() => setPopupChurch(null)}
-            onEdit={() => {
-              if (onChurchEdit) {
-                onChurchEdit(popupChurch);
-              }
-              setPopupChurch(null);
-            }}
-            onViewDetails={() => {
-              onChurchSelect(popupChurch);
-              setPopupChurch(null);
-            }}
-          />
-        </>
-      )}
+
     </div>
   );
 }

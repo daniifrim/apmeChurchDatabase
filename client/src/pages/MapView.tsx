@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import InteractiveMap from '@/components/InteractiveMap';
 import ChurchDetailsPanel from '@/components/ChurchDetailsPanel';
 import ChurchForm from '@/components/ChurchForm';
+import ChurchPopup from '@/components/ChurchPopup';
 import { Church } from '@/types';
 import { MagnifyingGlassIcon, AdjustmentsHorizontalIcon, MapPinIcon } from '@heroicons/react/24/outline';
 
@@ -15,6 +16,7 @@ export default function MapView() {
   const [showFilters, setShowFilters] = useState(false);
   const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
   const [isLocating, setIsLocating] = useState(false);
+  const [popupChurch, setPopupChurch] = useState<Church | null>(null);
 
   const { data: churches = [] } = useQuery<Church[]>({
     queryKey: ['/api/churches', searchQuery, selectedCounty, selectedEngagementLevel],
@@ -124,6 +126,7 @@ export default function MapView() {
             selectedChurch={selectedChurch}
             onChurchSelect={handleChurchSelect}
             onChurchEdit={handleChurchEdit}
+            onChurchPopup={setPopupChurch}
             userLocation={userLocation}
           />
         </div>
@@ -274,6 +277,30 @@ export default function MapView() {
           onSave={handleChurchSaved}
           onClose={handleCloseForm}
         />
+      )}
+
+      {/* Church Popup - Rendered at top level for highest z-index */}
+      {popupChurch && (
+        <>
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-20 z-[9998]"
+            onClick={() => setPopupChurch(null)}
+          />
+          {/* Popup */}
+          <ChurchPopup
+            church={popupChurch}
+            onClose={() => setPopupChurch(null)}
+            onEdit={() => {
+              handleChurchEdit(popupChurch);
+              setPopupChurch(null);
+            }}
+            onViewDetails={() => {
+              handleChurchSelect(popupChurch);
+              setPopupChurch(null);
+            }}
+          />
+        </>
       )}
     </div>
   );
