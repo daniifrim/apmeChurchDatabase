@@ -4,7 +4,7 @@ import InteractiveMap from '@/components/InteractiveMap';
 import ChurchDetailsPanel from '@/components/ChurchDetailsPanel';
 import ChurchForm from '@/components/ChurchForm';
 import { Church } from '@/types';
-import { MagnifyingGlassIcon, AdjustmentsHorizontalIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, AdjustmentsHorizontalIcon, MapPinIcon } from '@heroicons/react/24/outline';
 
 export default function MapView() {
   const [selectedChurch, setSelectedChurch] = useState<Church | null>(null);
@@ -13,6 +13,8 @@ export default function MapView() {
   const [selectedCounty, setSelectedCounty] = useState('');
   const [selectedEngagementLevel, setSelectedEngagementLevel] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+  const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
+  const [isLocating, setIsLocating] = useState(false);
 
   const { data: churches = [] } = useQuery<Church[]>({
     queryKey: ['/api/churches', searchQuery, selectedCounty, selectedEngagementLevel],
@@ -33,6 +35,45 @@ export default function MapView() {
   const handleChurchSaved = (church: Church) => {
     setIsAddingChurch(false);
     setSelectedChurch(church);
+  };
+
+  const handleLocationClick = () => {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser');
+      return;
+    }
+
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setUserLocation({ lat: latitude, lng: longitude });
+        setIsLocating(false);
+        // The map will center on user location via the InteractiveMap component
+      },
+      (error) => {
+        setIsLocating(false);
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            alert('Location access denied. Please enable location permissions.');
+            break;
+          case error.POSITION_UNAVAILABLE:
+            alert('Location information is unavailable.');
+            break;
+          case error.TIMEOUT:
+            alert('Location request timed out.');
+            break;
+          default:
+            alert('An unknown error occurred while getting location.');
+            break;
+        }
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000
+      }
+    );
   };
 
   const handleCloseForm = () => {
@@ -78,6 +119,7 @@ export default function MapView() {
             selectedEngagementLevel={selectedEngagementLevel}
             selectedChurch={selectedChurch}
             onChurchSelect={handleChurchSelect}
+            userLocation={userLocation}
           />
         </div>
 
@@ -91,12 +133,17 @@ export default function MapView() {
             <AdjustmentsHorizontalIcon className="h-6 w-6 text-gray-700" />
           </button>
           
-          {/* Add Church Button */}
+          {/* Location Button */}
           <button
-            onClick={() => setIsAddingChurch(true)}
-            className="w-14 h-14 bg-[#228B22] hover:bg-green-700 rounded-full shadow-lg flex items-center justify-center transition-all duration-200"
+            onClick={handleLocationClick}
+            disabled={isLocating}
+            className="w-14 h-14 bg-[#2E5BBA] hover:bg-blue-700 disabled:opacity-50 rounded-full shadow-lg flex items-center justify-center transition-all duration-200"
           >
-            <PlusIcon className="h-6 w-6 text-white" />
+            {isLocating ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <MapPinIcon className="h-6 w-6 text-white" />
+            )}
           </button>
         </div>
       </div>

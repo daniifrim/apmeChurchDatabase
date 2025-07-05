@@ -10,6 +10,7 @@ interface InteractiveMapProps {
   selectedEngagementLevel: string;
   selectedChurch: Church | null;
   onChurchSelect: (church: Church) => void;
+  userLocation?: {lat: number, lng: number} | null;
 }
 
 const ENGAGEMENT_COLORS = {
@@ -25,6 +26,7 @@ export default function InteractiveMap({
   selectedEngagementLevel,
   selectedChurch,
   onChurchSelect,
+  userLocation,
 }: InteractiveMapProps) {
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.LayerGroup | null>(null);
@@ -108,6 +110,33 @@ export default function InteractiveMap({
       mapRef.current.setView([lat, lng], 12);
     }
   }, [selectedChurch]);
+
+  // Center on user location
+  useEffect(() => {
+    if (!mapRef.current || !userLocation) return;
+
+    mapRef.current.setView([userLocation.lat, userLocation.lng], 12);
+    
+    // Add a user location marker
+    const userMarker = L.marker([userLocation.lat, userLocation.lng], {
+      icon: L.divIcon({
+        className: 'user-location-marker',
+        html: `<div style="background-color: #2E5BBA; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(46,91,186,0.5);"></div>`,
+        iconSize: [22, 22],
+        iconAnchor: [11, 11]
+      })
+    });
+    
+    // Remove any existing user location marker and add the new one
+    mapRef.current.eachLayer((layer) => {
+      if (layer instanceof L.Marker && (layer as any)._isUserLocation) {
+        mapRef.current!.removeLayer(layer);
+      }
+    });
+    
+    (userMarker as any)._isUserLocation = true;
+    userMarker.addTo(mapRef.current);
+  }, [userLocation]);
 
   return (
     <div className="h-full w-full relative">
