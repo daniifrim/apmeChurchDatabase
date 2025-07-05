@@ -133,11 +133,20 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
   };
 
   const formatActivityDate = (date: string) => {
-    return new Date(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
+    try {
+      const parsedDate = new Date(date);
+      // Check if the date is valid
+      if (isNaN(parsedDate.getTime())) {
+        return "Invalid date";
+      }
+      return parsedDate.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short", 
+        day: "numeric",
+      });
+    } catch (error) {
+      return "Invalid date";
+    }
   };
 
   const getActivityIcon = (type: string) => {

@@ -74,7 +74,7 @@ export default function AnalyticsView() {
   ];
 
   return (
-    <div className="h-full bg-gray-50 pb-20">
+    <div className="h-full bg-gray-50 overflow-y-auto pb-20">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 p-4">
         <h1 className="text-xl font-semibold text-gray-900">Analytics</h1>

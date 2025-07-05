@@ -150,7 +150,7 @@ export default function MapView() {
 
       {/* Filter Panel - Slide up from bottom */}
       {showFilters && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-end">
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end">
           <div className="bg-white w-full rounded-t-xl p-4 pb-8 max-h-[80vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-gray-900">Filters & Legend</h2>
