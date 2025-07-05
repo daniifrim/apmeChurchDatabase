@@ -37,6 +37,10 @@ export default function MapView() {
     setSelectedChurch(church);
   };
 
+  const handleChurchEdit = (church: Church) => {
+    setSelectedChurch(church);
+  };
+
   const handleLocationClick = () => {
     if (!navigator.geolocation) {
       alert('Geolocation is not supported by your browser');
@@ -119,6 +123,7 @@ export default function MapView() {
             selectedEngagementLevel={selectedEngagementLevel}
             selectedChurch={selectedChurch}
             onChurchSelect={handleChurchSelect}
+            onChurchEdit={handleChurchEdit}
             userLocation={userLocation}
           />
         </div>

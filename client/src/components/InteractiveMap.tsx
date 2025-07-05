@@ -1,8 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Church } from "@/types";
+import ChurchPopup from "./ChurchPopup";
 
 interface InteractiveMapProps {
   searchQuery: string;
@@ -10,6 +11,7 @@ interface InteractiveMapProps {
   selectedEngagementLevel: string;
   selectedChurch: Church | null;
   onChurchSelect: (church: Church) => void;
+  onChurchEdit?: (church: Church) => void;
   userLocation?: {lat: number, lng: number} | null;
 }
 
@@ -26,11 +28,13 @@ export default function InteractiveMap({
   selectedEngagementLevel,
   selectedChurch,
   onChurchSelect,
+  onChurchEdit,
   userLocation,
 }: InteractiveMapProps) {
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.LayerGroup | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [popupChurch, setPopupChurch] = useState<Church | null>(null);
 
   const { data: churches = [] } = useQuery<Church[]>({
     queryKey: ["/api/churches", searchQuery, selectedCounty, selectedEngagementLevel],
@@ -46,6 +50,11 @@ export default function InteractiveMap({
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
+
+    // Close popup when clicking on map
+    map.on('click', () => {
+      setPopupChurch(null);
+    });
 
     mapRef.current = map;
     markersRef.current = L.layerGroup().addTo(map);
@@ -80,19 +89,8 @@ export default function InteractiveMap({
       });
 
       const marker = L.marker([lat, lng], { icon: customIcon })
-        .bindPopup(
-          `<div class="p-2">
-            <h3 class="font-semibold text-sm">${church.name}</h3>
-            <p class="text-xs text-gray-600">${church.address}</p>
-            <p class="text-xs text-gray-500 mt-1">
-              Pastor: ${church.pastor || 'N/A'}<br/>
-              Members: ${church.memberCount || 'N/A'}<br/>
-              Engagement: ${church.engagementLevel}
-            </p>
-          </div>`
-        )
         .on('click', () => {
-          onChurchSelect(church);
+          setPopupChurch(church);
         });
 
       markersRef.current!.addLayer(marker);
@@ -189,6 +187,24 @@ export default function InteractiveMap({
           </div>
         </div>
       </div>
+
+      {/* Church Popup */}
+      {popupChurch && (
+        <ChurchPopup
+          church={popupChurch}
+          onClose={() => setPopupChurch(null)}
+          onEdit={() => {
+            if (onChurchEdit) {
+              onChurchEdit(popupChurch);
+            }
+            setPopupChurch(null);
+          }}
+          onViewDetails={() => {
+            onChurchSelect(popupChurch);
+            setPopupChurch(null);
+          }}
+        />
+      )}
     </div>
   );
 }
