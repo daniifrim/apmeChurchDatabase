@@ -95,7 +95,6 @@ export default function ListView() {
           </div>
         </div>
       </div>
-
       {/* Church List */}
       <div className="flex-1 overflow-y-auto pb-24">
         <div className="divide-y divide-gray-200">
@@ -158,7 +157,6 @@ export default function ListView() {
           </div>
         )}
       </div>
-
       {/* Quick Filters */}
       <div className="fixed bottom-16 left-0 right-0 bg-white border-t border-gray-200 p-4">
         <div className="text-sm font-medium text-gray-700 mb-3">Quick Filters</div>
@@ -167,12 +165,7 @@ export default function ListView() {
             <button
               key={county}
               onClick={() => setSelectedCounty(selectedCounty === county ? '' : county)}
-              className={cn(
-                "flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium border transition-colors",
-                selectedCounty === county
-                  ? "bg-blue-100 text-blue-800 border-blue-200"
-                  : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200"
-              )}
+              className="flex-shrink-0 px-4 py-2 rounded-full font-medium border transition-colors bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200 text-[14px] pt-[4px] pb-[4px]"
             >
               {county}
             </button>
