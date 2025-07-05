@@ -25,7 +25,7 @@ export default function ProfileView() {
         {
           icon: BuildingOfficeIcon,
           label: 'Role',
-          value: user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1) || 'Not assigned',
+          value: user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Not assigned',
         },
         {
           icon: MapPinIcon,

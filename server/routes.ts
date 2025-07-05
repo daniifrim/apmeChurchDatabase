@@ -22,8 +22,19 @@ const devBypass: RequestHandler = (req: any, res: any, next: any) => {
   next();
 };
 
-// Helper to use dev bypass or real auth
-const authMiddleware = process.env.NODE_ENV === 'development' ? devBypass : isAuthenticated;
+// Session-based auth middleware for production
+const sessionAuth: RequestHandler = (req: any, res: any, next: any) => {
+  if (req.session && req.session.user) {
+    req.user = req.session.user;
+    req.isAuthenticated = () => true;
+    next();
+  } else {
+    res.status(401).json({ message: 'Unauthorized' });
+  }
+};
+
+// Helper to use dev bypass or session auth
+const authMiddleware = process.env.NODE_ENV === 'development' ? devBypass : sessionAuth;
 
 // Create sample churches for development
 async function createSampleChurches(userId: string) {
@@ -129,6 +140,62 @@ async function createSampleChurches(userId: string) {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
+
+  // Simple login endpoint
+  app.post('/api/auth/login', async (req: any, res) => {
+    const { email, password } = req.body;
+    
+    // Check hardcoded credentials
+    if (email === 'office@apme.ro' && password === 'admin 1234') {
+      try {
+        // Create or get admin user in database
+        const adminUser = await storage.upsertUser({
+          id: 'admin-user-001',
+          email: 'office@apme.ro',
+          firstName: 'APME',
+          lastName: 'Admin',
+          role: 'administrator',
+          region: 'Romania'
+        });
+
+        // Create session
+        req.session.user = {
+          claims: {
+            sub: 'admin-user-001',
+            email: 'office@apme.ro',
+            first_name: 'APME',
+            last_name: 'Admin'
+          }
+        };
+        
+        // Create sample churches for admin user
+        await createSampleChurches('admin-user-001');
+        
+        // Save session
+        req.session.save((err: any) => {
+          if (err) {
+            return res.status(500).json({ message: 'Session save failed' });
+          }
+          res.json({ success: true });
+        });
+      } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ message: 'Login failed' });
+      }
+    } else {
+      res.status(401).json({ message: 'Invalid credentials' });
+    }
+  });
+
+  // Logout endpoint
+  app.post('/api/auth/logout', (req: any, res) => {
+    req.session.destroy((err: any) => {
+      if (err) {
+        return res.status(500).json({ message: 'Logout failed' });
+      }
+      res.json({ success: true });
+    });
+  });
 
   // Auth routes
   app.get('/api/auth/user', authMiddleware, async (req: any, res) => {

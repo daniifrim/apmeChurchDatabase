@@ -4,7 +4,9 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { useAuth } from "@/hooks/useAuth";
 import NotFound from "@/pages/not-found";
+import LoginPage from "@/pages/LoginPage";
 import MapView from "@/pages/MapView";
 import ListView from "@/pages/ListView";
 import AnalyticsView from "@/pages/AnalyticsView";
@@ -49,13 +51,22 @@ function MobileApp() {
 }
 
 function Router() {
-  // Direct access to map view - bypass authentication
+  const { isAuthenticated, isLoading } = useAuth();
+
   return (
     <Switch>
-      <Route path="/" component={MobileApp} />
-      <Route path="/list" component={MobileApp} />
-      <Route path="/analytics" component={MobileApp} />
-      <Route path="/profile" component={MobileApp} />
+      {isLoading ? (
+        <Route path="/" component={() => <div className="flex items-center justify-center h-screen">Loading...</div>} />
+      ) : !isAuthenticated ? (
+        <Route path="/" component={LoginPage} />
+      ) : (
+        <>
+          <Route path="/" component={MobileApp} />
+          <Route path="/list" component={MobileApp} />
+          <Route path="/analytics" component={MobileApp} />
+          <Route path="/profile" component={MobileApp} />
+        </>
+      )}
       <Route component={NotFound} />
     </Switch>
   );
