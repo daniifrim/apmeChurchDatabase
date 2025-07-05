@@ -51,9 +51,9 @@ export default function MapView() {
   ];
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full w-full relative">
       {/* Map Container with proper bounds */}
-      <div className="flex-1 relative overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden">
         {/* Search Bar - Floating at Top */}
         <div className="absolute top-4 left-4 right-4 z-20">
           <div className="bg-white rounded-lg shadow-lg">
