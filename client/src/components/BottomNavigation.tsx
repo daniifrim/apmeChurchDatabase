@@ -36,7 +36,7 @@ export default function BottomNavigation({ activeTab, onTabChange }: BottomNavig
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 safe-area-pb">
+    <div className="bg-white border-t border-gray-200 flex-shrink-0 z-50">
       <div className="flex justify-around items-center h-16 px-2">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;

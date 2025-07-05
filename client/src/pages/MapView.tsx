@@ -53,7 +53,7 @@ export default function MapView() {
   return (
     <div className="h-full w-full relative">
       {/* Map Container with proper bounds */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="h-full w-full relative overflow-hidden">
         {/* Search Bar - Floating at Top */}
         <div className="absolute top-4 left-4 right-4 z-20">
           <div className="bg-white rounded-lg shadow-lg">
