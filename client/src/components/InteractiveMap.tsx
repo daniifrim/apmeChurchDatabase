@@ -91,7 +91,6 @@ export default function InteractiveMap({
       const marker = L.marker([lat, lng], { icon: customIcon })
         .on('click', (e) => {
           e.originalEvent?.stopPropagation();
-          console.log('Marker clicked:', church.name);
           setPopupChurch(church);
         });
 
@@ -193,7 +192,12 @@ export default function InteractiveMap({
       {/* Church Popup */}
       {popupChurch && (
         <>
-          {console.log('Rendering popup for:', popupChurch.name)}
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-20 z-[9999]"
+            onClick={() => setPopupChurch(null)}
+          />
+          {/* Popup */}
           <ChurchPopup
             church={popupChurch}
             onClose={() => setPopupChurch(null)}
