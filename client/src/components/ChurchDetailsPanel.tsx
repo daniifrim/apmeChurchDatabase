@@ -29,6 +29,20 @@ interface ChurchDetailsPanelProps {
 export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPanelProps) {
   const [note, setNote] = useState("");
   const [isAddingNote, setIsAddingNote] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({
+    name: church.name,
+    address: church.address,
+    city: church.city,
+    county: church.county,
+    pastor: church.pastor || "",
+    phone: church.phone || "",
+    email: church.email || "",
+    memberCount: church.memberCount || "",
+    foundedYear: church.foundedYear || "",
+    engagementLevel: church.engagementLevel,
+    notes: church.notes || ""
+  });
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -112,6 +126,43 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
     },
   });
 
+  const updateChurchMutation = useMutation({
+    mutationFn: async (formData: typeof editForm) => {
+      const response = await apiRequest("PUT", `/api/churches/${church.id}`, {
+        ...formData,
+        memberCount: formData.memberCount ? parseInt(formData.memberCount.toString()) : null,
+        foundedYear: formData.foundedYear ? parseInt(formData.foundedYear.toString()) : null,
+      });
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/churches"] });
+      setIsEditing(false);
+      toast({
+        title: "Success",
+        description: "Church details updated successfully",
+      });
+    },
+    onError: (error) => {
+      if (isUnauthorizedError(error)) {
+        toast({
+          title: "Unauthorized",
+          description: "You are logged out. Logging in again...",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.href = "/api/login";
+        }, 500);
+        return;
+      }
+      toast({
+        title: "Error",
+        description: "Failed to update church details",
+        variant: "destructive",
+      });
+    },
+  });
+
   const getEngagementColor = (level: string) => {
     switch (level) {
       case "high": return "bg-green-500";
@@ -163,6 +214,20 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
     addNoteMutation.mutate(note.trim());
   };
 
+  const openGoogleMaps = () => {
+    const destination = `${church.address}, ${church.city}, ${church.county}`;
+    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`;
+    window.open(googleMapsUrl, '_blank');
+  };
+
+  const handleFormChange = (field: string, value: string) => {
+    setEditForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSaveEdit = () => {
+    updateChurchMutation.mutate(editForm);
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end md:items-center md:justify-center">
       <div className="bg-white w-full h-full md:max-w-4xl md:h-auto md:rounded-lg overflow-hidden flex flex-col">
@@ -175,78 +240,246 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
             <ArrowLeft className="h-6 w-6 text-gray-600" />
           </button>
           <h1 className="text-lg font-semibold text-gray-900 truncate mx-4">
-            Church Details
+            {isEditing ? "Edit Church" : "Church Details"}
           </h1>
-          <button 
-            onClick={() => scheduleVisitMutation.mutate()}
-            disabled={scheduleVisitMutation.isPending}
-            className="bg-[#2E5BBA] hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm"
-          >
-            Visit
-          </button>
+          <div className="flex space-x-2">
+            {!isEditing && (
+              <>
+                <button 
+                  onClick={() => setIsEditing(true)}
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg text-sm flex items-center space-x-1"
+                >
+                  <Edit className="h-4 w-4" />
+                  <span>Edit</span>
+                </button>
+                <button 
+                  onClick={() => scheduleVisitMutation.mutate()}
+                  disabled={scheduleVisitMutation.isPending}
+                  className="bg-[#2E5BBA] hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm"
+                >
+                  Visit
+                </button>
+              </>
+            )}
+            {isEditing && (
+              <>
+                <button 
+                  onClick={handleSaveEdit}
+                  disabled={updateChurchMutation.isPending}
+                  className="bg-[#2E5BBA] hover:bg-blue-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg text-sm"
+                >
+                  {updateChurchMutation.isPending ? "Saving..." : "Save"}
+                </button>
+                <button 
+                  onClick={() => setIsEditing(false)}
+                  className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm"
+                >
+                  Cancel
+                </button>
+              </>
+            )}
+          </div>
         </div>
 
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto p-4 pb-28">
-          {/* Church Header */}
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">{church.name}</h2>
-            <div className="flex items-center space-x-2 mb-3">
-              <Badge
-                className={`text-white px-3 py-1 ${getEngagementColor(church.engagementLevel)}`}
-              >
-                {getEngagementLabel(church.engagementLevel)}
-              </Badge>
+          {/* Church Header / Edit Form */}
+          {!isEditing ? (
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">{church.name}</h2>
+              <div className="flex items-center space-x-2 mb-3">
+                <Badge
+                  className={`text-white px-3 py-1 ${getEngagementColor(church.engagementLevel)}`}
+                >
+                  {getEngagementLabel(church.engagementLevel)}
+                </Badge>
+              </div>
+              <div className="flex items-start space-x-2 text-gray-600">
+                <MapPin className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                <button 
+                  onClick={openGoogleMaps}
+                  className="text-sm text-left hover:text-[#2E5BBA] hover:underline transition-colors"
+                >
+                  {church.address}, {church.city}, {church.county}
+                </button>
+              </div>
             </div>
-            <div className="flex items-start space-x-2 text-gray-600">
-              <MapPin className="h-5 w-5 mt-0.5 flex-shrink-0" />
-              <p className="text-sm">{church.address}, {church.city}, {church.county}</p>
+          ) : (
+            <div className="mb-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Church Name</label>
+                <input
+                  type="text"
+                  value={editForm.name}
+                  onChange={(e) => handleFormChange('name', e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                  <input
+                    type="text"
+                    value={editForm.address}
+                    onChange={(e) => handleFormChange('address', e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
+                  <input
+                    type="text"
+                    value={editForm.city}
+                    onChange={(e) => handleFormChange('city', e.target.value)}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">County</label>
+                <select
+                  value={editForm.county}
+                  onChange={(e) => handleFormChange('county', e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                >
+                  <option value="Bucharest">Bucharest</option>
+                  <option value="Cluj">Cluj</option>
+                  <option value="Timiș">Timiș</option>
+                  <option value="Iași">Iași</option>
+                  <option value="Brașov">Brașov</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Engagement Level</label>
+                <select
+                  value={editForm.engagementLevel}
+                  onChange={(e) => handleFormChange('engagementLevel', e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                >
+                  <option value="high">Actively Engaged</option>
+                  <option value="medium">Partnership Established</option>
+                  <option value="low">Initial Contact</option>
+                  <option value="new">Not Contacted</option>
+                </select>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Basic Information */}
-          <div className="bg-gray-50 rounded-lg p-4 mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">Pastor:</span>
-                <span className="font-medium text-gray-900">{church.pastor || "N/A"}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">Members:</span>
-                <span className="flex items-center font-medium text-gray-900">
-                  <Users className="h-4 w-4 mr-2 text-gray-500" />
-                  {church.memberCount || "N/A"}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">Founded:</span>
-                <span className="font-medium text-gray-900">{church.foundedYear || "N/A"}</span>
-              </div>
-              {church.phone && (
+          {!isEditing ? (
+            <div className="bg-gray-50 rounded-lg p-4 mb-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Phone:</span>
+                  <span className="text-gray-600">Pastor:</span>
+                  <span className="font-medium text-gray-900">{church.pastor || "N/A"}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-600">Members:</span>
                   <span className="flex items-center font-medium text-gray-900">
-                    <Phone className="h-4 w-4 mr-2 text-gray-500" />
-                    <a href={`tel:${church.phone}`} className="text-blue-600 hover:text-blue-800">
-                      {church.phone}
-                    </a>
+                    <Users className="h-4 w-4 mr-2 text-gray-500" />
+                    {church.memberCount || "N/A"}
                   </span>
                 </div>
-              )}
-              {church.email && (
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Email:</span>
-                  <span className="flex items-center font-medium text-gray-900">
-                    <Mail className="h-4 w-4 mr-2 text-gray-500" />
-                    <a href={`mailto:${church.email}`} className="text-blue-600 hover:text-blue-800">
-                      {church.email}
-                    </a>
-                  </span>
+                  <span className="text-gray-600">Founded:</span>
+                  <span className="font-medium text-gray-900">{church.foundedYear || "N/A"}</span>
                 </div>
-              )}
+                {church.phone && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600">Phone:</span>
+                    <span className="flex items-center font-medium text-gray-900">
+                      <Phone className="h-4 w-4 mr-2 text-gray-500" />
+                      <a href={`tel:${church.phone}`} className="text-blue-600 hover:text-blue-800">
+                        {church.phone}
+                      </a>
+                    </span>
+                  </div>
+                )}
+                {church.email && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600">Email:</span>
+                    <span className="flex items-center font-medium text-gray-900">
+                      <Mail className="h-4 w-4 mr-2 text-gray-500" />
+                      <a href={`mailto:${church.email}`} className="text-blue-600 hover:text-blue-800">
+                        {church.email}
+                      </a>
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="bg-gray-50 rounded-lg p-4 mb-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Pastor</label>
+                  <input
+                    type="text"
+                    value={editForm.pastor}
+                    onChange={(e) => handleFormChange('pastor', e.target.value)}
+                    placeholder="Pastor name"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                    <input
+                      type="tel"
+                      value={editForm.phone}
+                      onChange={(e) => handleFormChange('phone', e.target.value)}
+                      placeholder="Phone number"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <input
+                      type="email"
+                      value={editForm.email}
+                      onChange={(e) => handleFormChange('email', e.target.value)}
+                      placeholder="Email address"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Member Count</label>
+                    <input
+                      type="number"
+                      value={editForm.memberCount}
+                      onChange={(e) => handleFormChange('memberCount', e.target.value)}
+                      placeholder="Number of members"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Founded Year</label>
+                    <input
+                      type="number"
+                      value={editForm.foundedYear}
+                      onChange={(e) => handleFormChange('foundedYear', e.target.value)}
+                      placeholder="Year founded"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                  <textarea
+                    value={editForm.notes}
+                    onChange={(e) => handleFormChange('notes', e.target.value)}
+                    placeholder="Additional notes about the church"
+                    rows={4}
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Recent Activity */}
           <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
