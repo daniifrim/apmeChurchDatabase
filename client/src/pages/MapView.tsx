@@ -51,56 +51,59 @@ export default function MapView() {
   ];
 
   return (
-    <div className="h-full flex flex-col relative">
-      {/* Search Bar - Floating at Top */}
-      <div className="absolute top-4 left-4 right-4 z-20">
-        <div className="bg-white rounded-lg shadow-lg">
-          <div className="relative">
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search churches..."
-              className="w-full pl-12 pr-4 py-3 border-0 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#2E5BBA]"
-            />
+    <div className="h-full flex flex-col">
+      {/* Map Container with proper bounds */}
+      <div className="flex-1 relative overflow-hidden">
+        {/* Search Bar - Floating at Top */}
+        <div className="absolute top-4 left-4 right-4 z-20">
+          <div className="bg-white rounded-lg shadow-lg">
+            <div className="relative">
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search churches..."
+                className="w-full pl-12 pr-4 py-3 border-0 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#2E5BBA]"
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Full-Screen Map */}
-      <div className="flex-1 relative">
-        <InteractiveMap
-          searchQuery={searchQuery}
-          selectedCounty={selectedCounty}
-          selectedEngagementLevel={selectedEngagementLevel}
-          selectedChurch={selectedChurch}
-          onChurchSelect={handleChurchSelect}
-        />
-      </div>
+        {/* Map - constrained to container */}
+        <div className="absolute inset-0 z-10">
+          <InteractiveMap
+            searchQuery={searchQuery}
+            selectedCounty={selectedCounty}
+            selectedEngagementLevel={selectedEngagementLevel}
+            selectedChurch={selectedChurch}
+            onChurchSelect={handleChurchSelect}
+          />
+        </div>
 
-      {/* Floating Action Buttons - Bottom Right */}
-      <div className="absolute bottom-24 right-4 z-20 flex flex-col space-y-3">
-        {/* Filter Button */}
-        <button
-          onClick={() => setShowFilters(!showFilters)}
-          className="w-14 h-14 bg-white hover:bg-gray-50 rounded-full shadow-lg flex items-center justify-center border border-gray-200 transition-all duration-200"
-        >
-          <AdjustmentsHorizontalIcon className="h-6 w-6 text-gray-700" />
-        </button>
-        
-        {/* Add Church Button */}
-        <button
-          onClick={() => setIsAddingChurch(true)}
-          className="w-14 h-14 bg-[#228B22] hover:bg-green-700 rounded-full shadow-lg flex items-center justify-center transition-all duration-200"
-        >
-          <PlusIcon className="h-6 w-6 text-white" />
-        </button>
+        {/* Floating Action Buttons - Bottom Right of map */}
+        <div className="absolute bottom-4 right-4 z-20 flex flex-col space-y-3">
+          {/* Filter Button */}
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className="w-14 h-14 bg-white hover:bg-gray-50 rounded-full shadow-lg flex items-center justify-center border border-gray-200 transition-all duration-200"
+          >
+            <AdjustmentsHorizontalIcon className="h-6 w-6 text-gray-700" />
+          </button>
+          
+          {/* Add Church Button */}
+          <button
+            onClick={() => setIsAddingChurch(true)}
+            className="w-14 h-14 bg-[#228B22] hover:bg-green-700 rounded-full shadow-lg flex items-center justify-center transition-all duration-200"
+          >
+            <PlusIcon className="h-6 w-6 text-white" />
+          </button>
+        </div>
       </div>
 
       {/* Filter Panel - Slide up from bottom */}
       {showFilters && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-30 flex items-end">
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-end">
           <div className="bg-white w-full rounded-t-xl p-4 pb-8 max-h-[80vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-gray-900">Filters & Legend</h2>
