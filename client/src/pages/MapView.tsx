@@ -4,7 +4,7 @@ import InteractiveMap from '@/components/InteractiveMap';
 import ChurchDetailsPanel from '@/components/ChurchDetailsPanel';
 import ChurchForm from '@/components/ChurchForm';
 import { Church } from '@/types';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, AdjustmentsHorizontalIcon, PlusIcon } from '@heroicons/react/24/outline';
 
 export default function MapView() {
   const [selectedChurch, setSelectedChurch] = useState<Church | null>(null);
@@ -45,26 +45,30 @@ export default function MapView() {
 
   const engagementLevels = [
     { level: 'high', label: 'Actively Engaged', color: 'bg-green-500' },
-    { level: 'medium', label: 'Partnership Established', color: 'bg-gray-400' },
+    { level: 'medium', label: 'Partnership Established', color: 'bg-blue-500' },
     { level: 'low', label: 'Initial Contact', color: 'bg-yellow-500' },
-    { level: 'new', label: 'Not Contacted', color: 'bg-green-600' },
-    { level: 'inactive', label: 'Not Interested', color: 'bg-red-500' },
+    { level: 'new', label: 'Not Contacted', color: 'bg-gray-500' },
   ];
 
   return (
     <div className="h-full flex flex-col relative">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 bg-white border-b border-gray-200">
-        <h1 className="text-xl font-semibold text-gray-900">Church Map</h1>
-        <div className="flex items-center space-x-3">
-          <span className="text-sm text-gray-500">admin</span>
-          <div className="w-8 h-8 bg-[#2E5BBA] rounded-full flex items-center justify-center">
-            <span className="text-white text-sm font-semibold">A</span>
+      {/* Search Bar - Floating at Top */}
+      <div className="absolute top-4 left-4 right-4 z-20">
+        <div className="bg-white rounded-lg shadow-lg">
+          <div className="relative">
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search churches..."
+              className="w-full pl-12 pr-4 py-3 border-0 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#2E5BBA]"
+            />
           </div>
         </div>
       </div>
 
-      {/* Map */}
+      {/* Full-Screen Map */}
       <div className="flex-1 relative">
         <InteractiveMap
           searchQuery={searchQuery}
@@ -73,64 +77,133 @@ export default function MapView() {
           selectedChurch={selectedChurch}
           onChurchSelect={handleChurchSelect}
         />
+      </div>
 
-        {/* Location Button */}
-        <button className="absolute top-4 right-4 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center border border-gray-200">
-          <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
-            <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
-          </div>
+      {/* Floating Action Buttons - Bottom Right */}
+      <div className="absolute bottom-24 right-4 z-20 flex flex-col space-y-3">
+        {/* Filter Button */}
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className="w-14 h-14 bg-white hover:bg-gray-50 rounded-full shadow-lg flex items-center justify-center border border-gray-200 transition-all duration-200"
+        >
+          <AdjustmentsHorizontalIcon className="h-6 w-6 text-gray-700" />
         </button>
-
-        {/* Home Button */}
-        <button className="absolute top-20 right-4 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center border border-gray-200">
-          <svg className="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-          </svg>
+        
+        {/* Add Church Button */}
+        <button
+          onClick={() => setIsAddingChurch(true)}
+          className="w-14 h-14 bg-[#228B22] hover:bg-green-700 rounded-full shadow-lg flex items-center justify-center transition-all duration-200"
+        >
+          <PlusIcon className="h-6 w-6 text-white" />
         </button>
       </div>
 
-      {/* Bottom Panel */}
-      <div className="bg-white border-t border-gray-200 p-4 pb-20">
-        {/* Church Count */}
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-gray-600">Showing {displayedCount} of {totalCount} churches</span>
-          <button 
-            onClick={() => setShowFilters(!showFilters)}
-            className="p-2 hover:bg-gray-100 rounded-lg"
-          >
-            <MagnifyingGlassIcon className="h-5 w-5 text-gray-600" />
-          </button>
-        </div>
+      {/* Filter Panel - Slide up from bottom */}
+      {showFilters && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-30 flex items-end">
+          <div className="bg-white w-full rounded-t-xl p-4 pb-8 max-h-[80vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-semibold text-gray-900">Filters & Legend</h2>
+              <button 
+                onClick={() => setShowFilters(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg"
+              >
+                <span className="text-gray-500 text-xl">✕</span>
+              </button>
+            </div>
 
-        {/* Action Buttons */}
-        <div className="flex space-x-3 mb-4">
-          <button 
-            onClick={() => setShowFilters(!showFilters)}
-            className="flex-1 bg-[#2E5BBA] text-white py-3 px-4 rounded-lg font-medium"
-          >
-            Filters
-          </button>
-          <button 
-            onClick={() => setIsAddingChurch(true)}
-            className="flex-1 bg-[#228B22] text-white py-3 px-4 rounded-lg font-medium"
-          >
-            Add Church
-          </button>
-        </div>
-
-        {/* Engagement Levels Legend */}
-        <div>
-          <h3 className="text-sm font-medium text-gray-900 mb-2">Engagement Levels</h3>
-          <div className="grid grid-cols-2 gap-2 text-sm">
-            {engagementLevels.map((item, index) => (
-              <div key={item.level} className="flex items-center space-x-2">
-                <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
-                <span className="text-gray-700">{item.label}</span>
+            {/* Church Count */}
+            <div className="mb-6 p-3 bg-gray-50 rounded-lg">
+              <span className="text-gray-700 font-medium">
+                Showing {displayedCount} of {totalCount} churches
+              </span>
+            </div>
+            
+            <div className="space-y-6">
+              {/* Search Filter */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Search Churches</label>
+                <div className="relative">
+                  <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Church name, pastor, address..."
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                  />
+                </div>
               </div>
-            ))}
+              
+              {/* County Filter */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Filter by County</label>
+                <select
+                  value={selectedCounty}
+                  onChange={(e) => setSelectedCounty(e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                >
+                  <option value="">All Counties</option>
+                  <option value="Bucharest">Bucharest</option>
+                  <option value="Cluj">Cluj</option>
+                  <option value="Timiș">Timiș</option>
+                  <option value="Iași">Iași</option>
+                  <option value="Brașov">Brașov</option>
+                </select>
+              </div>
+              
+              {/* Engagement Level Filter */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Engagement</label>
+                <select
+                  value={selectedEngagementLevel}
+                  onChange={(e) => setSelectedEngagementLevel(e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                >
+                  <option value="">All Engagement Levels</option>
+                  <option value="high">Actively Engaged</option>
+                  <option value="medium">Partnership Established</option>
+                  <option value="low">Initial Contact</option>
+                  <option value="new">Not Contacted</option>
+                </select>
+              </div>
+
+              {/* Engagement Levels Legend */}
+              <div>
+                <h3 className="text-sm font-medium text-gray-900 mb-3">Map Legend</h3>
+                <div className="space-y-3">
+                  {engagementLevels.map((item) => (
+                    <div key={item.level} className="flex items-center space-x-3">
+                      <div className={`w-4 h-4 rounded-full ${item.color}`}></div>
+                      <span className="text-gray-700">{item.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+            {/* Apply Button */}
+            <div className="mt-6 flex space-x-3">
+              <button 
+                onClick={() => setShowFilters(false)}
+                className="flex-1 bg-[#2E5BBA] hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors duration-200"
+              >
+                Apply Filters
+              </button>
+              <button 
+                onClick={() => {
+                  setSearchQuery('');
+                  setSelectedCounty('');
+                  setSelectedEngagementLevel('');
+                }}
+                className="px-6 bg-gray-200 hover:bg-gray-300 text-gray-700 py-3 rounded-lg font-medium transition-colors duration-200"
+              >
+                Clear
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Church Details Panel */}
       {selectedChurch && !isAddingChurch && (
@@ -146,74 +219,6 @@ export default function MapView() {
           onSave={handleChurchSaved}
           onClose={handleCloseForm}
         />
-      )}
-
-      {/* Filters Panel */}
-      {showFilters && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end">
-          <div className="bg-white w-full rounded-t-xl p-6 pb-8">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold">Filters</h2>
-              <button 
-                onClick={() => setShowFilters(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                ✕
-              </button>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Search</label>
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search churches..."
-                  className="w-full p-3 border border-gray-300 rounded-lg"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">County</label>
-                <select
-                  value={selectedCounty}
-                  onChange={(e) => setSelectedCounty(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg"
-                >
-                  <option value="">All Counties</option>
-                  <option value="Bucharest">Bucharest</option>
-                  <option value="Cluj">Cluj</option>
-                  <option value="Timiș">Timiș</option>
-                  <option value="Iași">Iași</option>
-                  <option value="Brașov">Brașov</option>
-                </select>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Engagement Level</label>
-                <select
-                  value={selectedEngagementLevel}
-                  onChange={(e) => setSelectedEngagementLevel(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg"
-                >
-                  <option value="">All Levels</option>
-                  <option value="high">High</option>
-                  <option value="medium">Medium</option>
-                  <option value="low">Low</option>
-                  <option value="new">New</option>
-                </select>
-              </div>
-            </div>
-            
-            <button 
-              onClick={() => setShowFilters(false)}
-              className="w-full mt-6 bg-[#2E5BBA] text-white py-3 rounded-lg font-medium"
-            >
-              Apply Filters
-            </button>
-          </div>
-        </div>
       )}
     </div>
   );

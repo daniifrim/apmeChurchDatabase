@@ -23,8 +23,14 @@ interface ChurchFormProps {
 const formSchema = insertChurchSchema.extend({
   latitude: z.string().min(1, "Latitude is required"),
   longitude: z.string().min(1, "Longitude is required"),
-  memberCount: z.string().optional().transform(val => val && val !== "" ? parseInt(val) : undefined),
-  foundedYear: z.string().optional().transform(val => val && val !== "" ? parseInt(val) : undefined),
+  memberCount: z.union([z.string(), z.number()]).optional().transform(val => {
+    if (val === undefined || val === null || val === "") return undefined;
+    return typeof val === "string" ? parseInt(val) : val;
+  }),
+  foundedYear: z.union([z.string(), z.number()]).optional().transform(val => {
+    if (val === undefined || val === null || val === "") return undefined;
+    return typeof val === "string" ? parseInt(val) : val;
+  }),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -53,13 +59,13 @@ export default function ChurchForm({ onSave, onClose }: ChurchFormProps) {
       country: "Romania",
       latitude: "",
       longitude: "",
-      pastor: "",
-      phone: "",
-      email: "",
-      memberCount: "",
-      foundedYear: "",
+      pastor: null,
+      phone: null,
+      email: null,
+      memberCount: undefined,
+      foundedYear: undefined,
       engagementLevel: "new",
-      notes: "",
+      notes: null,
     },
   });
 
