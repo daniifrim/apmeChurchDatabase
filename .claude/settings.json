@@ -1,0 +1,19 @@
+{
+  "hooks": {
+    "task:complete": "afplay \"/Users/daniifrim/Downloads/IPHONE NOTIFICATION SOUND EFFECT (PING-DING).mp3\"",
+    "task:error": "afplay /System/Library/Sounds/Glass.aiff",
+    "task:success": "afplay \"/Users/daniifrim/Downloads/IPHONE NOTIFICATION SOUND EFFECT (PING-DING).mp3\"",
+    "tool:complete": "afplay \"/Users/daniifrim/Downloads/IPHONE NOTIFICATION SOUND EFFECT (PING-DING).mp3\"",
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay \\\"/Users/daniifrim/Downloads/IPHONE NOTIFICATION SOUND EFFECT (PING-DING).mp3\\\""
+          }
+        ]
+      }
+    ]
+  }
+}
