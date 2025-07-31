@@ -1,5 +1,4 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
-import { supabase } from "./supabase";
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
@@ -8,12 +7,15 @@ async function throwIfResNotOk(res: Response) {
   }
 }
 
-async function getAuthHeaders() {
-  const { data: { session } } = await supabase.auth.getSession();
+function getAuthHeaders() {
   const headers: Record<string, string> = {};
   
-  if (session?.access_token) {
-    headers.Authorization = `Bearer ${session.access_token}`;
+  // Get token from localStorage (set by AuthContext)
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
   }
   
   return headers;
@@ -24,16 +26,15 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  const authHeaders = await getAuthHeaders();
+  const authHeaders = getAuthHeaders();
   
   const res = await fetch(url, {
     method,
     headers: {
-      ...(data ? { "Content-Type": "application/json" } : {}),
+      "Content-Type": "application/json",
       ...authHeaders,
     },
     body: data ? JSON.stringify(data) : undefined,
-    credentials: "include",
   });
 
   await throwIfResNotOk(res);
@@ -46,14 +47,20 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
-    const authHeaders = await getAuthHeaders();
+    const authHeaders = getAuthHeaders();
     
     const res = await fetch(queryKey[0] as string, {
-      headers: authHeaders,
-      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        ...authHeaders,
+      },
     });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
+      // Clear invalid token on 401
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('auth_token');
+      }
       return null;
     }
 

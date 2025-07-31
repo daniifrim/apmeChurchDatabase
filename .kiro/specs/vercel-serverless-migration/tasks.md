@@ -62,61 +62,61 @@
   - Add proper data aggregation and caching
   - _Requirements: 2.1, 2.2, 2.3, 4.1, 4.2, 5.1, 5.2_
 
-- [ ] 5. Update database storage layer for serverless compatibility
-  - [ ] 5.1 Create serverless-optimized storage class
+- [x] 5. Update database storage layer for serverless compatibility
+  - [x] 5.1 Create serverless-optimized storage class
     - Implement new storage class using Supabase client instead of Drizzle ORM
     - Replace direct database connections with Supabase client calls
     - Add connection pooling and error handling for serverless environment
     - _Requirements: 4.1, 4.2, 4.3, 4.4_
 
-  - [ ] 5.2 Implement church operations with Supabase client
+  - [x] 5.2 Implement church operations with Supabase client
     - Convert church CRUD operations to use Supabase client
     - Add proper filtering and search functionality
     - Implement soft deletion and activity logging
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 5.1, 5.2_
 
-  - [ ] 5.3 Implement user and visit operations with Supabase client
+  - [x] 5.3 Implement user and visit operations with Supabase client
     - Convert user management operations to Supabase client
     - Implement visit tracking and activity logging
     - Add analytics calculation methods
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 5.1, 5.2_
 
-- [ ] 6. Update frontend authentication system for JWT tokens
-  - [ ] 6.1 Update AuthContext for JWT token management
+- [x] 6. Update frontend authentication system for JWT tokens
+  - [x] 6.1 Update AuthContext for JWT token management
     - Modify `client/src/contexts/AuthContext.tsx` to handle JWT tokens
     - Implement token storage in localStorage
     - Add automatic token refresh and expiration handling
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 5.1, 5.2, 5.3, 5.4_
 
-  - [ ] 6.2 Update API client for Bearer token authentication
+  - [x] 6.2 Update API client for Bearer token authentication
     - Modify `client/src/lib/queryClient.ts` to include JWT tokens in requests
     - Add automatic token attachment to all API calls
     - Implement proper error handling for authentication failures
     - _Requirements: 5.1, 5.2, 5.3, 5.4_
 
-  - [ ] 6.3 Update login page for new authentication flow
+  - [x] 6.3 Update login page for new authentication flow
     - Modify `client/src/pages/LoginPage.tsx` for JWT-based login
     - Update form handling to work with new API endpoints
     - Add proper error messaging and loading states
     - _Requirements: 3.1, 3.2, 5.1, 5.2, 5.3, 5.4_
 
-- [ ] 7. Configure Vercel deployment settings
-  - [ ] 7.1 Create Vercel configuration file
+- [ ] 7. Configure local development environment for serverless testing
+  - [ ] 7.1 Set up local serverless function testing
+    - Configure development server to handle serverless function routes
+    - Set up proper API route proxying for localhost testing
+    - Ensure hot reloading works with serverless function structure
+    - _Requirements: 1.1, 1.2, 1.3, 7.1, 7.2, 7.3_
+
+  - [ ] 7.2 Create Vercel-compatible configuration (for future deployment)
     - Write `vercel.json` with proper serverless function configuration
-    - Set up environment variable mapping
+    - Set up environment variable mapping for production
     - Configure build settings for both frontend and API
     - _Requirements: 1.1, 1.2, 1.3_
 
-  - [ ] 7.2 Update package.json for Vercel deployment
-    - Add Vercel-specific build scripts
-    - Update dependencies for serverless compatibility
-    - Configure proper start and build commands
-    - _Requirements: 1.1, 1.2, 1.3_
-
-  - [ ] 7.3 Set up environment variables for production
-    - Configure Supabase environment variables in Vercel
-    - Set up proper environment variable validation
-    - Add development and production environment separation
+  - [ ] 7.3 Validate localhost compatibility with Vercel structure
+    - Ensure serverless functions work identically on localhost and Vercel
+    - Test environment variable loading in development
+    - Verify API routes match Vercel's expected structure
     - _Requirements: 1.1, 1.2, 1.3_
 
 - [ ] 8. Implement error handling and logging for serverless functions
@@ -125,18 +125,24 @@
   - Implement graceful error responses with appropriate HTTP status codes
   - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5_
 
-- [ ] 9. Update development workflow for serverless architecture
-  - [ ] 9.1 Configure local development environment
-    - Update `vite.config.ts` to work with serverless function structure
-    - Modify development server to proxy API requests correctly
-    - Add hot reloading support for serverless functions
-    - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
+- [ ] 9. Test complete serverless migration on localhost
+  - [ ] 9.1 Test authentication flow end-to-end on localhost
+    - Verify login, registration, and logout work with JWT tokens locally
+    - Test token validation and expiration handling in development
+    - Validate user profile management functionality works locally
+    - _Requirements: 3.1, 3.2, 3.3, 3.4, 5.1, 5.2, 5.3, 5.4, 7.1, 7.2, 7.3_
 
-  - [ ] 9.2 Create development testing utilities
-    - Add utilities for testing serverless functions locally
-    - Implement mock authentication for development
-    - Create sample data generation for testing
-    - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
+  - [ ] 9.2 Test church management functionality on localhost
+    - Verify all church CRUD operations work correctly locally
+    - Test visit logging and activity tracking in development
+    - Validate search and filtering functionality works locally
+    - _Requirements: 2.1, 2.2, 2.3, 4.1, 4.2, 5.1, 5.2, 7.1, 7.2, 7.3_
+
+  - [ ] 9.3 Test analytics and reporting on localhost
+    - Verify dashboard analytics load correctly in development
+    - Test data aggregation and performance locally
+    - Validate all metrics calculations work in localhost environment
+    - _Requirements: 2.1, 2.2, 2.3, 4.1, 4.2, 5.1, 5.2, 7.1, 7.2, 7.3_
 
 - [ ] 10. Remove legacy Express server code
   - [ ] 10.1 Clean up monolithic server files
@@ -151,26 +157,21 @@
     - Clean up unused dependencies related to Express server
     - _Requirements: 2.5, 5.5_
 
-- [ ] 11. Test complete serverless migration
-  - [ ] 11.1 Test authentication flow end-to-end
-    - Verify login, registration, and logout work with JWT tokens
-    - Test token validation and expiration handling
-    - Validate user profile management functionality
-    - _Requirements: 3.1, 3.2, 3.3, 3.4, 5.1, 5.2, 5.3, 5.4_
+- [ ] 11. Prepare for Vercel deployment (when ready)
+  - [ ] 11.1 Final Vercel configuration review
+    - Review and finalize `vercel.json` configuration
+    - Ensure all environment variables are properly configured
+    - Validate build scripts and deployment settings
+    - _Requirements: 1.1, 1.2, 1.3_
 
-  - [ ] 11.2 Test church management functionality
-    - Verify all church CRUD operations work correctly
-    - Test visit logging and activity tracking
-    - Validate search and filtering functionality
-    - _Requirements: 2.1, 2.2, 2.3, 4.1, 4.2, 5.1, 5.2_
+  - [ ] 11.2 Create deployment checklist
+    - Document environment variables needed for production
+    - Create step-by-step deployment guide
+    - Prepare rollback plan in case of issues
+    - _Requirements: 1.1, 1.2, 1.3, 1.4_
 
-  - [ ] 11.3 Test analytics and reporting
-    - Verify dashboard analytics load correctly
-    - Test data aggregation and performance
-    - Validate all metrics calculations
-    - _Requirements: 2.1, 2.2, 2.3, 4.1, 4.2, 5.1, 5.2_
-
-- [ ] 12. Deploy to Vercel and validate production functionality
+- [ ] 12. Deploy to Vercel (future task - when localhost testing is complete)
+  - Connect GitHub repository to Vercel
   - Deploy application to Vercel staging environment
   - Run comprehensive testing on deployed application
   - Monitor performance and error rates in production

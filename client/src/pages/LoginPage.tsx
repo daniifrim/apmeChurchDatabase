@@ -15,6 +15,16 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!email || !password) {
+      toast({
+        title: "Error",
+        description: "Please enter both email and password",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -22,20 +32,22 @@ export default function LoginPage() {
       
       if (error) {
         toast({
-          title: "Error",
+          title: "Login Failed",
           description: error,
           variant: "destructive",
         });
       } else {
         toast({
-          title: "Success",
-          description: "Logged in successfully",
+          title: "Welcome!",
+          description: "Successfully logged in to APME Church Database",
         });
+        // The AuthContext will handle navigation after successful login
       }
     } catch (error) {
+      console.error('Login error:', error);
       toast({
         title: "Error",
-        description: "Login failed",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -51,6 +63,12 @@ export default function LoginPage() {
           <CardDescription>
             Sign in to access the church management system
           </CardDescription>
+          {/* Development hint */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-xs text-blue-700">
+              <strong>Dev Mode:</strong> Use office@apme.ro / admin 1234 for testing
+            </div>
+          )}
         </CardHeader>
         <form onSubmit={handleLogin}>
           <CardContent className="space-y-4">
