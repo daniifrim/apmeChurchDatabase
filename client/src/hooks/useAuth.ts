@@ -1,15 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
-import { User } from "@/types";
+// Legacy hook - redirects to new AuthContext
+// This maintains compatibility with existing components
+import { useAuth as useAuthContext } from "@/contexts/AuthContext";
 
 export function useAuth() {
-  const { data: user, isLoading } = useQuery<User>({
-    queryKey: ["/api/auth/user"],
-    retry: false,
-  });
+  const { user, loading } = useAuthContext();
 
   return {
     user,
-    isLoading,
+    isLoading: loading,
     isAuthenticated: !!user,
   };
 }

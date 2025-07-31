@@ -1,11 +1,13 @@
 import { useAuth } from '@/hooks/useAuth';
+import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { UserIcon, EnvelopeIcon, BuildingOfficeIcon, MapPinIcon, CogIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 
 export default function ProfileView() {
   const { user } = useAuth();
+  const { signOut } = useAuthContext();
 
-  const handleLogout = () => {
-    window.location.href = '/api/logout';
+  const handleLogout = async () => {
+    await signOut();
   };
 
   const profileSections = [

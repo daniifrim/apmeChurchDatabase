@@ -276,6 +276,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Database test endpoint
+  app.get('/api/test-db', async (req, res) => {
+    try {
+      const result = await storage.testConnection();
+      res.json({ status: 'success', result });
+    } catch (error) {
+      console.error("Database test failed:", error);
+      res.status(500).json({ status: 'error', error: error.message });
+    }
+  });
+
   // Auth routes
   app.get('/api/auth/user', authMiddleware, async (req: any, res) => {
     try {

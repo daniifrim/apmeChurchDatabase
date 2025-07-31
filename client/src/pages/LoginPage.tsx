@@ -4,39 +4,32 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { queryClient } from '@/lib/queryClient';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { signIn } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
-        // Invalidate auth queries to trigger re-fetch
-        queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
+      const { error } = await signIn(email, password);
+      
+      if (error) {
         toast({
-          title: "Success",
-          description: "Logged in successfully",
+          title: "Error",
+          description: error,
+          variant: "destructive",
         });
       } else {
         toast({
-          title: "Error",
-          description: "Invalid credentials",
-          variant: "destructive",
+          title: "Success",
+          description: "Logged in successfully",
         });
       }
     } catch (error) {

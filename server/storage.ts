@@ -17,6 +17,9 @@ import { eq, desc, and, ilike, sql } from "drizzle-orm";
 
 // Interface for storage operations
 export interface IStorage {
+  // Test operations
+  testConnection(): Promise<any>;
+  
   // User operations
   // (IMPORTANT) these user operations are mandatory for Replit Auth.
   getUser(id: string): Promise<User | undefined>;
@@ -52,6 +55,46 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
+  // Test operations
+  async testConnection(): Promise<any> {
+    // Debug environment variables
+    const envDebug = {
+      DATABASE_URL: process.env.DATABASE_URL ? 'SET' : 'NOT SET',
+      SUPABASE_URL: process.env.SUPABASE_URL ? 'SET' : 'NOT SET',
+      SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY ? 'SET' : 'NOT SET',
+    };
+    
+    try {
+      // Try direct SQL first
+      const result = await db.execute(sql`SELECT 1 as test, current_timestamp as timestamp`);
+      return { method: 'drizzle', result, envDebug };
+    } catch (drizzleError) {
+      // If drizzle fails, try using Supabase client
+      try {
+        const { createClient } = await import('@supabase/supabase-js');
+        
+        if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+          throw new Error(`Missing env vars: URL=${!!process.env.SUPABASE_URL}, ANON_KEY=${!!process.env.SUPABASE_ANON_KEY}`);
+        }
+        
+        const supabase = createClient(
+          process.env.SUPABASE_URL,
+          process.env.SUPABASE_ANON_KEY
+        );
+        
+        const { data, error } = await supabase
+          .from('users')
+          .select('*', { count: 'exact' })
+          .limit(1);
+          
+        if (error) throw error;
+        return { method: 'supabase', result: data, envDebug };
+      } catch (supabaseError) {
+        throw new Error(`Both connections failed - Drizzle: ${drizzleError.message}, Supabase: ${supabaseError.message}, Env: ${JSON.stringify(envDebug)}`);
+      }
+    }
+  }
+
   // User operations
   // (IMPORTANT) these user operations are mandatory for Replit Auth.
 

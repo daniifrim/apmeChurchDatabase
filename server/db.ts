@@ -8,5 +8,13 @@ if (!process.env.DATABASE_URL) {
   );
 }
 
-const client = postgres(process.env.DATABASE_URL);
+// Configure postgres client with proper settings for Supabase
+const client = postgres(process.env.DATABASE_URL, {
+  ssl: 'require',
+  max: 1,
+  idle_timeout: 20,
+  connect_timeout: 10,
+  prepare: false, // Disable prepared statements for compatibility
+});
+
 export const db = drizzle(client, { schema });
