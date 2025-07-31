@@ -10,7 +10,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { useSoundNotifications } from "@/lib/soundNotifications";
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import { X, ArrowLeft, MapPin } from "lucide-react";
@@ -48,7 +47,6 @@ const COUNTIES = [
 export default function ChurchForm({ onSave, onClose }: ChurchFormProps) {
   const [isGeocoding, setIsGeocoding] = useState(false);
   const { toast } = useToast();
-  const { churchCreated } = useSoundNotifications();
   const queryClient = useQueryClient();
 
   const form = useForm<FormData>({
