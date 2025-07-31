@@ -6,57 +6,57 @@
   - Build authentication wrapper for protecting serverless endpoints
   - _Requirements: 3.1, 3.2, 3.3, 3.4_
 
-- [ ] 2. Implement authentication API endpoints as serverless functions
-  - [ ] 2.1 Create login endpoint serverless function
+- [x] 2. Implement authentication API endpoints as serverless functions
+  - [x] 2.1 Create login endpoint serverless function
     - Write `api/auth/login.ts` with JWT token generation
     - Implement Supabase authentication integration
     - Add fallback support for existing hardcoded credentials during migration
     - _Requirements: 3.1, 3.2, 5.1, 5.2_
 
-  - [ ] 2.2 Create registration endpoint serverless function
+  - [x] 2.2 Create registration endpoint serverless function
     - Write `api/auth/register.ts` with user creation in Supabase
     - Implement user profile creation in local database
     - Add proper error handling and validation
     - _Requirements: 3.1, 3.2, 5.1, 5.2_
 
-  - [ ] 2.3 Create user profile endpoint serverless function
+  - [x] 2.3 Create user profile endpoint serverless function
     - Write `api/auth/user.ts` for fetching authenticated user data
     - Implement JWT token validation and user lookup
     - Add development mode user creation for testing
     - _Requirements: 3.2, 5.1, 5.2_
 
-  - [ ] 2.4 Create logout endpoint serverless function
+  - [x] 2.4 Create logout endpoint serverless function
     - Write `api/auth/logout.ts` for token invalidation
     - Implement Supabase sign-out integration
     - Add proper cleanup of user session state
     - _Requirements: 3.4, 5.1, 5.2_
 
-- [ ] 3. Convert church management routes to serverless functions
-  - [ ] 3.1 Create churches listing and creation endpoint
+- [x] 3. Convert church management routes to serverless functions
+  - [x] 3.1 Create churches listing and creation endpoint
     - Write `api/churches/index.ts` handling GET and POST requests
     - Implement church filtering and search functionality
     - Add church creation with activity logging
     - _Requirements: 2.1, 2.2, 2.3, 4.1, 4.2, 5.1, 5.2_
 
-  - [ ] 3.2 Create individual church management endpoint
+  - [x] 3.2 Create individual church management endpoint
     - Write `api/churches/[id].ts` handling GET, PUT, and DELETE requests
     - Implement church retrieval, update, and soft deletion
     - Add role-based permissions for delete operations
     - _Requirements: 2.1, 2.2, 2.3, 4.1, 4.2, 5.1, 5.2_
 
-  - [ ] 3.3 Create church visits management endpoint
+  - [x] 3.3 Create church visits management endpoint
     - Write `api/churches/[id]/visits.ts` for visit tracking
     - Implement visit creation and retrieval functionality
     - Add automatic activity logging for visits
     - _Requirements: 2.1, 2.2, 2.3, 4.1, 4.2, 5.1, 5.2_
 
-  - [ ] 3.4 Create church activities management endpoint
+  - [x] 3.4 Create church activities management endpoint
     - Write `api/churches/[id]/activities.ts` for activity tracking
     - Implement activity creation and retrieval with pagination
     - Add proper activity type validation
     - _Requirements: 2.1, 2.2, 2.3, 4.1, 4.2, 5.1, 5.2_
 
-- [ ] 4. Create analytics endpoint as serverless function
+- [x] 4. Create analytics endpoint as serverless function
   - Write `api/analytics.ts` for dashboard statistics
   - Implement church engagement metrics calculation
   - Add proper data aggregation and caching
