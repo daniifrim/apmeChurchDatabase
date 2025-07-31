@@ -1,40 +1,34 @@
 import type { Express, RequestHandler } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { authMiddleware, supabase } from "./authMiddleware";
 import { insertChurchSchema, insertVisitSchema, insertActivitySchema } from "@shared/schema";
 import { z } from "zod";
+import session from "express-session";
+import connectPg from "connect-pg-simple";
 
-// Development mode bypass middleware
-const devBypass: RequestHandler = (req: any, res: any, next: any) => {
-  if (process.env.NODE_ENV === 'development') {
-    // Mock user for development
-    req.user = {
-      claims: {
-        sub: 'dev-user-123',
-        email: 'developer@apme.ro',
-        first_name: 'Dev',
-        last_name: 'User'
-      }
-    };
-    req.isAuthenticated = () => true;
-  }
-  next();
-};
-
-// Session-based auth middleware for production
-const sessionAuth: RequestHandler = (req: any, res: any, next: any) => {
-  if (req.session && req.session.user) {
-    req.user = req.session.user;
-    req.isAuthenticated = () => true;
-    next();
-  } else {
-    res.status(401).json({ message: 'Unauthorized' });
-  }
-};
-
-// Helper to use dev bypass or session auth
-const authMiddleware = process.env.NODE_ENV === 'development' ? devBypass : sessionAuth;
+// Session setup for temporary compatibility during migration
+function getSession() {
+  const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
+  const pgStore = connectPg(session);
+  const sessionStore = new pgStore({
+    conString: process.env.DATABASE_URL,
+    createTableIfMissing: false,
+    ttl: sessionTtl,
+    tableName: "sessions",
+  });
+  return session({
+    secret: process.env.SESSION_SECRET || 'fallback-secret-key',
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: sessionTtl,
+    },
+  });
+}
 
 // Create sample churches for development
 async function createSampleChurches(userId: string) {
@@ -138,63 +132,148 @@ async function createSampleChurches(userId: string) {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth middleware
-  await setupAuth(app);
+  // Setup session middleware for temporary compatibility
+  app.set("trust proxy", 1);
+  app.use(getSession());
 
-  // Simple login endpoint
+  // Supabase authentication endpoints
   app.post('/api/auth/login', async (req: any, res) => {
     const { email, password } = req.body;
     
-    // Check hardcoded credentials
-    if (email === 'office@apme.ro' && password === 'admin 1234') {
-      try {
-        // Create or get admin user in database
-        const adminUser = await storage.upsertUser({
-          id: 'admin-user-001',
-          email: 'office@apme.ro',
-          firstName: 'APME',
-          lastName: 'Admin',
-          role: 'administrator',
+    try {
+      // Try Supabase auth first
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        // Fallback to hardcoded credentials during migration
+        if (email === 'office@apme.ro' && password === 'admin 1234') {
+          // Create or get admin user in database
+          const adminUser = await storage.upsertUser({
+            id: 'admin-user-001',
+            email: 'office@apme.ro',
+            firstName: 'APME',
+            lastName: 'Admin',
+            role: 'administrator',
+            region: 'Romania'
+          });
+
+          // Create session
+          req.session.user = {
+            claims: {
+              sub: 'admin-user-001',
+              email: 'office@apme.ro',
+              first_name: 'APME',
+              last_name: 'Admin'
+            }
+          };
+          
+          // Create sample churches for admin user
+          await createSampleChurches('admin-user-001');
+          
+          // Save session
+          req.session.save((err: any) => {
+            if (err) {
+              return res.status(500).json({ message: 'Session save failed' });
+            }
+            res.json({ success: true, fallback: true });
+          });
+          return;
+        }
+        
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+
+      if (data.user) {
+        // Create or update user in our database
+        await storage.upsertUser({
+          id: data.user.id,
+          email: data.user.email!,
+          firstName: data.user.user_metadata?.first_name || '',
+          lastName: data.user.user_metadata?.last_name || '',
+          role: 'missionary', // Default role
           region: 'Romania'
         });
 
-        // Create session
-        req.session.user = {
-          claims: {
-            sub: 'admin-user-001',
-            email: 'office@apme.ro',
-            first_name: 'APME',
-            last_name: 'Admin'
-          }
-        };
-        
-        // Create sample churches for admin user
-        await createSampleChurches('admin-user-001');
-        
-        // Save session
-        req.session.save((err: any) => {
-          if (err) {
-            return res.status(500).json({ message: 'Session save failed' });
-          }
-          res.json({ success: true });
+        // Create sample churches for development
+        if (process.env.NODE_ENV === 'development') {
+          await createSampleChurches(data.user.id);
+        }
+
+        res.json({ 
+          success: true, 
+          user: data.user,
+          session: data.session 
         });
-      } catch (error) {
-        console.error('Login error:', error);
-        res.status(500).json({ message: 'Login failed' });
       }
-    } else {
-      res.status(401).json({ message: 'Invalid credentials' });
+    } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).json({ message: 'Login failed' });
+    }
+  });
+
+  // Register endpoint
+  app.post('/api/auth/register', async (req: any, res) => {
+    const { email, password, firstName, lastName } = req.body;
+    
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+          }
+        }
+      });
+
+      if (error) {
+        return res.status(400).json({ message: error.message });
+      }
+
+      if (data.user) {
+        // Create user in our database
+        await storage.upsertUser({
+          id: data.user.id,
+          email: data.user.email!,
+          firstName: firstName || '',
+          lastName: lastName || '',
+          role: 'missionary', // Default role
+          region: 'Romania'
+        });
+
+        res.json({ 
+          success: true, 
+          user: data.user,
+          session: data.session 
+        });
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      res.status(500).json({ message: 'Registration failed' });
     }
   });
 
   // Logout endpoint
-  app.post('/api/auth/logout', (req: any, res) => {
-    req.session.destroy((err: any) => {
-      if (err) {
-        return res.status(500).json({ message: 'Logout failed' });
-      }
-      res.json({ success: true });
-    });
+  app.post('/api/auth/logout', async (req: any, res) => {
+    try {
+      // Sign out from Supabase
+      const { error } = await supabase.auth.signOut();
+      
+      // Destroy session as fallback
+      req.session.destroy((err: any) => {
+        if (err) {
+          console.error('Session destroy error:', err);
+        }
+        res.json({ success: true });
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+      res.status(500).json({ message: 'Logout failed' });
+    }
   });
 
   // Auth routes
