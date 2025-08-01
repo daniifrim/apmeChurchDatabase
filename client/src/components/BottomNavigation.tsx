@@ -1,10 +1,10 @@
-import { MapIcon, ListBulletIcon, ChartBarIcon, UserIcon } from '@heroicons/react/24/outline';
-import { MapIcon as MapIconSolid, ListBulletIcon as ListIconSolid, ChartBarIcon as ChartIconSolid, UserIcon as UserIconSolid } from '@heroicons/react/24/solid';
+import { MapIcon, ListBulletIcon, ChartBarIcon, ClockIcon } from '@heroicons/react/24/outline';
+import { MapIcon as MapIconSolid, ListBulletIcon as ListIconSolid, ChartBarIcon as ChartIconSolid, ClockIcon as ClockIconSolid } from '@heroicons/react/24/solid';
 import { cn } from '@/lib/utils';
 
 interface BottomNavigationProps {
-  activeTab: 'map' | 'list' | 'analytics' | 'profile';
-  onTabChange: (tab: 'map' | 'list' | 'analytics' | 'profile') => void;
+  activeTab: 'map' | 'list' | 'visits' | 'analytics';
+  onTabChange: (tab: 'map' | 'list' | 'visits' | 'analytics') => void;
 }
 
 export default function BottomNavigation({ activeTab, onTabChange }: BottomNavigationProps) {
@@ -22,16 +22,16 @@ export default function BottomNavigation({ activeTab, onTabChange }: BottomNavig
       iconSolid: ListIconSolid 
     },
     { 
+      id: 'visits' as const, 
+      label: 'Visits', 
+      icon: ClockIcon, 
+      iconSolid: ClockIconSolid 
+    },
+    { 
       id: 'analytics' as const, 
       label: 'Analytics', 
       icon: ChartBarIcon, 
       iconSolid: ChartIconSolid 
-    },
-    { 
-      id: 'profile' as const, 
-      label: 'Profile', 
-      icon: UserIcon, 
-      iconSolid: UserIconSolid 
     },
   ];
 

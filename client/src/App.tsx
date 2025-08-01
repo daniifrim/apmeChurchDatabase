@@ -9,15 +9,15 @@ import NotFound from "@/pages/not-found";
 import LoginPage from "@/pages/LoginPage";
 import MapView from "@/pages/MapView";
 import ListView from "@/pages/ListView";
+import VisitsView from "@/pages/VisitsView";
 import AnalyticsView from "@/pages/AnalyticsView";
-import ProfileView from "@/pages/ProfileView";
 import BottomNavigation from "@/components/BottomNavigation";
 
 function MobileApp() {
-  const [activeTab, setActiveTab] = useState<'map' | 'list' | 'analytics' | 'profile'>('map');
+  const [activeTab, setActiveTab] = useState<'map' | 'list' | 'visits' | 'analytics'>('map');
   const [, setLocation] = useLocation();
 
-  const handleTabChange = (tab: 'map' | 'list' | 'analytics' | 'profile') => {
+  const handleTabChange = (tab: 'map' | 'list' | 'visits' | 'analytics') => {
     setActiveTab(tab);
     setLocation(`/${tab === 'map' ? '' : tab}`);
   };
@@ -32,11 +32,11 @@ function MobileApp() {
           <Route path="/list">
             <ListView />
           </Route>
+          <Route path="/visits">
+            <VisitsView />
+          </Route>
           <Route path="/analytics">
             <AnalyticsView />
-          </Route>
-          <Route path="/profile">
-            <ProfileView />
           </Route>
           <Route component={NotFound} />
         </Switch>
@@ -64,8 +64,8 @@ function Router() {
         <>
           <Route path="/" component={MobileApp} />
           <Route path="/list" component={MobileApp} />
+          <Route path="/visits" component={MobileApp} />
           <Route path="/analytics" component={MobileApp} />
-          <Route path="/profile" component={MobileApp} />
         </>
       )}
       <Route component={NotFound} />

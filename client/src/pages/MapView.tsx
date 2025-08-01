@@ -4,6 +4,8 @@ import InteractiveMap from '@/components/InteractiveMap';
 import ChurchDetailsPanel from '@/components/ChurchDetailsPanel';
 import ChurchForm from '@/components/ChurchForm';
 import ChurchPopup from '@/components/ChurchPopup';
+import ProfilePopup from '@/components/ProfilePopup';
+import { useAuth } from '@/hooks/useAuth';
 import { Church } from '@/types';
 import { MagnifyingGlassIcon, AdjustmentsHorizontalIcon, MapPinIcon } from '@heroicons/react/24/outline';
 
@@ -18,12 +20,16 @@ export default function MapView() {
   const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
   const [isLocating, setIsLocating] = useState(false);
   const [popupChurch, setPopupChurch] = useState<Church | null>(null);
+  const [showProfilePopup, setShowProfilePopup] = useState(false);
 
   // Fetch filter options
   const { data: filterOptions } = useQuery({
     queryKey: ['/api/filters'],
     queryFn: () => fetch('/api/filters').then(res => res.json()).then(data => data.data)
   });
+
+  // Get user info for profile
+  const { user } = useAuth();
 
   const { data: churches = [] } = useQuery<Church[]>({
     queryKey: ['/api/churches', searchQuery, selectedCountyId, selectedRegionId, selectedEngagementLevel],
@@ -105,23 +111,41 @@ export default function MapView() {
     { level: 'new', label: 'Not Contacted', color: 'bg-gray-500' },
   ];
 
+  const getInitials = (firstName: string | null, lastName: string | null) => {
+    const first = firstName?.[0] || "";
+    const last = lastName?.[0] || "";
+    return (first + last).toUpperCase() || "U";
+  };
+
   return (
     <div className="h-full w-full relative">
       {/* Map Container with proper bounds */}
       <div className="h-full w-full relative overflow-hidden">
         {/* Search Bar - Floating at Top */}
         <div className="absolute top-4 left-4 right-4 z-20">
-          <div className="bg-white rounded-lg shadow-lg">
-            <div className="relative">
-              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search churches..."
-                className="w-full pl-12 pr-4 py-3 border-0 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#2E5BBA]"
-              />
+          <div className="flex items-center space-x-2">
+            <div className="flex-1 bg-white rounded-lg shadow-lg">
+              <div className="relative">
+                <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search churches..."
+                  className="w-full pl-12 pr-4 py-3 border-0 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-[#2E5BBA]"
+                />
+              </div>
             </div>
+            
+            {/* Profile Avatar Button */}
+            <button
+              onClick={() => setShowProfilePopup(true)}
+              className="w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center border border-gray-200 hover:shadow-xl transition-shadow"
+            >
+              <div className="w-8 h-8 bg-[#2E5BBA] rounded-full flex items-center justify-center text-white text-sm font-medium">
+                {getInitials(user?.firstName || null, user?.lastName || null)}
+              </div>
+            </button>
           </div>
         </div>
 
@@ -334,6 +358,12 @@ export default function MapView() {
           />
         </>
       )}
+
+      {/* Profile Popup */}
+      <ProfilePopup 
+        isOpen={showProfilePopup} 
+        onClose={() => setShowProfilePopup(false)} 
+      />
     </div>
   );
 }
