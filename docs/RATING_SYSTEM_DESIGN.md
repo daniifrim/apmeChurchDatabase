@@ -20,16 +20,15 @@ This document outlines the comprehensive design for the APME Church Star Rating 
 ### Rating Criteria (Romanian Context)
 Based on APME's specific needs, the rating system evaluates:
 
-#### Primary Rating Categories (1-5 scale each)
-1. **Deschidere generală pentru misiune** (General openness to mission)
-2. **Ospitalitate** (Hospitality)
+#### Primary Rating Categories 
+1. **Deschidere generală pentru misiune** (General openness to mission) - (1-5 scale)
+2. **Ospitalitate** (Hospitality) - (1-5 scale)
 3. **Sustine vreun misionar adoptat** (Supports adopted missionary)
    - Number of missionaries supported
 4. **Colecta** (Offerings)
    - Amount collected
-   - Per member ratio
-   - Per attendee ratio
-5. **Promisiuni prin credință** (Faith promises) - Future feature
+   - Per member ratio/Per attendee ratio
+5. **Promisiuni prin credință** (Faith promises, this is when someone signs a check promising to donate regularly to a missionary) - Future feature
 
 ---
 
