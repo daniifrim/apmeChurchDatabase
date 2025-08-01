@@ -1,0 +1,2 @@
+- you need to update all the progress that we make on the appropiate docs on /docs
+- you need to follow the tasks that you can find on tasks.md. This is how we do spec driven development

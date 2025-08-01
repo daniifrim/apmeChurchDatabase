@@ -11,6 +11,8 @@ interface AnalyticsData {
   pendingVisits: number;
   newThisMonth: number;
   engagementBreakdown: { level: string; count: number }[];
+  regionalBreakdown: { region: string; count: number }[];
+  countyBreakdown: { county: string; region: string; count: number }[];
 }
 
 interface AnalyticsResponse {

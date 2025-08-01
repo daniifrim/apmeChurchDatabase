@@ -6,7 +6,8 @@ import type { Church } from "@/types";
 
 interface InteractiveMapProps {
   searchQuery: string;
-  selectedCounty: string;
+  selectedCountyId: string;
+  selectedRegionId: string;
   selectedEngagementLevel: string;
   selectedChurch: Church | null;
   onChurchSelect: (church: Church) => void;
@@ -24,7 +25,8 @@ const ENGAGEMENT_COLORS = {
 
 export default function InteractiveMap({
   searchQuery,
-  selectedCounty,
+  selectedCountyId,
+  selectedRegionId,
   selectedEngagementLevel,
   selectedChurch,
   onChurchSelect,
@@ -37,7 +39,16 @@ export default function InteractiveMap({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { data: churches = [] } = useQuery<Church[]>({
-    queryKey: ["/api/churches", searchQuery, selectedCounty, selectedEngagementLevel],
+    queryKey: ["/api/churches", searchQuery, selectedCountyId, selectedRegionId, selectedEngagementLevel],
+    queryFn: () => {
+      const params = new URLSearchParams();
+      if (searchQuery) params.set('search', searchQuery);
+      if (selectedCountyId) params.set('countyId', selectedCountyId);
+      if (selectedRegionId) params.set('regionId', selectedRegionId);
+      if (selectedEngagementLevel) params.set('engagementLevel', selectedEngagementLevel);
+      
+      return fetch(`/api/churches?${params}`).then(res => res.json());
+    },
     retry: false,
   });
 

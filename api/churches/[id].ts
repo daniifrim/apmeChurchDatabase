@@ -1,12 +1,11 @@
-import { withAuth, requireRole } from '../../lib/auth';
+import { withAuth } from '../../lib/auth';
 import { serverlessStorage } from '../../lib/storage';
-import { handleServerlessError, validateMethod, validateRequestBody } from '../../lib/errorHandler';
-import { handleCors, logServerlessFunction, parseNumericParam } from '../../lib/utils';
+import { handleServerlessError, validateRequestBody } from '../../lib/errorHandler';
+import { handleCors, logServerlessFunction } from '../../lib/utils';
 import { insertChurchSchema } from '@shared/schema';
 import type { NextApiRequest, NextApiResponse } from '../../lib/types';
 import type { JWTPayload } from '../../lib/auth';
 import type { Church, InsertChurch } from '@shared/schema';
-import { z } from 'zod';
 
 interface ChurchResponse {
   success?: boolean;
@@ -17,15 +16,15 @@ interface ChurchResponse {
 
 async function handler(
   req: NextApiRequest & { user: JWTPayload },
-  res: NextApiResponse<ChurchResponse | Church | void>
+  res: NextApiResponse<ChurchResponse | Church>
 ) {
   // Handle CORS
   if (handleCors(req, res)) return;
 
   const userId = req.user.sub;
-  const churchId = parseNumericParam(req.query.id);
+  const churchId = parseInt(req.query.id as string);
 
-  if (!churchId) {
+  if (isNaN(churchId)) {
     return res.status(400).json({
       success: false,
       message: 'Invalid church ID'
@@ -57,21 +56,20 @@ async function handleGetChurch(
 
   try {
     const church = await serverlessStorage.getChurchById(churchId);
-    
+
     if (!church) {
-      logServerlessFunction('church-get', 'GET', userId, { churchId, error: 'Church not found' });
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Church not found' 
+      return res.status(404).json({
+        success: false,
+        message: 'Church not found'
       });
     }
 
     logServerlessFunction('church-get', 'GET', userId, { 
-      churchId, 
-      churchName: church.name 
+      churchId,
+      churchName: church.name
     });
 
-    // Return church object directly (matching existing API contract)
+    // Return church object directly
     return res.status(200).json(church);
 
   } catch (error) {
@@ -95,24 +93,24 @@ async function handleUpdateChurch(
     // Check if church exists
     const existingChurch = await serverlessStorage.getChurchById(churchId);
     if (!existingChurch) {
-      logServerlessFunction('church-update', 'PUT', userId, { churchId, error: 'Church not found' });
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Church not found' 
+      return res.status(404).json({
+        success: false,
+        message: 'Church not found'
       });
     }
 
     // Validate and parse church data (partial update)
     const churchData = validateRequestBody(req.body, insertChurchSchema.partial());
+
     const updatedChurch = await serverlessStorage.updateChurch(churchId, churchData);
 
     // Create activity for church update
     await serverlessStorage.createActivity({
-      churchId,
+      churchId: updatedChurch.id,
       userId,
       type: 'note',
       title: 'Church information updated',
-      description: 'Church details were updated',
+      description: `Church ${updatedChurch.name} information was updated`,
       activityDate: new Date(),
     });
 
@@ -121,7 +119,7 @@ async function handleUpdateChurch(
       churchName: updatedChurch.name
     });
 
-    // Return updated church object directly (matching existing API contract)
+    // Return updated church object directly
     return res.status(200).json(updatedChurch);
 
   } catch (error) {
@@ -135,47 +133,51 @@ async function handleUpdateChurch(
 
 async function handleDeleteChurch(
   req: NextApiRequest & { user: JWTPayload },
-  res: NextApiResponse<ChurchResponse | void>,
+  res: NextApiResponse<ChurchResponse>,
   userId: string,
   churchId: number
 ) {
   logServerlessFunction('church-delete', 'DELETE', userId, { churchId });
 
   try {
-    // Check if user has administrator role
-    const user = await serverlessStorage.getUser(userId);
-    
-    if (user?.role !== 'administrator') {
-      logServerlessFunction('church-delete', 'DELETE', userId, { 
-        churchId, 
-        error: 'Insufficient permissions',
-        userRole: user?.role 
-      });
-      return res.status(403).json({ 
-        success: false, 
-        message: 'Insufficient permissions' 
-      });
-    }
-
     // Check if church exists
     const existingChurch = await serverlessStorage.getChurchById(churchId);
     if (!existingChurch) {
-      logServerlessFunction('church-delete', 'DELETE', userId, { churchId, error: 'Church not found' });
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Church not found' 
+      return res.status(404).json({
+        success: false,
+        message: 'Church not found'
+      });
+    }
+
+    // Check if user has permission to delete (only administrators)
+    if (req.user.role !== 'administrator') {
+      return res.status(403).json({
+        success: false,
+        message: 'Only administrators can delete churches'
       });
     }
 
     await serverlessStorage.deleteChurch(churchId);
+
+    // Create activity for church deletion
+    await serverlessStorage.createActivity({
+      churchId: existingChurch.id,
+      userId,
+      type: 'note',
+      title: 'Church deactivated',
+      description: `Church ${existingChurch.name} was deactivated`,
+      activityDate: new Date(),
+    });
 
     logServerlessFunction('church-delete', 'DELETE', userId, { 
       churchId,
       churchName: existingChurch.name
     });
 
-    // Return 204 No Content (matching existing API contract)
-    return res.status(204).end();
+    return res.status(200).json({
+      success: true,
+      message: 'Church deleted successfully'
+    });
 
   } catch (error) {
     logServerlessFunction('church-delete', 'DELETE', userId, { 

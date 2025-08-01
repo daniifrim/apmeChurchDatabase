@@ -21,7 +21,7 @@ export default async function handler(
   // Extract user info from token for logging (optional)
   let userId: string | undefined;
   try {
-    const authHeader = req.headers.authorization;
+    const authHeader = req.headers?.authorization;
     if (authHeader?.startsWith('Bearer ')) {
       const token = authHeader.substring(7);
       const { data: { user } } = await supabase.auth.getUser(token);
@@ -38,7 +38,7 @@ export default async function handler(
     // The client will handle removing the token from localStorage
     
     // Extract token from Authorization header
-    const authHeader = req.headers.authorization;
+    const authHeader = req.headers?.authorization;
     if (authHeader?.startsWith('Bearer ')) {
       const token = authHeader.substring(7);
       

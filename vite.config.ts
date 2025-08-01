@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
+  envDir: path.resolve(__dirname, 'client'),
   plugins: [react()],
   resolve: {
     alias: {
@@ -20,9 +21,17 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
+    port: 5173,
     fs: {
       strict: true,
       deny: ["**/.*"],
+    },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 });

@@ -46,6 +46,7 @@ export const churches = pgTable("churches", {
   address: text("address").notNull(),
   city: varchar("city", { length: 100 }).notNull(),
   county: varchar("county", { length: 100 }).notNull(),
+  countyId: integer("county_id").references(() => counties.id).notNull(),
   country: varchar("country", { length: 100 }).notNull().default("Romania"),
   latitude: decimal("latitude", { precision: 10, scale: 8 }).notNull(),
   longitude: decimal("longitude", { precision: 11, scale: 8 }).notNull(),
@@ -84,11 +85,31 @@ export const activities = pgTable("activities", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const rccpRegions = pgTable("rccp_regions", {
+  id: integer("id").primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const counties = pgTable("counties", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+  abbreviation: varchar("abbreviation", { length: 2 }).notNull().unique(),
+  rccpRegionId: integer("rccp_region_id").references(() => rccpRegions.id).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Relations
 export const churchesRelations = relations(churches, ({ one, many }) => ({
   createdBy: one(users, {
     fields: [churches.createdBy],
     references: [users.id],
+  }),
+  county: one(counties, {
+    fields: [churches.countyId],
+    references: [counties.id],
   }),
   visits: many(visits),
   activities: many(activities),
@@ -122,21 +143,58 @@ export const activitiesRelations = relations(activities, ({ one }) => ({
   }),
 }));
 
+export const rccpRegionsRelations = relations(rccpRegions, ({ many }) => ({
+  counties: many(counties),
+}));
+
+export const countiesRelations = relations(counties, ({ one, many }) => ({
+  rccpRegion: one(rccpRegions, {
+    fields: [counties.rccpRegionId],
+    references: [rccpRegions.id],
+  }),
+  churches: many(churches),
+}));
+
 // Schemas
 export const insertChurchSchema = createInsertSchema(churches).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  countyId: z.number().positive("County ID is required"),
 });
 
-export const insertVisitSchema = createInsertSchema(visits).omit({
-  id: true,
-  createdAt: true,
+export const insertVisitSchema = z.object({
+  churchId: z.number(),
+  visitedBy: z.string(),
+  visitDate: z.union([z.date(), z.string()]).transform((val) => 
+    typeof val === 'string' ? new Date(val) : val
+  ),
+  purpose: z.string().optional(),
+  notes: z.string().optional(),
+  followUpRequired: z.boolean().optional(),
 });
 
-export const insertActivitySchema = createInsertSchema(activities).omit({
+export const insertActivitySchema = z.object({
+  churchId: z.number(),
+  userId: z.string(),
+  type: z.enum(["visit", "call", "training", "event", "note"]),
+  title: z.string(),
+  description: z.string().optional(),
+  activityDate: z.union([z.date(), z.string()]).transform((val) => 
+    typeof val === 'string' ? new Date(val) : val
+  ),
+});
+
+export const insertRccpRegionSchema = createInsertSchema(rccpRegions).omit({
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertCountySchema = createInsertSchema(counties).omit({
   id: true,
   createdAt: true,
+  updatedAt: true,
 });
 
 // Types
@@ -148,3 +206,7 @@ export type Visit = typeof visits.$inferSelect;
 export type InsertVisit = z.infer<typeof insertVisitSchema>;
 export type Activity = typeof activities.$inferSelect;
 export type InsertActivity = z.infer<typeof insertActivitySchema>;
+export type RccpRegion = typeof rccpRegions.$inferSelect;
+export type InsertRccpRegion = z.infer<typeof insertRccpRegionSchema>;
+export type County = typeof counties.$inferSelect;
+export type InsertCounty = z.infer<typeof insertCountySchema>;

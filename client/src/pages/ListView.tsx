@@ -1,25 +1,38 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Church } from '@/types';
+import { Church, County, RccpRegion } from '@/types';
 import { MagnifyingGlassIcon, ChevronRightIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import ChurchDetailsPanel from '@/components/ChurchDetailsPanel';
 import { cn } from '@/lib/utils';
 
 export default function ListView() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCounty, setSelectedCounty] = useState('');
-  const [selectedDenomination, setSelectedDenomination] = useState('');
+  const [selectedCountyId, setSelectedCountyId] = useState('');
+  const [selectedRegionId, setSelectedRegionId] = useState('');
   const [selectedChurch, setSelectedChurch] = useState<Church | null>(null);
   const queryClient = useQueryClient();
 
-  const { data: churches = [] } = useQuery<Church[]>({
-    queryKey: ['/api/churches', searchQuery, selectedCounty],
+  // Fetch filter options
+  const { data: filterOptions } = useQuery({
+    queryKey: ['/api/filters'],
+    queryFn: () => fetch('/api/filters').then(res => res.json()).then(data => data.data)
+  });
+
+  // Fetch churches with filters
+  const { data: churches = [], isLoading, error } = useQuery<Church[]>({
+    queryKey: ['/api/churches', searchQuery, selectedCountyId, selectedRegionId],
     queryFn: () => {
       const params = new URLSearchParams();
       if (searchQuery) params.set('search', searchQuery);
-      if (selectedCounty) params.set('county', selectedCounty);
+      if (selectedCountyId) params.set('countyId', selectedCountyId);
+      if (selectedRegionId) params.set('regionId', selectedRegionId);
       
-      return fetch(`/api/churches?${params}`).then(res => res.json());
+      return fetch(`/api/churches?${params}`).then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      });
     }
   });
 
@@ -45,15 +58,11 @@ export default function ListView() {
   };
 
   const filteredChurches = churches.filter((church: Church) => {
-    const matchesDenomination = !selectedDenomination || 
-      selectedDenomination === 'Pentecostal' || 
-      church.name.toLowerCase().includes(selectedDenomination.toLowerCase());
-    
-    return church.isActive && matchesDenomination;
+    return church.isActive;
   });
 
-  const counties = ['Bucuresti', 'Cluj', 'Timis', 'Iasi', 'Brasov'];
-  const denominations = ['Baptist', 'Orthodox', 'Pentecostal'];
+  const counties: County[] = filterOptions?.counties || [];
+  const regions: RccpRegion[] = filterOptions?.regions || [];
 
   if (selectedChurch) {
     return (
@@ -115,10 +124,10 @@ export default function ListView() {
                           {church.name}
                         </h3>
                         <p className="text-gray-600 mb-1">
-                          {church.city}, {church.county}
+                          {church.city}, {church.counties?.name || church.county}
                         </p>
                         <p className="text-gray-500 text-sm mb-2">
-                          Romanian Pentecostal
+                          {church.counties?.rccp_regions?.name || 'RCCP Region'}
                         </p>
                         {church.pastor && (
                           <p className="text-gray-700 text-sm mb-3">
@@ -151,7 +160,19 @@ export default function ListView() {
           })}
         </div>
         
-        {filteredChurches.length === 0 && (
+        {isLoading && (
+          <div className="text-center py-12">
+            <p className="text-gray-500">Loading churches...</p>
+          </div>
+        )}
+        
+        {error && (
+          <div className="text-center py-12">
+            <p className="text-red-500">Error loading churches: {error.message}</p>
+          </div>
+        )}
+        
+        {!isLoading && !error && filteredChurches.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500">No churches found</p>
           </div>
@@ -161,28 +182,38 @@ export default function ListView() {
       <div className="fixed bottom-16 left-0 right-0 bg-white border-t border-gray-200 p-4">
         <div className="text-sm font-medium text-gray-700 mb-3">Quick Filters</div>
         <div className="flex space-x-2 overflow-x-auto">
-          {counties.map((county) => (
+          {/* Region Filters */}
+          {regions.slice(0, 3).map((region) => (
             <button
-              key={county}
-              onClick={() => setSelectedCounty(selectedCounty === county ? '' : county)}
-              className="flex-shrink-0 px-4 py-2 rounded-full font-medium border transition-colors bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200 text-[14px] pt-[4px] pb-[4px]"
-            >
-              {county}
-            </button>
-          ))}
-          
-          {denominations.map((denomination) => (
-            <button
-              key={denomination}
-              onClick={() => setSelectedDenomination(selectedDenomination === denomination ? '' : denomination)}
+              key={region.id}
+              onClick={() => setSelectedRegionId(selectedRegionId === region.id.toString() ? '' : region.id.toString())}
               className={cn(
                 "flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium border transition-colors",
-                selectedDenomination === denomination
-                  ? "bg-orange-100 text-orange-800 border-orange-200"
+                selectedRegionId === region.id.toString()
+                  ? "bg-blue-100 text-blue-800 border-blue-200"
                   : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200"
               )}
             >
-              {denomination}
+              {region.name}
+            </button>
+          ))}
+          
+          {/* County Filters - show counties from selected region or top counties */}
+          {counties
+            .filter(county => !selectedRegionId || county.rccpRegionId.toString() === selectedRegionId)
+            .slice(0, 4)
+            .map((county) => (
+            <button
+              key={county.id}
+              onClick={() => setSelectedCountyId(selectedCountyId === county.id.toString() ? '' : county.id.toString())}
+              className={cn(
+                "flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium border transition-colors",
+                selectedCountyId === county.id.toString()
+                  ? "bg-green-100 text-green-800 border-green-200"
+                  : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200"
+              )}
+            >
+              {county.name}
             </button>
           ))}
         </div>

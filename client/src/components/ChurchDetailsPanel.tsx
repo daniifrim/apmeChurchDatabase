@@ -52,6 +52,11 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
     retry: false,
   });
 
+  const { data: filterOptions } = useQuery({
+    queryKey: ['/api/filters'],
+    queryFn: () => fetch('/api/filters').then(res => res.json()).then(data => data.data)
+  });
+
   const addNoteMutation = useMutation({
     mutationFn: async (noteText: string) => {
       await apiRequest("POST", `/api/churches/${church.id}/activities`, {
@@ -294,15 +299,20 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
                   {getEngagementLabel(church.engagementLevel)}
                 </Badge>
               </div>
-              <div className="flex items-start space-x-2 text-gray-600">
+              <div className="flex items-start space-x-2 text-gray-600 mb-2">
                 <MapPin className="h-5 w-5 mt-0.5 flex-shrink-0" />
                 <button 
                   onClick={openGoogleMaps}
                   className="text-sm text-left hover:text-[#2E5BBA] hover:underline transition-colors"
                 >
-                  {church.address}, {church.city}, {church.county}
+                  {church.address}, {church.city}, {church.counties?.name || church.county}
                 </button>
               </div>
+              {church.counties?.rccp_regions && (
+                <div className="text-sm text-gray-500">
+                  RCCP Region: {church.counties.rccp_regions.name}
+                </div>
+              )}
             </div>
           ) : (
             <div className="mb-6 space-y-4">
@@ -342,11 +352,12 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
                   onChange={(e) => handleFormChange('county', e.target.value)}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
                 >
-                  <option value="Bucharest">Bucharest</option>
-                  <option value="Cluj">Cluj</option>
-                  <option value="Timiș">Timiș</option>
-                  <option value="Iași">Iași</option>
-                  <option value="Brașov">Brașov</option>
+                  <option value="">Select a county</option>
+                  {filterOptions?.counties?.map((county: any) => (
+                    <option key={county.id} value={county.name}>
+                      {county.name} ({county.abbreviation})
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>

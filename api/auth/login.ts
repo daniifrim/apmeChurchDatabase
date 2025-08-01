@@ -47,38 +47,44 @@ export default async function handler(
     if (error) {
       // Fallback to hardcoded credentials during migration
       if (email === 'office@apme.ro' && password === 'admin 1234') {
-        logServerlessFunction('login', 'POST', 'admin-user-001', { fallback: true });
+        const adminUserId = 'admin-user-1';
+        logServerlessFunction('login', 'POST', adminUserId, { fallback: true });
 
-        // Create or get admin user in database
-        const adminUser = await serverlessStorage.upsertUser({
-          id: 'admin-user-001',
-          email: 'office@apme.ro',
-          firstName: 'APME',
-          lastName: 'Admin',
-          role: 'administrator',
-          region: 'Romania'
-        });
+        // Get existing admin user from database
+        let adminUser = await serverlessStorage.getUser(adminUserId);
+        
+        if (!adminUser) {
+          // Create admin user if it doesn't exist
+          adminUser = await serverlessStorage.upsertUser({
+            id: adminUserId,
+            email: 'office@apme.ro',
+            firstName: 'APME',
+            lastName: 'Admin',
+            role: 'administrator',
+            region: 'Romania'
+          });
+        }
 
         // Create sample churches for admin user
-        await createSampleChurches('admin-user-001', serverlessStorage);
+        await createSampleChurches(adminUserId, serverlessStorage);
 
         // Return success with fallback flag
         return res.status(200).json({
           success: true,
           fallback: true,
           user: {
-            id: 'admin-user-001',
+            id: adminUserId,
             email: 'office@apme.ro',
             user_metadata: {
-              first_name: 'APME',
-              last_name: 'Admin',
-              role: 'administrator',
+              first_name: adminUser.firstName,
+              last_name: adminUser.lastName,
+              role: adminUser.role,
             }
           },
           session: {
-            access_token: 'fallback-token-admin-user-001',
+            access_token: `fallback-token-${adminUserId}`,
             user: {
-              id: 'admin-user-001',
+              id: adminUserId,
               email: 'office@apme.ro',
             }
           }

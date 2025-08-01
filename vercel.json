@@ -11,8 +11,40 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/index.ts"
+      "src": "/api/auth/login",
+      "dest": "/api/auth/login.ts"
+    },
+    {
+      "src": "/api/auth/register",
+      "dest": "/api/auth/register.ts"
+    },
+    {
+      "src": "/api/auth/user",
+      "dest": "/api/auth/user.ts"
+    },
+    {
+      "src": "/api/auth/logout",
+      "dest": "/api/auth/logout.ts"
+    },
+    {
+      "src": "/api/churches/([^/]+)/visits",
+      "dest": "/api/churches/[id]/visits.ts?id=$1"
+    },
+    {
+      "src": "/api/churches/([^/]+)/activities",
+      "dest": "/api/churches/[id]/activities.ts?id=$1"
+    },
+    {
+      "src": "/api/churches/([^/]+)",
+      "dest": "/api/churches/[id].ts?id=$1"
+    },
+    {
+      "src": "/api/churches",
+      "dest": "/api/churches/index.ts"
+    },
+    {
+      "src": "/api/analytics",
+      "dest": "/api/analytics.ts"
     },
     {
       "src": "/(.*)",
@@ -20,8 +52,20 @@
     }
   ],
   "functions": {
-    "api/index.ts": {
+    "api/**/*.ts": {
       "runtime": "nodejs18.x"
+    }
+  },
+  "env": {
+    "SUPABASE_URL": "@supabase-url",
+    "SUPABASE_ANON_KEY": "@supabase-anon-key",
+    "SUPABASE_SERVICE_ROLE_KEY": "@supabase-service-role-key",
+    "SESSION_SECRET": "@session-secret"
+  },
+  "build": {
+    "env": {
+      "VITE_SUPABASE_URL": "@supabase-url",
+      "VITE_SUPABASE_ANON_KEY": "@supabase-anon-key"
     }
   }
 }

@@ -11,19 +11,27 @@ export default function MapView() {
   const [selectedChurch, setSelectedChurch] = useState<Church | null>(null);
   const [isAddingChurch, setIsAddingChurch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCounty, setSelectedCounty] = useState('');
+  const [selectedCountyId, setSelectedCountyId] = useState('');
+  const [selectedRegionId, setSelectedRegionId] = useState('');
   const [selectedEngagementLevel, setSelectedEngagementLevel] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
   const [isLocating, setIsLocating] = useState(false);
   const [popupChurch, setPopupChurch] = useState<Church | null>(null);
 
+  // Fetch filter options
+  const { data: filterOptions } = useQuery({
+    queryKey: ['/api/filters'],
+    queryFn: () => fetch('/api/filters').then(res => res.json()).then(data => data.data)
+  });
+
   const { data: churches = [] } = useQuery<Church[]>({
-    queryKey: ['/api/churches', searchQuery, selectedCounty, selectedEngagementLevel],
+    queryKey: ['/api/churches', searchQuery, selectedCountyId, selectedRegionId, selectedEngagementLevel],
     queryFn: () => {
       const params = new URLSearchParams();
       if (searchQuery) params.set('search', searchQuery);
-      if (selectedCounty) params.set('county', selectedCounty);
+      if (selectedCountyId) params.set('countyId', selectedCountyId);
+      if (selectedRegionId) params.set('regionId', selectedRegionId);
       if (selectedEngagementLevel) params.set('engagementLevel', selectedEngagementLevel);
       
       return fetch(`/api/churches?${params}`).then(res => res.json());
@@ -121,7 +129,8 @@ export default function MapView() {
         <div className="absolute inset-0 z-10">
           <InteractiveMap
             searchQuery={searchQuery}
-            selectedCounty={selectedCounty}
+            selectedCountyId={selectedCountyId}
+            selectedRegionId={selectedRegionId}
             selectedEngagementLevel={selectedEngagementLevel}
             selectedChurch={selectedChurch}
             onChurchSelect={handleChurchSelect}
@@ -206,20 +215,42 @@ export default function MapView() {
                 </div>
               </div>
               
+              {/* Region Filter */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Filter by RCCP Region</label>
+                <select
+                  value={selectedRegionId}
+                  onChange={(e) => {
+                    setSelectedRegionId(e.target.value);
+                    setSelectedCountyId(''); // Clear county when region changes
+                  }}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                >
+                  <option value="">All Regions</option>
+                  {filterOptions?.regions?.map((region: any) => (
+                    <option key={region.id} value={region.id}>
+                      {region.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               {/* County Filter */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Filter by County</label>
                 <select
-                  value={selectedCounty}
-                  onChange={(e) => setSelectedCounty(e.target.value)}
+                  value={selectedCountyId}
+                  onChange={(e) => setSelectedCountyId(e.target.value)}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
                 >
                   <option value="">All Counties</option>
-                  <option value="Bucharest">Bucharest</option>
-                  <option value="Cluj">Cluj</option>
-                  <option value="Timiș">Timiș</option>
-                  <option value="Iași">Iași</option>
-                  <option value="Brașov">Brașov</option>
+                  {filterOptions?.counties
+                    ?.filter((county: any) => !selectedRegionId || county.rccpRegionId.toString() === selectedRegionId)
+                    ?.map((county: any) => (
+                    <option key={county.id} value={county.id}>
+                      {county.name} ({county.abbreviation})
+                    </option>
+                  ))}
                 </select>
               </div>
               
@@ -251,7 +282,8 @@ export default function MapView() {
               <button 
                 onClick={() => {
                   setSearchQuery('');
-                  setSelectedCounty('');
+                  setSelectedCountyId('');
+                  setSelectedRegionId('');
                   setSelectedEngagementLevel('');
                 }}
                 className="px-6 bg-gray-200 hover:bg-gray-300 text-gray-700 py-3 rounded-lg font-medium transition-colors duration-200"

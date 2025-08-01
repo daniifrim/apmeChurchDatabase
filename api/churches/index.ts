@@ -48,17 +48,21 @@ async function handleGetChurches(
     // Parse query parameters
     const search = parseQueryParam(req.query.search);
     const county = parseQueryParam(req.query.county);
+    const countyId = parseQueryParam(req.query.countyId);
+    const regionId = parseQueryParam(req.query.regionId);
     const engagementLevel = parseQueryParam(req.query.engagementLevel);
 
     const churches = await serverlessStorage.getChurches({
       search,
       county,
+      countyId: countyId ? parseInt(countyId) : undefined,
+      regionId: regionId ? parseInt(regionId) : undefined,
       engagementLevel,
     });
 
     logServerlessFunction('churches-get', 'GET', userId, { 
       count: churches.length,
-      filters: { search, county, engagementLevel }
+      filters: { search, county, countyId, regionId, engagementLevel }
     });
 
     // Return churches array directly (matching existing API contract)

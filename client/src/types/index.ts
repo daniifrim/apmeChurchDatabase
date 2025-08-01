@@ -1,9 +1,27 @@
+export interface RccpRegion {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface County {
+  id: number;
+  name: string;
+  abbreviation: string;
+  rccpRegionId: number;
+  createdAt: string;
+  updatedAt: string;
+  rccp_regions?: RccpRegion;
+}
+
 export interface Church {
   id: number;
   name: string;
   address: string;
   city: string;
   county: string;
+  countyId: number;
   country: string;
   latitude: string;
   longitude: string;
@@ -18,6 +36,7 @@ export interface Church {
   createdBy: string | null;
   createdAt: string;
   updatedAt: string;
+  counties?: County;
 }
 
 export interface User {
@@ -61,6 +80,15 @@ export interface Analytics {
   newThisMonth: number;
   engagementBreakdown: Array<{
     level: string;
+    count: number;
+  }>;
+  regionalBreakdown: Array<{
+    region: string;
+    count: number;
+  }>;
+  countyBreakdown: Array<{
+    county: string;
+    region: string;
     count: number;
   }>;
 }

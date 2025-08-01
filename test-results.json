@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Server Running",
+    "passed": true,
+    "details": "Server is running",
+    "timestamp": "2025-07-31T19:09:35.831Z"
+  },
+  {
+    "name": "Environment Variables",
+    "passed": true,
+    "details": "All required variables present",
+    "timestamp": "2025-07-31T19:09:35.831Z"
+  },
+  {
+    "name": "CORS Configuration",
+    "passed": true,
+    "details": "CORS properly configured",
+    "timestamp": "2025-07-31T19:09:35.837Z"
+  },
+  {
+    "name": "User Registration",
+    "passed": false,
+    "details": "Validation error",
+    "timestamp": "2025-07-31T19:09:35.865Z"
+  },
+  {
+    "name": "User Login",
+    "passed": false,
+    "details": "Invalid credentials",
+    "timestamp": "2025-07-31T19:09:36.323Z"
+  },
+  {
+    "name": "Fallback Login",
+    "passed": false,
+    "details": "Internal server error",
+    "timestamp": "2025-07-31T19:09:37.040Z"
+  },
+  {
+    "name": "Church Management",
+    "passed": false,
+    "details": "No authentication token available",
+    "timestamp": "2025-07-31T19:09:37.041Z"
+  }
+]
