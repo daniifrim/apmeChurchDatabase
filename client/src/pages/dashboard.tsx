@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
@@ -7,7 +8,7 @@ import Sidebar from "@/components/Sidebar";
 import InteractiveMap from "@/components/InteractiveMap";
 import ChurchDetailsPanel from "@/components/ChurchDetailsPanel";
 import ChurchForm from "@/components/ChurchForm";
-import type { Church } from "@/types";
+import type { Church, County } from "@/types";
 
 export default function Dashboard() {
   const { toast } = useToast();
@@ -17,6 +18,13 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCounty, setSelectedCounty] = useState("");
   const [selectedEngagementLevel, setSelectedEngagementLevel] = useState("");
+
+  const { data: counties = [] } = useQuery<County[]>({
+    queryKey: ["/api/counties"],
+    retry: false,
+  });
+
+  const selectedCountyId = counties.find(c => c.name === selectedCounty)?.id.toString() || "";
 
   // Redirect to home if not authenticated
   useEffect(() => {
@@ -89,7 +97,8 @@ export default function Dashboard() {
           <div className="flex-1 relative">
             <InteractiveMap
               searchQuery={searchQuery}
-              selectedCounty={selectedCounty}
+              selectedCountyId={selectedCountyId}
+              selectedRegionId=""
               selectedEngagementLevel={selectedEngagementLevel}
               selectedChurch={selectedChurch}
               onChurchSelect={handleChurchSelect}

@@ -30,7 +30,6 @@ export default function MapView() {
     queryKey: ['/api/filters'],
     queryFn: () => fetch('/api/filters').then(res => res.json()).then(data => data.data),
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-    cacheTime: 10 * 60 * 1000,
   });
 
   const { data: churches = [] } = useQuery<Church[]>({
@@ -45,7 +44,6 @@ export default function MapView() {
       return fetch(`/api/churches?${params}`).then(res => res.json());
     },
     staleTime: 2 * 60 * 1000, // Cache for 2 minutes
-    cacheTime: 5 * 60 * 1000,
   });
 
   const handleChurchSelect = (church: Church) => {
@@ -104,9 +102,9 @@ export default function MapView() {
     setIsAddingChurch(false);
   };
 
-  const filteredChurches = churches.filter((church: Church) => church.isActive);
+  const filteredChurches = (churches || []).filter((church: Church) => church.isActive);
   const displayedCount = filteredChurches.length;
-  const totalCount = churches.length;
+  const totalCount = (churches || []).length;
 
   const engagementLevels = [
     { level: 'high', label: 'Actively Engaged', color: 'bg-green-500' },

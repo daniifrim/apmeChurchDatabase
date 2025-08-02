@@ -78,7 +78,7 @@ export default function ChurchForm({ onSave, onClose }: ChurchFormProps) {
         memberCount: data.memberCount,
         foundedYear: data.foundedYear,
       });
-      return response;
+      return response.json();
     },
     onSuccess: (church: Church) => {
       queryClient.invalidateQueries({ queryKey: ["/api/churches"] });

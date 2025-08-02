@@ -1,19 +1,30 @@
 {
-  "hooks": {
-    "task:complete": "afplay \"/Users/daniifrim/Downloads/IPHONE NOTIFICATION SOUND EFFECT (PING-DING).mp3\"",
-    "task:error": "afplay /System/Library/Sounds/Glass.aiff",
-    "task:success": "afplay \"/Users/daniifrim/Downloads/IPHONE NOTIFICATION SOUND EFFECT (PING-DING).mp3\"",
-    "tool:complete": "afplay \"/Users/daniifrim/Downloads/IPHONE NOTIFICATION SOUND EFFECT (PING-DING).mp3\"",
-    "Notification": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "afplay \\\"/Users/daniifrim/Downloads/IPHONE NOTIFICATION SOUND EFFECT (PING-DING).mp3\\\""
-          }
-        ]
+  "mcpServers": {
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--read-only",
+        "--project-ref=znoqcfyvnmgtptsimvcm"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "sbp_4af9fdd41dddd199f5baab60c406a12f0dff01c9"
       }
-    ]
+    },
+    "context-seven": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@context-seven/mcp-server@latest"
+      ]
+    },
+    "browseruse": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@browseruse/mcp-server@latest"
+      ]
+    }
   }
 }

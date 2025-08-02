@@ -2,8 +2,8 @@
 
 ## Progress Documentation Requirements
 
-### Always Update docs/PROGRESS.md
-When making significant changes to the codebase, you MUST update the `docs/PROGRESS.md` file to track:
+### Always Update docs/CHANGELOG.md
+When making significant changes to the codebase, you MUST update the `docs/CHANGELOG.md` file to track:
 
 - **Feature implementations** - New functionality added
 - **Bug fixes** - Issues resolved and their solutions
@@ -36,7 +36,7 @@ Brief description of how this affects the application
 ```
 
 ### When to Update Progress
-Update `docs/PROGRESS.md` when:
+Update `docs/CHANGELOG.md` when:
 - Adding new features or components
 - Fixing significant bugs
 - Making database schema changes
