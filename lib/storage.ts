@@ -10,6 +10,10 @@ import type {
   InsertActivity,
   County,
   RccpRegion,
+  VisitRating,
+  InsertVisitRating,
+  ChurchStarRating,
+  CalculatedRating,
 } from '../shared/schema';
 
 if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
@@ -49,7 +53,27 @@ export interface IServerlessStorage {
   
   // Visit operations
   getVisitsByChurch(churchId: number): Promise<Visit[]>;
+  getAllVisitsWithChurches(): Promise<any[]>;
+  getVisitById(id: number): Promise<Visit | undefined>;
   createVisit(visit: InsertVisit): Promise<Visit>;
+  updateVisit(id: number, visit: Partial<InsertVisit>): Promise<Visit>;
+  deleteVisit(id: number): Promise<void>;
+  
+  // Rating operations
+  getVisitRating(visitId: number): Promise<VisitRating | undefined>;
+  createVisitRating(rating: InsertVisitRating, calculated: CalculatedRating): Promise<VisitRating>;
+  getChurchStarRating(churchId: number): Promise<ChurchStarRating | undefined>;
+  getChurchRatingHistory(churchId: number, limit: number, offset: number): Promise<any[]>;
+  getTopRatedChurches(limit: number, offset: number): Promise<ChurchStarRating[]>;
+  getRecentlyActiveChurches(limit: number): Promise<ChurchStarRating[]>;
+  getRatingStatistics(): Promise<{
+    totalRatedChurches: number;
+    averageRating: number;
+    totalVisits: number;
+    totalOfferings: number;
+    ratingDistribution: { stars: number; count: number }[];
+  }>;
+  recalculateChurchRating(churchId: number): Promise<void>;
   
   // Activity operations
   getActivitiesByChurch(churchId: number, limit?: number): Promise<Activity[]>;
@@ -347,6 +371,48 @@ export class ServerlessStorage implements IServerlessStorage {
     return data as Visit[];
   }
 
+  async getAllVisitsWithChurches(): Promise<any[]> {
+    const { data, error } = await supabase
+      .from('visits')
+      .select(`
+        *,
+        churches (
+          id,
+          name,
+          address,
+          city,
+          county_id
+        )
+      `)
+      .order('visit_date', { ascending: false });
+    
+    if (error) throw error;
+    
+    // Transform the data to flatten church information
+    return data.map((visit: any) => ({
+      ...visit,
+      churchName: visit.churches?.name,
+      churchAddress: visit.churches?.address,
+      churchCity: visit.churches?.city,
+      churchCountyId: visit.churches?.county_id,
+    }));
+  }
+
+  async getVisitById(id: number): Promise<Visit | undefined> {
+    const { data, error } = await supabase
+      .from('visits')
+      .select('*')
+      .eq('id', id)
+      .single();
+    
+    if (error) {
+      if (error.code === 'PGRST116') return undefined; // Not found
+      throw error;
+    }
+    
+    return data as Visit;
+  }
+
   async createVisit(visit: InsertVisit): Promise<Visit> {
     // Map camelCase to snake_case for database
     const dbVisit = {
@@ -356,6 +422,7 @@ export class ServerlessStorage implements IServerlessStorage {
       purpose: visit.purpose,
       notes: visit.notes,
       follow_up_required: visit.followUpRequired,
+      attendees_count: visit.attendeesCount,
     };
 
     const { data, error } = await supabase
@@ -366,6 +433,40 @@ export class ServerlessStorage implements IServerlessStorage {
     
     if (error) throw error;
     return data as Visit;
+  }
+
+  async updateVisit(id: number, visit: Partial<InsertVisit>): Promise<Visit> {
+    // Map camelCase to snake_case for database
+    const dbVisit: any = {
+      updated_at: new Date().toISOString(),
+    };
+
+    if (visit.churchId !== undefined) dbVisit.church_id = visit.churchId;
+    if (visit.visitedBy !== undefined) dbVisit.visited_by = visit.visitedBy;
+    if (visit.visitDate !== undefined) dbVisit.visit_date = visit.visitDate;
+    if (visit.purpose !== undefined) dbVisit.purpose = visit.purpose;
+    if (visit.notes !== undefined) dbVisit.notes = visit.notes;
+    if (visit.followUpRequired !== undefined) dbVisit.follow_up_required = visit.followUpRequired;
+    if (visit.attendeesCount !== undefined) dbVisit.attendees_count = visit.attendeesCount;
+
+    const { data, error } = await supabase
+      .from('visits')
+      .update(dbVisit)
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data as Visit;
+  }
+
+  async deleteVisit(id: number): Promise<void> {
+    const { error } = await supabase
+      .from('visits')
+      .delete()
+      .eq('id', id);
+    
+    if (error) throw error;
   }
 
   // Activity operations
@@ -546,6 +647,229 @@ export class ServerlessStorage implements IServerlessStorage {
         count: data.count
       }))
     };
+  }
+
+  // Rating operations
+  async getVisitRating(visitId: number): Promise<VisitRating | undefined> {
+    const { data, error } = await supabase
+      .from('visit_ratings')
+      .select('*')
+      .eq('visit_id', visitId)
+      .single();
+    
+    if (error) {
+      if (error.code === 'PGRST116') return undefined; // Not found
+      throw error;
+    }
+    
+    return data as VisitRating;
+  }
+
+  async createVisitRating(rating: InsertVisitRating, calculated: CalculatedRating): Promise<VisitRating> {
+    // Map camelCase to snake_case for database
+    const dbRating = {
+      visit_id: rating.visitId,
+      missionary_id: rating.missionaryId,
+      mission_openness_rating: rating.missionOpennessRating,
+      hospitality_rating: rating.hospitalityRating,
+      missionary_support_count: rating.missionarySupportCount,
+      offerings_amount: rating.offeringsAmount,
+      church_members: rating.churchMembers,
+      financial_score: calculated.financialScore,
+      missionary_bonus: calculated.missionaryBonus,
+      calculated_star_rating: calculated.starRating,
+      visit_duration_minutes: rating.visitDurationMinutes,
+      notes: rating.notes,
+    };
+
+    const { data, error } = await supabase
+      .from('visit_ratings')
+      .insert(dbRating)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data as VisitRating;
+  }
+
+  async getChurchStarRating(churchId: number): Promise<ChurchStarRating | undefined> {
+    const { data, error } = await supabase
+      .from('church_star_ratings')
+      .select('*')
+      .eq('church_id', churchId)
+      .single();
+    
+    if (error) {
+      if (error.code === 'PGRST116') return undefined; // Not found
+      throw error;
+    }
+    
+    return data as ChurchStarRating;
+  }
+
+  async getTopRatedChurches(limit: number, offset: number): Promise<ChurchStarRating[]> {
+    const { data, error } = await supabase
+      .from('church_star_ratings')
+      .select(`
+        *,
+        churches!church_id (
+          id,
+          name,
+          city,
+          county
+        )
+      `)
+      .not('average_stars', 'is', null)
+      .order('average_stars', { ascending: false })
+      .order('total_visits', { ascending: false })
+      .range(offset, offset + limit - 1);
+    
+    if (error) throw error;
+    return data as ChurchStarRating[];
+  }
+
+  async getRecentlyActiveChurches(limit: number): Promise<ChurchStarRating[]> {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const { data, error } = await supabase
+      .from('church_star_ratings')
+      .select(`
+        *,
+        churches!church_id (
+          id,
+          name,
+          city,
+          county
+        )
+      `)
+      .not('last_visit_date', 'is', null)
+      .gte('last_visit_date', thirtyDaysAgo.toISOString())
+      .order('last_visit_date', { ascending: false })
+      .limit(limit);
+    
+    if (error) throw error;
+    return data as ChurchStarRating[];
+  }
+
+  async getRatingStatistics(): Promise<{
+    totalRatedChurches: number;
+    averageRating: number;
+    totalVisits: number;
+    totalOfferings: number;
+    ratingDistribution: { stars: number; count: number }[];
+  }> {
+    // Get basic statistics
+    const { data: stats, error: statsError } = await supabase
+      .from('church_star_ratings')
+      .select('average_stars, total_visits, total_offerings_collected')
+      .not('average_stars', 'is', null);
+    
+    if (statsError) throw statsError;
+
+    if (!stats || stats.length === 0) {
+      return {
+        totalRatedChurches: 0,
+        averageRating: 0,
+        totalVisits: 0,
+        totalOfferings: 0,
+        ratingDistribution: []
+      };
+    }
+
+    // Calculate aggregates
+    const totalRatedChurches = stats.length;
+    const averageRating = stats.reduce((sum, s) => sum + Number(s.average_stars), 0) / totalRatedChurches;
+    const totalVisits = stats.reduce((sum, s) => sum + Number(s.total_visits), 0);
+    const totalOfferings = stats.reduce((sum, s) => sum + Number(s.total_offerings_collected), 0);
+
+    // Calculate rating distribution
+    const distribution: { [key: number]: number } = {};
+    stats.forEach(s => {
+      const rounded = Math.round(Number(s.average_stars));
+      distribution[rounded] = (distribution[rounded] || 0) + 1;
+    });
+
+    const ratingDistribution = Object.entries(distribution)
+      .map(([stars, count]) => ({ stars: Number(stars), count }))
+      .sort((a, b) => a.stars - b.stars);
+
+    return {
+      totalRatedChurches,
+      averageRating: Math.round(averageRating * 10) / 10,
+      totalVisits,
+      totalOfferings,
+      ratingDistribution
+    };
+  }
+
+  async getChurchRatingHistory(churchId: number, limit: number, offset: number): Promise<any[]> {
+    const { data, error } = await supabase
+      .from('visit_ratings')
+      .select(`
+        id,
+        visit_id,
+        missionary_id,
+        mission_openness_rating,
+        hospitality_rating,
+        missionary_support_count,
+        offerings_amount,
+        church_members,
+        financial_score,
+        missionary_bonus,
+        calculated_star_rating,
+        visit_duration_minutes,
+        notes,
+        created_at,
+        visits!visit_id (
+          id,
+          visit_date
+        ),
+        users!missionary_id (
+          first_name,
+          last_name,
+          email
+        )
+      `)
+      .eq('visits.church_id', churchId)
+      .order('visits.visit_date', { ascending: false })
+      .range(offset, offset + limit - 1);
+    
+    if (error) throw error;
+
+    // Transform the data to match the expected format
+    return (data || []).map(rating => ({
+      id: rating.id,
+      visitId: rating.visit_id,
+      visitDate: rating.visits?.visit_date,
+      missionOpennessRating: rating.mission_openness_rating,
+      hospitalityRating: rating.hospitality_rating,
+      missionarySupportCount: rating.missionary_support_count,
+      offeringsAmount: Number(rating.offerings_amount),
+      churchMembers: rating.church_members,
+      calculatedStarRating: rating.calculated_star_rating,
+      visitDurationMinutes: rating.visit_duration_minutes,
+      notes: rating.notes,
+      createdAt: rating.created_at,
+      missionaryName: rating.users?.first_name && rating.users?.last_name 
+        ? `${rating.users.first_name} ${rating.users.last_name}`
+        : 'Unknown Missionary',
+      missionaryEmail: rating.users?.email || '',
+      breakdown: {
+        missionOpenness: rating.mission_openness_rating,
+        hospitality: rating.hospitality_rating,
+        financial: Number(rating.financial_score),
+        missionarySupport: Number(rating.missionary_bonus)
+      }
+    }));
+  }
+
+  async recalculateChurchRating(churchId: number): Promise<void> {
+    const { error } = await supabase.rpc('calculate_church_star_rating', {
+      church_id_param: churchId
+    });
+    
+    if (error) throw error;
   }
 }
 
