@@ -9,13 +9,14 @@ This document outlines the comprehensive design for the APME Church Star Rating 
 
 ## 1. User Flow & Rating Process
 
-### Visit Rating Flow
-1. **Missionary visits a church** and logs the visit in the system
-2. **System prompts for rating form** after visit is logged
-3. **Missionary fills out Romanian rating criteria** with specific values
-4. **System calculates star rating** (1-5 stars) using the rating formula
-5. **Rating is stored** and contributes to church's average score
-6. **Future visitors see aggregated star rating** based on all previous visits
+### Visit Logging and Rating Flow
+1. **Missionary logs a new visit** to a church, providing basic details (e.g., date, attendees).
+2. **System creates a visit record** and returns a unique `visit_id`.
+3. **User is prompted to add a rating** for the newly created visit.
+4. **Missionary fills out the detailed rating form** using Romanian-specific criteria.
+5. **System calculates the star rating** (1-5 stars) based on the provided data.
+6. **Rating is stored** and linked to the visit, contributing to the church's overall average score.
+7. **Future visitors can see the aggregated star rating** and past visit details.
 
 ### Rating Criteria (Romanian Context)
 Based on APME's specific needs, the rating system evaluates:
@@ -145,6 +146,31 @@ function calculateChurchAverageRating(visitRatings: VisitRating[]): ChurchStarRa
 ## 3. Data Model Design
 
 ### Core Tables
+
+#### `visits` Table
+```sql
+CREATE TABLE visits (
+  id SERIAL PRIMARY KEY,
+  church_id INTEGER REFERENCES churches(id) ON DELETE CASCADE,
+  missionary_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  
+  -- Visit Details
+  visit_date DATE NOT NULL,
+  attendees_count INTEGER,
+  notes TEXT,
+  
+  -- Status
+  is_rated BOOLEAN DEFAULT FALSE,
+  
+  -- Metadata
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+
+  -- Indexes
+  INDEX idx_visit_church (church_id),
+  INDEX idx_visit_missionary (missionary_id)
+);
+```
 
 #### `visit_ratings` Table
 ```sql
@@ -298,6 +324,25 @@ interface RatingFormData {
 ---
 
 ## 6. API Endpoints Design
+
+### Visit Management Endpoints
+
+#### `POST /api/churches/[id]/visits`
+**Purpose**: Create a new visit log for a church.
+```typescript
+interface CreateVisitRequest {
+  missionary_id: number;
+  visit_date: string; // YYYY-MM-DD
+  attendees_count?: number;
+  notes?: string;
+}
+
+interface CreateVisitResponse {
+  visit_id: number;
+  church_id: number;
+  message: string;
+}
+```
 
 ### Rating Management Endpoints
 

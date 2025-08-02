@@ -46,7 +46,7 @@ export default async function handler(
 
     if (error) {
       // Fallback to hardcoded credentials during migration
-      if (email === 'office@apme.ro' && password === 'admin 1234') {
+      if (email === 'office@apme.ro' && password === 'admin1234') {
         const adminUserId = 'admin-user-1';
         logServerlessFunction('login', 'POST', adminUserId, { fallback: true });
 

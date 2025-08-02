@@ -57,7 +57,7 @@ async function runTests() {
   console.log('\n📝 Testing Authentication Flow');
   const loginResult = await testEndpoint('POST', '/api/auth/login', {
     email: 'office@apme.ro',
-    password: 'admin 1234'
+    password: 'admin1234'
   });
   
   let token = null;

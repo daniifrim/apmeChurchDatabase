@@ -120,7 +120,7 @@ async function testAuthentication() {
   console.log('Testing fallback login...');
   const fallbackResponse = await makeRequest('POST', '/api/auth/login', {
     email: 'office@apme.ro',
-    password: 'admin 1234',
+    password: 'admin1234',
   });
   
   let fallbackToken = null;

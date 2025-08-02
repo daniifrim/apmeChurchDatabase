@@ -47,10 +47,7 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: activities = [] } = useQuery<Activity[]>({
-    queryKey: ["/api/churches", church.id, "activities"],
-    retry: false,
-  });
+
 
   const { data: filterOptions } = useQuery({
     queryKey: ['/api/filters'],
@@ -205,14 +202,7 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
     }
   };
 
-  const getActivityIcon = (type: string) => {
-    switch (type) {
-      case "visit": return <Calendar className="h-4 w-4" />;
-      case "call": return <Phone className="h-4 w-4" />;
-      case "note": return <StickyNote className="h-4 w-4" />;
-      default: return <Clock className="h-4 w-4" />;
-    }
-  };
+
 
   const handleAddNote = () => {
     if (!note.trim()) return;
@@ -492,32 +482,7 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
             </div>
           )}
 
-          {/* Recent Activity */}
-          <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
-            {activities.length === 0 ? (
-              <p className="text-gray-500">No recent activity</p>
-            ) : (
-              <div className="space-y-3">
-                {activities.slice(0, 5).map((activity) => (
-                  <div key={activity.id} className="flex items-start space-x-3 pb-3 border-b border-gray-100 last:border-b-0">
-                    <div className="text-[#2E5BBA] mt-1">
-                      {getActivityIcon(activity.type)}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-gray-900">{activity.title}</p>
-                      {activity.description && (
-                        <p className="text-gray-600 text-sm mt-1">{activity.description}</p>
-                      )}
-                      <p className="text-gray-500 text-sm mt-1">
-                        {formatActivityDate(activity.activityDate)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+
 
           {/* Notes Section */}
           {church.notes && (

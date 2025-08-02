@@ -110,7 +110,7 @@ This is a full-stack web application designed for APME (Romanian Pentecostal chu
 ```
 Changelog:
 - July 04, 2025. Initial setup
-- July 05, 2025. Updated authentication flow to bypass landing page and use simple email/password login (office@apme.ro / admin 1234)
+- July 05, 2025. Updated authentication flow to bypass landing page and use simple email/password login (office@apme.ro / admin1234)
 - July 05, 2025. Implemented session-based authentication for production deployment
 - July 05, 2025. Fixed church popup z-index stacking and positioning issues
 ```

@@ -66,7 +66,7 @@ export default function LoginPage() {
           {/* Development hint */}
           {process.env.NODE_ENV === 'development' && (
             <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-xs text-blue-700">
-              <strong>Dev Mode:</strong> Use office@apme.ro / admin 1234 for testing
+              <strong>Dev Mode:</strong> Use office@apme.ro / admin1234 for testing
             </div>
           )}
         </CardHeader>
