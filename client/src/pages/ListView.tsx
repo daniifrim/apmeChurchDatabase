@@ -1,31 +1,31 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Church, County, RccpRegion } from '@/types';
 import { MagnifyingGlassIcon, ChevronRightIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 import ChurchDetailsPanel from '@/components/ChurchDetailsPanel';
-import { cn } from '@/lib/utils';
+import { cn, normalizeDiacritics } from '@/lib/utils';
 
 export default function ListView() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCountyId, setSelectedCountyId] = useState('');
-  const [selectedRegionId, setSelectedRegionId] = useState('');
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [selectedChurch, setSelectedChurch] = useState<Church | null>(null);
   const queryClient = useQueryClient();
 
-  // Fetch filter options
-  const { data: filterOptions } = useQuery({
-    queryKey: ['/api/filters'],
-    queryFn: () => fetch('/api/filters').then(res => res.json()).then(data => data.data)
-  });
+  // Debounce search query to avoid too many API calls
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 300);
 
-  // Fetch churches with filters
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Fetch churches with search
   const { data: churches = [], isLoading, error } = useQuery<Church[]>({
-    queryKey: ['/api/churches', searchQuery, selectedCountyId, selectedRegionId],
+    queryKey: ['/api/churches', debouncedSearchQuery],
     queryFn: () => {
       const params = new URLSearchParams();
-      if (searchQuery) params.set('search', searchQuery);
-      if (selectedCountyId) params.set('countyId', selectedCountyId);
-      if (selectedRegionId) params.set('regionId', selectedRegionId);
+      if (debouncedSearchQuery) params.set('search', debouncedSearchQuery);
       
       return fetch(`/api/churches?${params}`).then(res => {
         if (!res.ok) {
@@ -33,7 +33,8 @@ export default function ListView() {
         }
         return res.json();
       });
-    }
+    },
+    staleTime: 30000, // Consider data fresh for 30 seconds
   });
 
   const getEngagementBadge = (level: string, lastVisit?: string) => {
@@ -61,8 +62,10 @@ export default function ListView() {
     return church.isActive;
   });
 
-  const counties: County[] = filterOptions?.counties || [];
-  const regions: RccpRegion[] = filterOptions?.regions || [];
+  // Check if we're currently searching (user has typed but debounce hasn't fired yet)
+  const isSearching = searchQuery !== debouncedSearchQuery;
+
+
 
   if (selectedChurch) {
     return (
@@ -160,9 +163,11 @@ export default function ListView() {
           })}
         </div>
         
-        {isLoading && (
+        {(isLoading || isSearching) && (
           <div className="text-center py-12">
-            <p className="text-gray-500">Loading churches...</p>
+            <p className="text-gray-500">
+              {isSearching ? 'Searching...' : 'Loading churches...'}
+            </p>
           </div>
         )}
         
@@ -178,46 +183,7 @@ export default function ListView() {
           </div>
         )}
       </div>
-      {/* Quick Filters */}
-      <div className="fixed bottom-16 left-0 right-0 bg-white border-t border-gray-200 p-4">
-        <div className="text-sm font-medium text-gray-700 mb-3">Quick Filters</div>
-        <div className="flex space-x-2 overflow-x-auto">
-          {/* Region Filters */}
-          {regions.slice(0, 3).map((region) => (
-            <button
-              key={region.id}
-              onClick={() => setSelectedRegionId(selectedRegionId === region.id.toString() ? '' : region.id.toString())}
-              className={cn(
-                "flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium border transition-colors",
-                selectedRegionId === region.id.toString()
-                  ? "bg-blue-100 text-blue-800 border-blue-200"
-                  : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200"
-              )}
-            >
-              {region.name}
-            </button>
-          ))}
-          
-          {/* County Filters - show counties from selected region or top counties */}
-          {counties
-            .filter(county => !selectedRegionId || county.rccpRegionId.toString() === selectedRegionId)
-            .slice(0, 4)
-            .map((county) => (
-            <button
-              key={county.id}
-              onClick={() => setSelectedCountyId(selectedCountyId === county.id.toString() ? '' : county.id.toString())}
-              className={cn(
-                "flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium border transition-colors",
-                selectedCountyId === county.id.toString()
-                  ? "bg-green-100 text-green-800 border-green-200"
-                  : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200"
-              )}
-            >
-              {county.name}
-            </button>
-          ))}
-        </div>
-      </div>
+
     </div>
   );
 }

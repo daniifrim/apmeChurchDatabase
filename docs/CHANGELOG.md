@@ -1,5 +1,54 @@
 ---
 date: "2025-08-02T00:00:00Z"
+type: "Feature"
+scope: ["frontend", "backend", "search"]
+author: "Dani"
+impact: "Medium"
+summary: "Implemented diacritic-insensitive search functionality for Romanian text across church and visit search interfaces. Users can now search with or without Romanian diacritics (ă, â, î, ș, ț) and get consistent results."
+files:
+  - "client/src/pages/ListView.tsx"
+  - "client/src/pages/VisitsView.tsx"
+  - "client/src/lib/utils.ts"
+  - "lib/storage.ts"
+technologies:
+  - "React"
+  - "TypeScript"
+  - "Node.js"
+  - "Supabase"
+---
+
+### Diacritic-Insensitive Search Implementation
+
+-   **Feature**: Added Romanian diacritic normalization to search functionality across ListView and VisitsView.
+-   **Backend**: Enhanced `getChurches` method with client-side diacritic-insensitive filtering for search queries.
+-   **Frontend**: Improved ListView with debounced search (300ms) and better loading states during search.
+-   **Utility**: Created `normalizeDiacritics` function that handles Romanian characters: ă, â, î, ș, ț.
+-   **User Experience**: Users can search for "sfanta" or "sfânta" and get the same results for church names like "Sfânta Maria".
+-   **Impact**: Significantly improved search usability for Romanian users who may not have easy access to diacritic characters.
+
+---
+date: "2025-08-02T00:00:00Z"
+type: "Fix"
+scope: ["backend", "compilation"]
+author: "Dani"
+impact: "High"
+summary: "Resolved critical compilation errors in the storage layer caused by duplicate variable declarations. Fixed authentication failures and server startup issues."
+files:
+  - "lib/storage.ts"
+technologies:
+  - "TypeScript"
+  - "Node.js"
+---
+
+### Critical Bug Fix: Duplicate Variable Declaration Resolution
+
+-   **Issue**: Server compilation failing with "symbol already declared" errors for `error` and `countyIds` variables.
+-   **Root Cause**: Duplicate code blocks in `getChurches` method causing variable scope conflicts.
+-   **Fix**: Removed orphaned duplicate code and consolidated helper functions within method scope.
+-   **Impact**: Resolved authentication failures and server startup issues, restoring full application functionality.
+
+---
+date: "2025-08-02T00:00:00Z"
 type: "Fix"
 scope: ["backend", "database"]
 author: "Dani"
