@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Church, County, RccpRegion } from '@/types';
-import { MagnifyingGlassIcon, ChevronRightIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, ChevronRightIcon, ArrowLeftIcon, MapPinIcon, UserIcon } from '@heroicons/react/24/outline';
 import ChurchDetailsPanel from '@/components/ChurchDetailsPanel';
 import { cn, normalizeDiacritics } from '@/lib/utils';
 
@@ -10,6 +10,24 @@ export default function ListView() {
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [selectedChurch, setSelectedChurch] = useState<Church | null>(null);
   const queryClient = useQueryClient();
+
+  // Check for pre-selected church from localStorage
+  useEffect(() => {
+    const selectedChurchId = localStorage.getItem('selectedChurchId');
+    if (selectedChurchId) {
+      // Fetch the specific church and set it as selected
+      fetch(`/api/churches/${selectedChurchId}`)
+        .then(res => res.json())
+        .then(church => {
+          setSelectedChurch(church);
+          localStorage.removeItem('selectedChurchId'); // Clean up
+        })
+        .catch(error => {
+          console.error('Failed to fetch selected church:', error);
+          localStorage.removeItem('selectedChurchId');
+        });
+    }
+  }, []);
 
   // Debounce search query to avoid too many API calls
   useEffect(() => {
@@ -109,62 +127,57 @@ export default function ListView() {
       </div>
       {/* Church List */}
       <div className="flex-1 overflow-y-auto pb-28">
-        <div className="divide-y divide-gray-200">
-          {filteredChurches.map((church: Church) => {
-            const badge = getEngagementBadge(church.engagementLevel);
-            
-            return (
-              <div 
-                key={church.id}
-                onClick={() => setSelectedChurch(church)}
-                className="bg-white px-4 py-4 hover:bg-gray-50 cursor-pointer"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                          {church.name}
-                        </h3>
-                        <p className="text-gray-600 mb-1">
-                          {church.city}, {church.counties?.name || church.county}
-                        </p>
-                        <p className="text-gray-500 text-sm mb-2">
-                          {church.counties?.rccp_regions?.name || 'RCCP Region'}
-                        </p>
-                        {church.pastor && (
-                          <p className="text-gray-700 text-sm mb-3">
-                            Pastor: {church.pastor}
-                          </p>
-                        )}
-                        
-                        <div className="flex items-center justify-between">
-                          <span className={cn(
-                            "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
-                            badge.color
-                          )}>
-                            {badge.label}
-                          </span>
-                          
-                          {church.engagementLevel === 'high' && (
-                            <span className="text-xs text-gray-500">
-                              {formatLastVisit(church.updatedAt)}
-                            </span>
-                          )}
+        <div className="p-4">
+          <div className="space-y-4">
+            {filteredChurches.map((church: Church) => {
+              const badge = getEngagementBadge(church.engagementLevel);
+              
+              return (
+                <div 
+                  key={church.id}
+                  onClick={() => setSelectedChurch(church)}
+                  className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                        {church.name}
+                      </h3>
+                      <div className="flex items-center space-x-4 text-sm text-gray-600 mb-2">
+                        <div className="flex items-center">
+                          <MapPinIcon className="h-4 w-4 mr-1" />
+                          {church.address}
                         </div>
+                        {church.pastor && (
+                          <div className="flex items-center">
+                            <UserIcon className="h-4 w-4 mr-1" />
+                            Pastor: {church.pastor}
+                          </div>
+                        )}
                       </div>
-                      
-                      <ChevronRightIcon className="h-5 w-5 text-gray-400 ml-3 flex-shrink-0" />
+                    </div>
+                    <div className="ml-4 flex flex-col items-end space-y-2">
+                      <span className={cn(
+                        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
+                        badge.color
+                      )}>
+                        {badge.label}
+                      </span>
+                      {church.engagementLevel === 'high' && (
+                        <span className="text-xs text-gray-500">
+                          {formatLastVisit(church.updatedAt)}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
         
         {(isLoading || isSearching) && (
-          <div className="text-center py-12">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
             <p className="text-gray-500">
               {isSearching ? 'Searching...' : 'Loading churches...'}
             </p>
@@ -172,13 +185,13 @@ export default function ListView() {
         )}
         
         {error && (
-          <div className="text-center py-12">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
             <p className="text-red-500">Error loading churches: {error.message}</p>
           </div>
         )}
         
         {!isLoading && !error && filteredChurches.length === 0 && (
-          <div className="text-center py-12">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
             <p className="text-gray-500">No churches found</p>
           </div>
         )}

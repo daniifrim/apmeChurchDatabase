@@ -19,12 +19,14 @@ import {
   X,
   ArrowLeft,
   Star,
-  Plus
+  Plus,
+  FileText
 } from "lucide-react";
 import { ChurchStarRating } from "./ChurchStarRating";
 import { RatingHistory } from "./RatingHistory";
 import { VisitRatingForm } from "./VisitRatingForm";
 import VisitForm from "./VisitForm";
+import VisitDetailsModal from "./VisitDetailsModal";
 import type { Church, Activity } from "@/types";
 
 interface ChurchDetailsPanelProps {
@@ -39,7 +41,8 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
   const [showRatingForm, setShowRatingForm] = useState(false);
   const [selectedVisitForRating, setSelectedVisitForRating] = useState<number | null>(null);
   const [showVisitForm, setShowVisitForm] = useState(false);
-  const [activeTab, setActiveTab] = useState<'details' | 'ratings' | 'history'>('details');
+  const [activeTab, setActiveTab] = useState<'details' | 'visits'>('details');
+  const [selectedVisitId, setSelectedVisitId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState({
     name: church.name,
     address: church.address,
@@ -282,24 +285,14 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
               Details
             </button>
             <button
-              onClick={() => setActiveTab('ratings')}
+              onClick={() => setActiveTab('visits')}
               className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                activeTab === 'ratings'
+                activeTab === 'visits'
                   ? 'bg-white text-gray-900 shadow-sm'
                   : 'text-gray-600 hover:text-gray-900'
               }`}
             >
-              Ratings
-            </button>
-            <button
-              onClick={() => setActiveTab('history')}
-              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                activeTab === 'history'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              History
+              Visits
             </button>
           </div>
           {/* Church Header / Edit Form */}
@@ -559,72 +552,82 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
                 </div>
               </div>
             </div>
-          ) : activeTab === 'ratings' && !isEditing ? (
-            <div className="space-y-6">
-              {/* Church Star Rating Display */}
-              {ratingLoading ? (
+          ) : activeTab === 'visits' && !isEditing ? (
+            <div className="space-y-4">
+              {/* All Visits List */}
+              {visitsLoading ? (
                 <div className="animate-pulse">
                   <div className="h-48 bg-gray-200 rounded-lg"></div>
                 </div>
-              ) : (
-                <ChurchStarRating
-                  churchId={church.id}
-                  churchName={church.name}
-                  averageStars={churchRating?.data?.averageStars || 0}
-                  totalVisits={churchRating?.data?.totalVisits || 0}
-                  visitsLast30Days={churchRating?.data?.visitsLast30Days}
-                  visitsLast90Days={churchRating?.data?.visitsLast90Days}
-                  ratingBreakdown={churchRating?.data?.ratingBreakdown}
-                  financialSummary={churchRating?.data?.financialSummary}
-                  lastVisitDate={churchRating?.data?.lastVisitDate}
-                  showDetails={true}
-                />
-              )}
-
-              {/* Unrated Visits */}
-              {visits?.data && (
-                <div className="bg-white border border-gray-200 rounded-lg p-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Unrated Visits</h3>
-                  <div className="space-y-2">
-                    {visits.data
-                      .filter((visit: any) => !visit.isRated)
-                      .map((visit: any) => (
-                        <div key={visit.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                          <div>
-                            <p className="font-medium text-gray-900">
-                              {visit.visitDate ? (() => {
-                                try {
-                                  const date = new Date(visit.visitDate);
-                                  return isNaN(date.getTime()) ? 'Invalid Date' : date.toLocaleDateString('ro-RO');
-                                } catch {
-                                  return 'Invalid Date';
-                                }
-                              })() : 'No Date'}
-                            </p>
-                            <p className="text-sm text-gray-600">{visit.purpose || 'No purpose specified'}</p>
+              ) : visits && visits.length > 0 ? (
+                <>
+                  {visits
+                    .sort((a: any, b: any) => new Date(b.visitDate || 0).getTime() - new Date(a.visitDate || 0).getTime())
+                    .map((visit: any) => (
+                      <div 
+                        key={visit.id} 
+                        className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow"
+                        onClick={() => setSelectedVisitId(visit.id)}
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-4 text-sm text-gray-600 mb-2">
+                              <div className="flex items-center">
+                                <Calendar className="h-4 w-4 mr-1" />
+                                {visit.visitDate ? (() => {
+                                  try {
+                                    const date = new Date(visit.visitDate);
+                                    return isNaN(date.getTime()) ? 'Invalid Date' : date.toLocaleDateString('ro-RO');
+                                  } catch {
+                                    return 'Invalid Date';
+                                  }
+                                })() : 'No Date'}
+                              </div>
+                              {visit.attendeesCount && (
+                                <div className="flex items-center">
+                                  <Users className="h-4 w-4 mr-1" />
+                                  {visit.attendeesCount} attendees
+                                </div>
+                              )}
+                            </div>
+                            {visit.notes && (
+                              <p className="text-gray-700 text-sm bg-gray-50 p-3 rounded-lg">
+                                {visit.notes}
+                              </p>
+                            )}
                           </div>
-                          <Button
-                            onClick={() => {
-                              setSelectedVisitForRating(visit.id);
-                              setShowRatingForm(true);
-                            }}
-                            size="sm"
-                            className="bg-blue-600 hover:bg-blue-700"
-                          >
-                            <Star className="w-4 h-4 mr-1" />
-                            Rate Visit
-                          </Button>
+                          <div className="ml-4 flex flex-col items-end space-y-2">
+                            {visit.isRated ? (
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                Rated
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                {visit.visitedBy || 'Unknown'}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                      ))}
-                    {visits.data.filter((visit: any) => !visit.isRated).length === 0 && (
-                      <p className="text-gray-500 text-center py-4">All visits have been rated</p>
-                    )}
+                      </div>
+                    ))}
+                </>
+              ) : (
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Clock className="h-8 w-8 text-blue-600" />
                   </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">No Visits Yet</h3>
+                  <p className="text-gray-600 mb-6">This church doesn't have any recorded visits.</p>
+                  <Button
+                    onClick={() => setShowVisitForm(true)}
+                    className="bg-[#2E5BBA] hover:bg-blue-700"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Log First Visit
+                  </Button>
                 </div>
               )}
             </div>
-          ) : activeTab === 'history' && !isEditing ? (
-            <RatingHistory churchId={church.id} churchName={church.name} />
           ) : null}
         </div>
 
@@ -660,6 +663,18 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
             church={church}
             onClose={() => setShowVisitForm(false)}
             onSuccess={() => {
+              queryClient.invalidateQueries({ queryKey: ["church-visits", church.id] });
+              queryClient.invalidateQueries({ queryKey: ["/api/churches"] });
+            }}
+          />
+        )}
+
+        {/* Visit Details Modal */}
+        {selectedVisitId && (
+          <VisitDetailsModal
+            visitId={selectedVisitId}
+            onClose={() => setSelectedVisitId(null)}
+            onUpdate={() => {
               queryClient.invalidateQueries({ queryKey: ["church-visits", church.id] });
               queryClient.invalidateQueries({ queryKey: ["/api/churches"] });
             }}

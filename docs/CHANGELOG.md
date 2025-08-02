@@ -1,5 +1,35 @@
 ---
 date: "2025-08-02T00:00:00Z"
+type: "Enhancement"
+scope: ["frontend", "ui-ux", "navigation"]
+author: "Dani"
+impact: "Medium"
+summary: "Enhanced church details panel with improved visits tab design, visit details modal with church navigation, and modernized ListView with card-based layout and better visual hierarchy."
+files:
+  - "client/src/components/ChurchDetailsPanel.tsx"
+  - "client/src/components/VisitDetailsModal.tsx"
+  - "client/src/pages/ListView.tsx"
+  - "client/src/pages/VisitsView.tsx"
+  - ".env"
+technologies:
+  - "React"
+  - "TypeScript"
+  - "Wouter"
+---
+
+### UI/UX Improvements: Enhanced Church and Visit Management
+
+-   **Church Details Panel**: Replaced separate ratings and history tabs with unified "Visits" tab showing all church visits in chronological order with click-to-view functionality.
+-   **Visit Details Modal**: Added church name as clickable button that navigates to ListView with pre-selected church, improving cross-navigation between views.
+-   **Modern ListView Design**: Transformed flat list to card-based layout with improved visual hierarchy, better spacing, and enhanced readability for church information.
+-   **Improved Visits Page**: Added sort and filter controls bar with dropdown selectors for date sorting and visit status filtering.
+-   **Enhanced Search Layout**: Moved search to header alongside "Log Visit" button for better space utilization and improved user flow.
+-   **Google Maps Integration**: Added environment configuration for Google Maps API key to support future geocoding features.
+-   **Visual Consistency**: Applied consistent card design patterns across ListView and visit components for cohesive user experience.
+-   **Impact**: Significantly improved navigation flow between churches and visits, modernized visual design, and enhanced overall user experience with cleaner, more intuitive interfaces.
+
+---
+date: "2025-08-02T00:00:00Z"
 type: "Feature"
 scope: ["frontend", "backend", "ui-ux"]
 author: "Dani"
