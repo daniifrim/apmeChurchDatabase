@@ -22,14 +22,16 @@ export default function MapView() {
   const [popupChurch, setPopupChurch] = useState<Church | null>(null);
   const [showProfilePopup, setShowProfilePopup] = useState(false);
 
-  // Fetch filter options
-  const { data: filterOptions } = useQuery({
-    queryKey: ['/api/filters'],
-    queryFn: () => fetch('/api/filters').then(res => res.json()).then(data => data.data)
-  });
-
   // Get user info for profile
   const { user } = useAuth();
+
+  // Parallel data fetching
+  const { data: filterOptions } = useQuery({
+    queryKey: ['/api/filters'],
+    queryFn: () => fetch('/api/filters').then(res => res.json()).then(data => data.data),
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    cacheTime: 10 * 60 * 1000,
+  });
 
   const { data: churches = [] } = useQuery<Church[]>({
     queryKey: ['/api/churches', searchQuery, selectedCountyId, selectedRegionId, selectedEngagementLevel],
@@ -41,7 +43,9 @@ export default function MapView() {
       if (selectedEngagementLevel) params.set('engagementLevel', selectedEngagementLevel);
       
       return fetch(`/api/churches?${params}`).then(res => res.json());
-    }
+    },
+    staleTime: 2 * 60 * 1000, // Cache for 2 minutes
+    cacheTime: 5 * 60 * 1000,
   });
 
   const handleChurchSelect = (church: Church) => {

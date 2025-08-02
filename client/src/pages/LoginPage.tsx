@@ -95,7 +95,7 @@ export default function LoginPage() {
               />
             </div>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="flex-col gap-2">
             <Button 
               type="submit" 
               className="w-full" 
@@ -103,6 +103,36 @@ export default function LoginPage() {
             >
               {isLoading ? 'Signing in...' : 'Sign In'}
             </Button>
+            {process.env.NODE_ENV === 'development' && (
+              <Button 
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={async () => {
+                  setIsLoading(true);
+                  try {
+                    const { error } = await signIn('office@apme.ro', 'admin1234');
+                    if (error) {
+                      toast({
+                        title: "Dev Login Failed",
+                        description: error,
+                        variant: "destructive",
+                      });
+                    }
+                  } catch (error) {
+                    toast({
+                      title: "Error",
+                      description: "Dev login failed",
+                      variant: "destructive",
+                    });
+                  } finally {
+                    setIsLoading(false);
+                  }
+                }}
+              >
+                Dev Login (office@apme.ro)
+              </Button>
+            )}
           </CardFooter>
         </form>
       </Card>
