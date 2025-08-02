@@ -175,9 +175,10 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
 
   const formatActivityDate = (date: string) => {
     try {
-      const parsedDate = new Date(date);
+      // Handle various date formats
+      const parsedDate = typeof date === 'string' ? new Date(date) : date;
       // Check if the date is valid
-      if (isNaN(parsedDate.getTime())) {
+      if (!parsedDate || isNaN(parsedDate.getTime())) {
         return "Invalid date";
       }
       return parsedDate.toLocaleDateString("en-US", {
@@ -591,7 +592,14 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
                         <div key={visit.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                           <div>
                             <p className="font-medium text-gray-900">
-                              {new Date(visit.visitDate).toLocaleDateString('ro-RO')}
+                              {visit.visitDate ? (() => {
+                                try {
+                                  const date = new Date(visit.visitDate);
+                                  return isNaN(date.getTime()) ? 'Invalid Date' : date.toLocaleDateString('ro-RO');
+                                } catch {
+                                  return 'Invalid Date';
+                                }
+                              })() : 'No Date'}
                             </p>
                             <p className="text-sm text-gray-600">{visit.purpose || 'No purpose specified'}</p>
                           </div>

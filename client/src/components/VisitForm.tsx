@@ -1,12 +1,13 @@
-import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState, useMemo } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
-import { X, Calendar, Users, FileText, Star, DollarSign, ChevronDown, ChevronUp, Clock } from "lucide-react";
+import { X, Calendar, Users, FileText, Star, DollarSign, ChevronDown, ChevronUp, Clock, Search, MapPin } from "lucide-react";
 import type { Church } from "@/types";
+import { normalizeDiacritics } from "@/lib/utils";
 
 interface VisitFormProps {
   church?: Church;
@@ -22,6 +23,10 @@ export default function VisitForm({ church, onClose, onSuccess }: VisitFormProps
     attendeesCount: "",
   });
 
+  const [churchSearchQuery, setChurchSearchQuery] = useState("");
+  const [showChurchDropdown, setShowChurchDropdown] = useState(false);
+  const [selectedChurch, setSelectedChurch] = useState<Church | undefined>(church);
+
   const [showRating, setShowRating] = useState(false);
   const [ratingData, setRatingData] = useState({
     missionOpennessRating: 0,
@@ -35,6 +40,32 @@ export default function VisitForm({ church, onClose, onSuccess }: VisitFormProps
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Fetch churches for the dropdown
+  const { data: churches = [] } = useQuery({
+    queryKey: ['/api/churches'],
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/churches');
+      return response.json();
+    },
+  });
+
+  // Filter churches based on search query
+  const filteredChurches = useMemo(() => {
+    if (!churchSearchQuery) return churches.slice(0, 10); // Show first 10 churches by default
+    
+    const normalizedQuery = normalizeDiacritics(churchSearchQuery.toLowerCase());
+    return churches.filter((ch: Church) => {
+      // Add null safety checks for all string properties
+      const name = ch.name?.toLowerCase() || '';
+      const city = ch.city?.toLowerCase() || '';
+      const county = ch.county?.toLowerCase() || '';
+      
+      return normalizeDiacritics(name).includes(normalizedQuery) ||
+             normalizeDiacritics(city).includes(normalizedQuery) ||
+             normalizeDiacritics(county).includes(normalizedQuery);
+    }).slice(0, 10);
+  }, [churches, churchSearchQuery]);
 
   // Romanian rating descriptions with options
   const missionOpennessOptions = [
@@ -146,6 +177,13 @@ export default function VisitForm({ church, onClose, onSuccess }: VisitFormProps
     setRatingData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleChurchSelect = (selectedChurch: Church) => {
+    setSelectedChurch(selectedChurch);
+    setFormData(prev => ({ ...prev, churchId: selectedChurch.id.toString() }));
+    setChurchSearchQuery(selectedChurch.name || '');
+    setShowChurchDropdown(false);
+  };
+
   // Calculate real-time star rating preview
   const calculatePreviewRating = () => {
     if (ratingData.missionOpennessRating === 0 || ratingData.hospitalityRating === 0) {
@@ -235,18 +273,64 @@ export default function VisitForm({ church, onClose, onSuccess }: VisitFormProps
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           {/* Church Selection (if no church provided) */}
           {!church && (
-            <div>
+            <div className="relative">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Church ID
+                <MapPin className="h-4 w-4 inline mr-2" />
+                Select Church
               </label>
-              <input
-                type="number"
-                value={formData.churchId}
-                onChange={(e) => handleInputChange('churchId', e.target.value)}
-                placeholder="Enter church ID"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
-                required
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={selectedChurch ? (selectedChurch.name || '') : churchSearchQuery}
+                  onChange={(e) => {
+                    setChurchSearchQuery(e.target.value);
+                    setShowChurchDropdown(true);
+                    if (!e.target.value) {
+                      setSelectedChurch(undefined);
+                      setFormData(prev => ({ ...prev, churchId: '' }));
+                    }
+                  }}
+                  onFocus={() => setShowChurchDropdown(true)}
+                  placeholder="Search for a church..."
+                  className="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                  required
+                />
+                <Search className="h-4 w-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                
+                {/* Church Dropdown */}
+                {showChurchDropdown && filteredChurches.length > 0 && (
+                  <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    {filteredChurches.map((ch: Church) => (
+                      <button
+                        key={ch.id}
+                        type="button"
+                        onClick={() => handleChurchSelect(ch)}
+                        className="w-full p-3 text-left hover:bg-gray-50 border-b border-gray-100 last:border-b-0 focus:outline-none focus:bg-gray-50"
+                      >
+                        <div className="flex flex-col">
+                          <span className="font-medium text-gray-900">{ch.name || 'Unnamed Church'}</span>
+                          <span className="text-sm text-gray-500">{ch.city || 'Unknown City'}, {ch.county || 'Unknown County'}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                
+                {/* No results message */}
+                {showChurchDropdown && churchSearchQuery && filteredChurches.length === 0 && (
+                  <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg p-3">
+                    <span className="text-gray-500 text-sm">No churches found matching "{churchSearchQuery}"</span>
+                  </div>
+                )}
+              </div>
+              
+              {/* Close dropdown when clicking outside */}
+              {showChurchDropdown && (
+                <div 
+                  className="fixed inset-0 z-5" 
+                  onClick={() => setShowChurchDropdown(false)}
+                />
+              )}
             </div>
           )}
 

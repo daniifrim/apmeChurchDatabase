@@ -124,6 +124,7 @@ export const visitRatings = pgTable("visit_ratings", {
   // Financial data
   offeringsAmount: decimal("offerings_amount", { precision: 10, scale: 2 }).default("0.00").notNull(),
   churchMembers: integer("church_members").notNull(),
+  attendeesCount: integer("attendees_count").notNull(),
   
   // Calculated fields
   financialScore: decimal("financial_score", { precision: 3, scale: 2 }).notNull(),
@@ -283,6 +284,7 @@ export const insertVisitRatingSchema = z.object({
   missionarySupportCount: z.number().min(0).default(0),
   offeringsAmount: z.number().min(0).default(0),
   churchMembers: z.number().positive(),
+  attendeesCount: z.number().positive(),
   visitDurationMinutes: z.number().positive().optional(),
   notes: z.string().optional(),
 });

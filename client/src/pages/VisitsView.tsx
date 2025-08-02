@@ -4,11 +4,13 @@ import { ClockIcon, MapPinIcon, PlusIcon, CalendarIcon, UserIcon } from '@heroic
 import { Button } from '@/components/ui/button';
 import { apiRequest } from '@/lib/queryClient';
 import VisitForm from '@/components/VisitForm';
+import VisitDetailsModal from '@/components/VisitDetailsModal';
 import { normalizeDiacritics } from '@/lib/utils';
 
 export default function VisitsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showVisitForm, setShowVisitForm] = useState(false);
+  const [selectedVisitId, setSelectedVisitId] = useState<number | null>(null);
   const queryClient = useQueryClient();
 
   // Fetch all visits across all churches
@@ -104,7 +106,11 @@ export default function VisitsView() {
           ) : (
             <div className="space-y-4">
               {filteredVisits.map((visit: any) => (
-                <div key={visit.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                <div 
+                  key={visit.id} 
+                  className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 cursor-pointer hover:shadow-md transition-shadow"
+                  onClick={() => setSelectedVisitId(visit.id)}
+                >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold text-gray-900 mb-1">
@@ -113,7 +119,14 @@ export default function VisitsView() {
                       <div className="flex items-center space-x-4 text-sm text-gray-600 mb-2">
                         <div className="flex items-center">
                           <CalendarIcon className="h-4 w-4 mr-1" />
-                          {new Date(visit.visitDate).toLocaleDateString('ro-RO')}
+                          {visit.visitDate ? (() => {
+                            try {
+                              const date = new Date(visit.visitDate);
+                              return isNaN(date.getTime()) ? 'Invalid Date' : date.toLocaleDateString('ro-RO');
+                            } catch {
+                              return 'Invalid Date';
+                            }
+                          })() : 'No Date'}
                         </div>
                         {visit.purpose && (
                           <div className="flex items-center">
@@ -167,6 +180,18 @@ export default function VisitsView() {
         <VisitForm
           onClose={() => setShowVisitForm(false)}
           onSuccess={() => {
+            // Refresh the visits list
+            queryClient.invalidateQueries({ queryKey: ['/api/visits'] });
+          }}
+        />
+      )}
+
+      {/* Visit Details Modal */}
+      {selectedVisitId && (
+        <VisitDetailsModal
+          visitId={selectedVisitId}
+          onClose={() => setSelectedVisitId(null)}
+          onUpdate={() => {
             // Refresh the visits list
             queryClient.invalidateQueries({ queryKey: ['/api/visits'] });
           }}

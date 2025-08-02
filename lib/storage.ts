@@ -486,9 +486,17 @@ export class ServerlessStorage implements IServerlessStorage {
     
     if (error) throw error;
     
-    // Transform the data to flatten church information
+    // Transform the data to flatten church information and normalize field names
     return data.map((visit: any) => ({
       ...visit,
+      visitDate: visit.visit_date,
+      attendeesCount: visit.attendees_count,
+      followUpRequired: visit.follow_up_required,
+      isRated: visit.is_rated,
+      createdAt: visit.created_at,
+      updatedAt: visit.updated_at,
+      visitedBy: visit.visited_by,
+      churchId: visit.church_id,
       churchName: visit.churches?.name,
       churchAddress: visit.churches?.address,
       churchCity: visit.churches?.city,
@@ -499,7 +507,16 @@ export class ServerlessStorage implements IServerlessStorage {
   async getVisitById(id: number): Promise<Visit | undefined> {
     const { data, error } = await supabase
       .from('visits')
-      .select('*')
+      .select(`
+        *,
+        churches (
+          id,
+          name,
+          address,
+          city,
+          county_id
+        )
+      `)
       .eq('id', id)
       .single();
     
@@ -508,7 +525,24 @@ export class ServerlessStorage implements IServerlessStorage {
       throw error;
     }
     
-    return data as Visit;
+    // Transform the data to include church information and normalize field names
+    const visit = {
+      ...data,
+      visitDate: data.visit_date,
+      attendeesCount: data.attendees_count,
+      followUpRequired: data.follow_up_required,
+      isRated: data.is_rated,
+      createdAt: data.created_at,
+      updatedAt: data.updated_at,
+      visitedBy: data.visited_by,
+      churchId: data.church_id,
+      churchName: data.churches?.name,
+      churchAddress: data.churches?.address,
+      churchCity: data.churches?.city,
+      churchCountyId: data.churches?.county_id,
+    };
+    
+    return visit as any; // Return with enhanced church data
   }
 
   async createVisit(visit: InsertVisit): Promise<Visit> {
@@ -773,6 +807,7 @@ export class ServerlessStorage implements IServerlessStorage {
       missionary_support_count: rating.missionarySupportCount,
       offerings_amount: rating.offeringsAmount,
       church_members: rating.churchMembers,
+      attendees_count: rating.attendeesCount,
       financial_score: calculated.financialScore,
       missionary_bonus: calculated.missionaryBonus,
       calculated_star_rating: calculated.starRating,

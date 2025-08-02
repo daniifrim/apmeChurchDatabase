@@ -1,5 +1,36 @@
 ---
 date: "2025-08-02T00:00:00Z"
+type: "Feature"
+scope: ["frontend", "backend", "ui-ux"]
+author: "Dani"
+impact: "High"
+summary: "Complete visits page overhaul with enhanced functionality including church dropdown selection, visit details modal with edit/delete capabilities, improved date handling, and error-free operations."
+files:
+  - "client/src/pages/VisitsView.tsx"
+  - "client/src/components/VisitForm.tsx"
+  - "client/src/components/VisitDetailsModal.tsx"
+  - "api/visits/[id]/index.ts"
+  - "lib/storage.ts"
+technologies:
+  - "React"
+  - "TypeScript"
+  - "Node.js"
+  - "Supabase"
+---
+
+### Visits Page Enhancement: Complete Functionality Overhaul
+
+-   **Church Selection**: Replaced unintuitive church ID input with searchable dropdown featuring diacritic-insensitive filtering and null safety checks to prevent TypeError crashes.
+-   **Visit Details Modal**: Created comprehensive modal for viewing visit details with tabbed interface for basic info and rating details, including proper location display and enhanced date formatting.
+-   **Edit/Delete Operations**: Implemented full CRUD operations with edit forms, delete confirmations, and proper permission checks (users can only edit/delete their own visits unless admin).
+-   **Error Handling**: Fixed "Invalid Date" display issues with robust date validation and added comprehensive error handling throughout the visits workflow.
+-   **Data Transformation**: Enhanced storage layer with proper field name mapping between snake_case database and camelCase frontend, including church information in visit details.
+-   **Activity Logging**: Added non-blocking activity creation for visit operations with error recovery to prevent cascade failures.
+-   **User Experience**: Improved visit workflow with better loading states, proper error messaging, and seamless integration between visit list and detail views.
+-   **Impact**: Transformed visits page from basic functionality to a fully-featured visit management system with intuitive UX and robust error handling.
+
+---
+date: "2025-08-02T00:00:00Z"
 type: "Enhancement"
 scope: ["frontend", "ui-ux"]
 author: "Dani"

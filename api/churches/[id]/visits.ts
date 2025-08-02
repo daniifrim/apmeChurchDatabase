@@ -2,18 +2,21 @@ import { withAuth } from '../../../lib/auth';
 import { serverlessStorage } from '../../../lib/storage';
 import { handleServerlessError, validateMethod, validateRequestBody } from '../../../lib/errorHandler';
 import { handleCors, logServerlessFunction, parseNumericParam } from '../../../lib/utils';
-import { insertVisitSchema } from '@shared/schema';
+import { insertVisitSchema, createRatingRequestSchema } from '@shared/schema';
+import { RatingCalculationService } from '../../../lib/rating-calculation';
 import type { NextApiRequest, NextApiResponse } from '../../../lib/types';
 import type { JWTPayload } from '../../../lib/auth';
-import type { Visit, InsertVisit } from '@shared/schema';
+import type { Visit, InsertVisit, CreateRatingRequest } from '@shared/schema';
 import { z } from 'zod';
 
 interface VisitsResponse {
   success?: boolean;
-  data?: Visit[] | Visit;
+  data?: Visit[] | Visit | any;
   message?: string;
   errors?: any;
 }
+
+const ratingCalculator = new RatingCalculationService();
 
 async function handler(
   req: NextApiRequest & { user: JWTPayload },
@@ -102,14 +105,81 @@ async function handleCreateVisit(
       });
     }
 
+    // Extract rating data if provided
+    const { rating, ...visitPayload } = req.body;
+    
     // Validate and parse visit data
     const visitData = validateRequestBody({
-      ...req.body,
+      ...visitPayload,
       churchId,
       visitedBy: userId,
     }, insertVisitSchema);
 
+    // Create the visit
     const visit = await serverlessStorage.createVisit(visitData);
+
+    let calculatedRating = null;
+
+    // If rating data is provided, create the rating
+    if (rating && rating.missionOpennessRating > 0 && rating.hospitalityRating > 0) {
+      try {
+        // Validate rating data
+        const ratingData = validateRequestBody(rating, createRatingRequestSchema);
+        
+        // Calculate the star rating
+        const ratingResult = ratingCalculator.calculateVisitRating({
+          missionOpennessRating: ratingData.missionOpennessRating,
+          hospitalityRating: ratingData.hospitalityRating,
+          missionarySupportCount: ratingData.missionarySupportCount,
+          offeringsAmount: ratingData.offeringsAmount,
+          churchMembers: ratingData.churchMembers,
+          attendeesCount: ratingData.attendeesCount,
+          visitDurationMinutes: ratingData.visitDurationMinutes,
+          notes: ratingData.notes,
+        });
+
+        // Create the visit rating
+        const visitRating = await serverlessStorage.createVisitRating({
+          visitId: visit.id,
+          missionaryId: userId,
+          missionOpennessRating: ratingData.missionOpennessRating,
+          hospitalityRating: ratingData.hospitalityRating,
+          missionarySupportCount: ratingData.missionarySupportCount,
+          offeringsAmount: ratingData.offeringsAmount,
+          churchMembers: ratingData.churchMembers,
+          attendeesCount: ratingData.attendeesCount,
+          visitDurationMinutes: ratingData.visitDurationMinutes,
+          notes: ratingData.notes,
+        }, {
+          financialScore: ratingResult.financialScore,
+          missionaryBonus: ratingResult.missionaryBonus,
+          starRating: ratingResult.calculatedStarRating,
+        });
+
+        // Update visit to mark it as rated
+        await serverlessStorage.updateVisit(visit.id, { isRated: true });
+
+        calculatedRating = {
+          calculatedStarRating: ratingResult.calculatedStarRating,
+          financialScore: ratingResult.financialScore,
+          missionaryBonus: ratingResult.missionaryBonus,
+        };
+
+        logServerlessFunction('visits-create', 'POST', userId, { 
+          churchId,
+          visitId: visit.id,
+          starRating: ratingResult.calculatedStarRating
+        });
+
+      } catch (ratingError) {
+        // Log the rating error but don't fail the visit creation
+        logServerlessFunction('visits-create', 'POST', userId, { 
+          churchId,
+          visitId: visit.id,
+          ratingError: ratingError instanceof Error ? ratingError.message : 'Unknown rating error'
+        });
+      }
+    }
 
     // Create activity for visit
     await serverlessStorage.createActivity({
@@ -124,11 +194,17 @@ async function handleCreateVisit(
     logServerlessFunction('visits-create', 'POST', userId, { 
       churchId,
       visitId: visit.id,
-      visitDate: visitData.visitDate
+      visitDate: visitData.visitDate,
+      hasRating: !!calculatedRating
     });
 
-    // Return visit object directly (matching existing API contract)
-    return res.status(201).json(visit);
+    // Return enhanced response with rating info if available
+    const response = {
+      ...visit,
+      ...(calculatedRating && { rating: calculatedRating })
+    };
+
+    return res.status(201).json(response);
 
   } catch (error) {
     logServerlessFunction('visits-create', 'POST', userId, { 

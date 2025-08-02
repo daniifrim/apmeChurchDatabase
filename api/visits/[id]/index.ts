@@ -183,14 +183,22 @@ async function handleDeleteVisit(
     await serverlessStorage.deleteVisit(visitId);
 
     // Create activity for visit deletion
-    await serverlessStorage.createActivity({
-      churchId: existingVisit.churchId,
-      userId,
-      type: 'note',
-      title: 'Visit deleted',
-      description: `Visit from ${new Date(existingVisit.visitDate).toLocaleDateString('ro-RO')} was deleted`,
-      activityDate: new Date(),
-    });
+    try {
+      await serverlessStorage.createActivity({
+        churchId: existingVisit.churchId,
+        userId,
+        type: 'note',
+        title: 'Visit deleted',
+        description: `Visit from ${existingVisit.visitDate ? new Date(existingVisit.visitDate).toLocaleDateString('ro-RO') : 'unknown date'} was deleted`,
+        activityDate: new Date(),
+      });
+    } catch (activityError) {
+      // Log activity creation error but don't fail the delete operation
+      logServerlessFunction('visit-delete-activity-error', 'DELETE', userId, { 
+        visitId,
+        activityError: activityError instanceof Error ? activityError.message : 'Unknown activity error'
+      });
+    }
 
     logServerlessFunction('visit-delete', 'DELETE', userId, { 
       visitId,
