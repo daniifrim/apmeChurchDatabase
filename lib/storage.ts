@@ -154,34 +154,19 @@ export class ServerlessStorage implements IServerlessStorage {
     regionId?: number;
     engagementLevel?: string;
   }): Promise<Church[]> {
-    // Start with basic church query
-    let query = supabase
-      .from('churches')
-      .select('*')
-      .eq('is_active', true);
-    
-    // Apply filters
-    if (filters?.search) {
-      query = query.or(`name.ilike.%${filters.search}%,address.ilike.%${filters.search}%,pastor.ilike.%${filters.search}%,city.ilike.%${filters.search}%`);
-    }
-    
-    if (filters?.county) {
-      query = query.eq('county', filters.county);
-    }
-    
-    if (filters?.countyId) {
-      query = query.eq('county_id', filters.countyId);
-    }
-    
-    if (filters?.engagementLevel) {
-      query = query.eq('engagement_level', filters.engagementLevel);
-    }
-    
-    const { data: churches, error } = await query.order('updated_at', { ascending: false });
-    
-    if (error) throw error;
-    if (!churches || churches.length === 0) return [];
-    
+    // Helper function to normalize text for diacritic-insensitive search
+    const normalizeForSearch = (text: string): string => {
+      return text
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[ăĂ]/g, 'a')
+        .replace(/[âÂ]/g, 'a')
+        .replace(/[îÎ]/g, 'i')
+        .replace(/[șȘ]/g, 's')
+        .replace(/[țȚ]/g, 't')
+        .toLowerCase();
+    };
+
     // Helper function to map database fields to frontend format
     const mapChurchFields = (church: any, county?: any) => ({
       ...church,
@@ -195,9 +180,133 @@ export class ServerlessStorage implements IServerlessStorage {
       countyId: church.county_id,
       counties: county
     });
+
+    // Start with basic church query
+    let query = supabase
+      .from('churches')
+      .select('*')
+      .eq('is_active', true);
     
-    // Get all counties and regions for the churches
-    const countyIds = [...new Set(churches.map(c => c.county_id).filter(Boolean))];
+    // If no search, apply other filters normally
+    if (!filters?.search) {
+      if (filters?.county) {
+        query = query.eq('county', filters.county);
+      }
+      
+      if (filters?.countyId) {
+        query = query.eq('county_id', filters.countyId);
+      }
+      
+      if (filters?.engagementLevel) {
+        query = query.eq('engagement_level', filters.engagementLevel);
+      }
+      
+      const { data: churches, error } = await query.order('updated_at', { ascending: false });
+      
+      if (error) throw error;
+      if (!churches || churches.length === 0) return [];
+      
+      // Continue with county/region processing
+      const countyIds = [...new Set(churches.map(c => c.county_id).filter(Boolean))];
+      
+      if (countyIds.length > 0) {
+        const { data: counties, error: countiesError } = await supabase
+          .from('counties')
+          .select(`
+            id,
+            name,
+            abbreviation,
+            rccp_region_id,
+            rccp_regions!rccp_region_id (
+              id,
+              name
+            )
+          `)
+          .in('id', countyIds);
+        
+        if (!countiesError && counties) {
+          const countiesMap = new Map(counties.map(c => [c.id, c]));
+          
+          let filteredChurches = churches;
+          if (filters?.regionId) {
+            filteredChurches = churches.filter(church => {
+              const county = countiesMap.get(church.county_id);
+              return county?.rccp_region_id === filters.regionId;
+            });
+          }
+          
+          return filteredChurches.map(church => 
+            mapChurchFields(church, church.county_id ? countiesMap.get(church.county_id) : undefined)
+          ) as Church[];
+        }
+      }
+      
+      return churches.map(church => mapChurchFields(church)) as Church[];
+    }
+    
+    // For search queries, fetch all churches and filter client-side for diacritic-insensitive search
+    const searchTerm = normalizeForSearch(filters.search);
+    
+    const { data: allChurches, error } = await query.order('updated_at', { ascending: false });
+    
+    if (error) throw error;
+    if (!allChurches || allChurches.length === 0) return [];
+    
+    // Filter churches client-side for diacritic-insensitive search
+    let filteredChurches = allChurches.filter(church => {
+      const searchableFields = [
+        church.name,
+        church.address,
+        church.pastor,
+        church.city,
+        church.county
+      ].filter(Boolean);
+      
+      return searchableFields.some(field => 
+        normalizeForSearch(String(field)).includes(searchTerm)
+      );
+    });
+    
+    // Apply other filters
+    if (filters?.county) {
+      filteredChurches = filteredChurches.filter(church => 
+        normalizeForSearch(church.county || '').includes(normalizeForSearch(filters.county!))
+      );
+    }
+    
+    if (filters?.countyId) {
+      filteredChurches = filteredChurches.filter(church => church.county_id === filters.countyId);
+    }
+    
+    if (filters?.engagementLevel) {
+      filteredChurches = filteredChurches.filter(church => church.engagement_level === filters.engagementLevel);
+    }
+    
+    if (filters?.regionId) {
+      // For region filtering with search, we need to get county data
+      const countyIds = [...new Set(filteredChurches.map(c => c.county_id).filter(Boolean))];
+      
+      if (countyIds.length > 0) {
+        const { data: counties, error: countiesError } = await supabase
+          .from('counties')
+          .select(`
+            id,
+            rccp_region_id
+          `)
+          .in('id', countyIds);
+        
+        if (!countiesError && counties) {
+          const countiesMap = new Map(counties.map(c => [c.id, c]));
+          filteredChurches = filteredChurches.filter(church => {
+            const county = countiesMap.get(church.county_id);
+            return county?.rccp_region_id === filters.regionId;
+          });
+        }
+      }
+    }
+    
+    // Continue with county/region processing for filtered churches
+    const countyIds = [...new Set(filteredChurches.map(c => c.county_id).filter(Boolean))];
     
     if (countyIds.length > 0) {
       const { data: counties, error: countiesError } = await supabase
@@ -215,17 +324,7 @@ export class ServerlessStorage implements IServerlessStorage {
         .in('id', countyIds);
       
       if (!countiesError && counties) {
-        // Map counties to churches
         const countiesMap = new Map(counties.map(c => [c.id, c]));
-        
-        // Apply region filter if needed
-        let filteredChurches = churches;
-        if (filters?.regionId) {
-          filteredChurches = churches.filter(church => {
-            const county = countiesMap.get(church.county_id);
-            return county?.rccp_region_id === filters.regionId;
-          });
-        }
         
         return filteredChurches.map(church => 
           mapChurchFields(church, church.county_id ? countiesMap.get(church.county_id) : undefined)
@@ -233,8 +332,7 @@ export class ServerlessStorage implements IServerlessStorage {
       }
     }
     
-    // Fallback: return churches without county data
-    return churches.map(church => mapChurchFields(church)) as Church[];
+    return filteredChurches.map(church => mapChurchFields(church)) as Church[];
   }
 
   async getChurchById(id: number): Promise<Church | undefined> {
