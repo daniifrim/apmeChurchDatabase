@@ -1,5 +1,62 @@
 ---
 date: "2025-08-02T00:00:00Z"
+type: "Enhancement"
+scope: ["frontend", "ui-ux"]
+author: "Dani"
+impact: "Medium"
+summary: "Improved visit form user experience by converting star rating inputs to dropdown selectors with clear Romanian descriptions and removed church member count field to simplify data entry."
+files:
+  - "client/src/components/VisitForm.tsx"
+technologies:
+  - "React"
+  - "TypeScript"
+---
+
+### Visit Form UX Improvements: Dropdown Ratings and Simplified Fields
+
+-   **Dropdown Ratings**: Converted mission openness and hospitality from star rating buttons to dropdown selectors with clear options like "1 - Resistent", "2 - Interes minim", etc.
+-   **Clear Descriptions**: Each dropdown selection shows full Romanian description below the field, improving user understanding of rating criteria.
+-   **Simplified Data Entry**: Removed "Numărul de membri" (church member count) field to reduce form complexity and focus on essential visit data.
+-   **Updated Calculations**: Modified financial score calculation to use only per-attendee ratios instead of member-based calculations.
+-   **Better Visual Hierarchy**: Added Clock icon to visit duration field for consistency with other form elements.
+-   **Impact**: Streamlined form reduces confusion about rating meanings and makes the evaluation process more intuitive for users.
+
+---
+date: "2025-08-02T00:00:00Z"
+type: "Feature"
+scope: ["frontend", "backend", "database", "ratings"]
+author: "Dani"
+impact: "High"
+summary: "Enhanced the visit logging system with integrated church rating functionality. Users can now log visits and provide comprehensive Romanian-specific church ratings in a single streamlined form, implementing the full church star rating system design."
+files:
+  - "client/src/components/VisitForm.tsx"
+  - "api/churches/[id]/visits.ts"
+  - "shared/schema.ts"
+  - "lib/storage.ts"
+  - "migrations/0002_add_attendees_count_to_visit_ratings.sql"
+technologies:
+  - "React"
+  - "TypeScript"
+  - "Node.js"
+  - "PostgreSQL"
+  - "Supabase"
+  - "Drizzle ORM"
+---
+
+### Enhanced Visit Logging with Integrated Church Rating System
+
+-   **Combined Workflow**: Transformed two-step process into single form allowing visit logging with optional comprehensive church rating.
+-   **Romanian-Specific Criteria**: Implemented dropdown-based rating system with Romanian descriptions for "Deschidere generală pentru misiune" and "Ospitalitate" (1-5 scale).
+-   **Financial Tracking**: Added fields for offerings amount, church member count, and missionary support tracking with automatic per-person ratio calculations.
+-   **Real-Time Preview**: Added live star rating calculation (1-5 stars) that updates as users fill rating fields using weighted formula (mission openness 35%, hospitality 25%, financial 25%, missionary bonus 15%).
+-   **Database Enhancement**: Extended `visit_ratings` table schema with `attendees_count` column and updated all related APIs and storage methods.
+-   **Atomic Transactions**: Backend creates visit and rating records in single transaction, ensuring data consistency and setting `isRated: true` when ratings provided.
+-   **Progressive Disclosure**: Expandable rating section maintains clean UX while providing comprehensive evaluation capabilities.
+-   **Backward Compatibility**: Maintains support for visit-only submissions while encouraging rating completion.
+-   **Impact**: Significantly improved data collection rate for church evaluations by integrating rating into natural visit workflow, supporting data-driven missionary outreach decisions.
+
+---
+date: "2025-08-02T00:00:00Z"
 type: "Feature"
 scope: ["frontend", "backend", "search"]
 author: "Dani"
