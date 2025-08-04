@@ -85,28 +85,6 @@ export default function ListView() {
 
 
 
-  if (selectedChurch) {
-    return (
-      <div className="h-full flex flex-col">
-        <div className="flex items-center p-4 border-b border-gray-200 bg-white">
-          <button 
-            onClick={() => setSelectedChurch(null)}
-            className="mr-3 p-1 hover:bg-gray-100 rounded"
-          >
-            <ArrowLeftIcon className="h-6 w-6 text-gray-600" />
-          </button>
-          <h1 className="text-lg font-semibold">Church Details</h1>
-        </div>
-        
-        <div className="flex-1 overflow-y-auto pb-20">
-          <ChurchDetailsPanel
-            church={selectedChurch}
-            onClose={() => setSelectedChurch(null)}
-          />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="h-full flex flex-col bg-gray-50">
@@ -189,6 +167,13 @@ export default function ListView() {
         )}
       </div>
 
+      {/* Church Details Panel - Overlay */}
+      {selectedChurch && (
+        <ChurchDetailsPanel
+          church={selectedChurch}
+          onClose={() => setSelectedChurch(null)}
+        />
+      )}
     </div>
   );
 }

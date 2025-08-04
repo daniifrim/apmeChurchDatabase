@@ -137,11 +137,11 @@ export default function VisitDetailsModal({ visitId, onClose, onUpdate }: VisitD
   });
 
   const handleEditSubmit = () => {
+    const attendeesCount = editForm.attendeesCount ? parseInt(editForm.attendeesCount) : undefined;
     const updatedData = {
       visitDate: editForm.visitDate,
       notes: editForm.notes || undefined,
-      // Note: attendeesCount temporarily disabled due to schema mismatch
-      // attendeesCount: editForm.attendeesCount ? parseInt(editForm.attendeesCount) : undefined,
+      ...(attendeesCount !== undefined && !isNaN(attendeesCount) ? { attendeesCount } : {}),
     };
     updateVisitMutation.mutate(updatedData);
   };

@@ -8,7 +8,6 @@ interface InteractiveMapProps {
   searchQuery: string;
   selectedCountyId: string;
   selectedRegionId: string;
-  selectedEngagementLevel: string;
   selectedChurch: Church | null;
   onChurchSelect: (church: Church) => void;
   onChurchEdit?: (church: Church) => void;
@@ -27,7 +26,6 @@ export default function InteractiveMap({
   searchQuery,
   selectedCountyId,
   selectedRegionId,
-  selectedEngagementLevel,
   selectedChurch,
   onChurchSelect,
   onChurchEdit,
@@ -38,16 +36,25 @@ export default function InteractiveMap({
   const markersRef = useRef<L.LayerGroup | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { data: churches = [] } = useQuery<Church[]>({
-    queryKey: ["/api/churches", searchQuery, selectedCountyId, selectedRegionId, selectedEngagementLevel],
-    queryFn: () => {
+  const { data: churches = [], error: churchesError, isLoading } = useQuery<Church[]>({
+    queryKey: ["/api/churches", searchQuery, selectedCountyId, selectedRegionId],
+    queryFn: async () => {
       const params = new URLSearchParams();
       if (searchQuery) params.set('search', searchQuery);
       if (selectedCountyId) params.set('countyId', selectedCountyId);
       if (selectedRegionId) params.set('regionId', selectedRegionId);
-      if (selectedEngagementLevel) params.set('engagementLevel', selectedEngagementLevel);
       
-      return fetch(`/api/churches?${params}`).then(res => res.json());
+      const url = `/api/churches?${params}`;
+      console.log('🗺️ InteractiveMap: Fetching churches:', { url, params: Object.fromEntries(params) });
+      
+      const response = await fetch(url);
+      if (!response.ok) {
+        console.error('❌ InteractiveMap: API error:', response.status, response.statusText);
+        throw new Error(`Churches API error: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log('✅ InteractiveMap: Churches loaded:', { count: result.length });
+      return result;
     },
     retry: false,
   });
@@ -154,6 +161,27 @@ export default function InteractiveMap({
     userMarker.addTo(mapRef.current);
   }, [userLocation]);
 
+  console.log('🗺️ InteractiveMap render:', { 
+    searchQuery, 
+    selectedCountyId, 
+    selectedRegionId, 
+    churchesCount: churches.length,
+    isLoading,
+    hasError: !!churchesError
+  });
+
+  if (churchesError) {
+    console.error('❌ InteractiveMap: Rendering error state');
+    return (
+      <div className="h-full w-full flex items-center justify-center bg-gray-100">
+        <div className="text-center p-4">
+          <p className="text-red-600 font-medium">Failed to load map data</p>
+          <p className="text-gray-600 text-sm mt-1">{churchesError.message}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="h-full w-full relative">
       <div ref={containerRef} className="h-full w-full" />
@@ -183,28 +211,6 @@ export default function InteractiveMap({
         </button>
       </div>
 
-      {/* Legend */}
-      <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-3">
-        <h4 className="text-sm font-semibold text-dark-blue-grey mb-2">Engagement Levels</h4>
-        <div className="space-y-1 text-xs">
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full bg-growth-green"></div>
-            <span>High Engagement</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full bg-warm-orange"></div>
-            <span>Medium Engagement</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-            <span>Low Engagement</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full bg-ministry-blue"></div>
-            <span>New Church</span>
-          </div>
-        </div>
-      </div>
 
 
     </div>

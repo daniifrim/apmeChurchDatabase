@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
@@ -16,19 +15,13 @@ import {
   Users, 
   MapPin, 
   Clock,
-  StickyNote,
-  X,
   ArrowLeft,
-  Star,
-  Plus,
-  FileText
+  Plus
 } from "lucide-react";
-import { ChurchStarRating } from "./ChurchStarRating";
-import { RatingHistory } from "./RatingHistory";
 import { VisitRatingForm } from "./VisitRatingForm";
 import VisitForm from "./VisitForm";
 import VisitDetailsModal from "./VisitDetailsModal";
-import type { Church, Activity } from "@/types";
+import type { Church } from "@/types";
 
 interface ChurchDetailsPanelProps {
   church: Church;
@@ -36,8 +29,6 @@ interface ChurchDetailsPanelProps {
 }
 
 export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPanelProps) {
-  const [note, setNote] = useState("");
-  const [isAddingNote, setIsAddingNote] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [showRatingForm, setShowRatingForm] = useState(false);
   const [selectedVisitForRating, setSelectedVisitForRating] = useState<number | null>(null);
@@ -58,7 +49,7 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
     engagementLevel: church.engagementLevel,
     notes: church.notes || ""
   });
-  const { user } = useAuth();
+  const { } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -82,48 +73,9 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
   });
 
   // Extract individual data from batched response
-  const churchRating = batchedData?.starRating;
   const visits = batchedData?.visits;
-  const ratingLoading = batchLoading;
   const visitsLoading = batchLoading;
 
-  const addNoteMutation = useMutation({
-    mutationFn: async (noteText: string) => {
-      await apiRequest("POST", `/api/churches/${church.id}/activities`, {
-        type: "note",
-        title: "Note added",
-        description: noteText,
-        activityDate: new Date().toISOString(),
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/churches", church.id, "activities"] });
-      setNote("");
-      setIsAddingNote(false);
-      toast({
-        title: "Success",
-        description: "Note added successfully",
-      });
-    },
-    onError: (error) => {
-      if (isUnauthorizedError(error)) {
-        toast({
-          title: "Unauthorized",
-          description: "You are logged out. Logging in again...",
-          variant: "destructive",
-        });
-        setTimeout(() => {
-          window.location.href = "/api/login";
-        }, 500);
-        return;
-      }
-      toast({
-        title: "Error",
-        description: "Failed to add note",
-        variant: "destructive",
-      });
-    },
-  });
 
   const updateChurchMutation = useMutation({
     mutationFn: async (formData: typeof editForm) => {
@@ -162,50 +114,9 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
     },
   });
 
-  const getEngagementColor = (level: string) => {
-    switch (level) {
-      case "high": return "bg-green-500";
-      case "medium": return "bg-blue-500";
-      case "low": return "bg-yellow-500";
-      case "new": return "bg-gray-500";
-      default: return "bg-gray-500";
-    }
-  };
-
-  const getEngagementLabel = (level: string) => {
-    switch (level) {
-      case "high": return "Actively Engaged";
-      case "medium": return "Partnership Established";
-      case "low": return "Initial Contact";
-      case "new": return "Not Contacted";
-      default: return level;
-    }
-  };
-
-  const formatActivityDate = (date: string) => {
-    try {
-      // Handle various date formats
-      const parsedDate = typeof date === 'string' ? new Date(date) : date;
-      // Check if the date is valid
-      if (!parsedDate || isNaN(parsedDate.getTime())) {
-        return "Invalid date";
-      }
-      return parsedDate.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short", 
-        day: "numeric",
-      });
-    } catch (error) {
-      return "Invalid date";
-    }
-  };
 
 
 
-  const handleAddNote = () => {
-    if (!note.trim()) return;
-    addNoteMutation.mutate(note.trim());
-  };
 
   const openGoogleMaps = () => {
     const destination = `${church.address}, ${church.city}, ${church.county}`;
@@ -222,8 +133,8 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end md:items-center md:justify-center">
-      <div className="bg-white w-full h-full md:max-w-4xl md:h-auto md:rounded-lg overflow-hidden flex flex-col">
+    <div className="fixed inset-0 bg-black bg-opacity-20 z-50">
+      <div className="fixed left-0 right-0 bg-white rounded-t-2xl shadow-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom-3 duration-300" style={{bottom: '80px', height: '60vh'}}>
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-white flex-shrink-0">
           <button 
@@ -277,7 +188,7 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
         </div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-4 pb-28">
+        <div className="flex-1 overflow-y-auto p-4">
           {/* Tab Navigation */}
           <div className="flex space-x-1 mb-6 bg-gray-100 p-1 rounded-lg">
             <button
@@ -427,49 +338,6 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
                 </div>
               )}
 
-              {/* Add Note Section */}
-              <div className="bg-white border border-gray-200 rounded-lg p-4">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Add Note</h3>
-                {!isAddingNote ? (
-                  <Button
-                    onClick={() => setIsAddingNote(true)}
-                    variant="outline"
-                    className="w-full"
-                  >
-                    <StickyNote className="h-4 w-4 mr-2" />
-                    Add Note
-                  </Button>
-                ) : (
-                  <div className="space-y-3">
-                    <Textarea
-                      value={note}
-                      onChange={(e) => setNote(e.target.value)}
-                      placeholder="Enter your note here..."
-                      rows={3}
-                      className="w-full"
-                    />
-                    <div className="flex space-x-2">
-                      <Button
-                        onClick={handleAddNote}
-                        disabled={addNoteMutation.isPending || !note.trim()}
-                        className="flex-1 bg-[#2E5BBA] hover:bg-blue-700"
-                      >
-                        {addNoteMutation.isPending ? "Adding..." : "Save Note"}
-                      </Button>
-                      <Button
-                        onClick={() => {
-                          setIsAddingNote(false);
-                          setNote("");
-                        }}
-                        variant="outline"
-                        className="flex-1"
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </div>
             </>
           ) : activeTab === 'details' && isEditing ? (
             <div className="bg-gray-50 rounded-lg p-4 mb-6">

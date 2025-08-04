@@ -277,7 +277,7 @@ export const insertVisitSchema = z.object({
   purpose: z.string().optional(),
   notes: z.string().optional(),
   followUpRequired: z.boolean().optional(),
-  attendeesCount: z.number().positive().optional(),
+  attendeesCount: z.number().min(0).optional(),
   isRated: z.boolean().optional(),
 });
 
