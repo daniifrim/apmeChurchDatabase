@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import InteractiveMap from '@/components/InteractiveMap';
 import ChurchDetailsPanel from '@/components/ChurchDetailsPanel';
@@ -15,7 +15,9 @@ export default function MapView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCountyId, setSelectedCountyId] = useState('');
   const [selectedRegionId, setSelectedRegionId] = useState('');
-  const [selectedEngagementLevel, setSelectedEngagementLevel] = useState('');
+  
+  // Track filter auto-population to prevent loops
+  const [isAutoPopulating, setIsAutoPopulating] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
   const [isLocating, setIsLocating] = useState(false);
@@ -24,27 +26,81 @@ export default function MapView() {
 
   // Get user info for profile
   const { user } = useAuth();
-
+  
   // Parallel data fetching
-  const { data: filterOptions } = useQuery({
+  const { data: filterOptions, error: filterError, isLoading: filterLoading } = useQuery({
     queryKey: ['/api/filters'],
-    queryFn: () => fetch('/api/filters').then(res => res.json()).then(data => data.data),
+    queryFn: async () => {
+      console.log('📡 Fetching filter options...');
+      const response = await fetch('/api/filters');
+      if (!response.ok) {
+        throw new Error(`Filter API error: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log('✅ Filter options loaded:', result.data);
+      return result.data;
+    },
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
   });
 
-  const { data: churches = [] } = useQuery<Church[]>({
-    queryKey: ['/api/churches', searchQuery, selectedCountyId, selectedRegionId, selectedEngagementLevel],
-    queryFn: () => {
+  const { data: churches = [], error: churchesError, isLoading: churchesLoading } = useQuery<Church[]>({
+    queryKey: ['/api/churches', searchQuery, selectedCountyId, selectedRegionId],
+    queryFn: async () => {
       const params = new URLSearchParams();
       if (searchQuery) params.set('search', searchQuery);
       if (selectedCountyId) params.set('countyId', selectedCountyId);
       if (selectedRegionId) params.set('regionId', selectedRegionId);
-      if (selectedEngagementLevel) params.set('engagementLevel', selectedEngagementLevel);
       
-      return fetch(`/api/churches?${params}`).then(res => res.json());
+      const url = `/api/churches?${params}`;
+      console.log('📡 Fetching churches:', { url, params: Object.fromEntries(params) });
+      
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Churches API error: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log('✅ Churches loaded:', { count: result.length, sample: result[0] });
+      return result;
     },
     staleTime: 2 * 60 * 1000, // Cache for 2 minutes
   });
+  
+  // Monitor for errors
+  useEffect(() => {
+    if (filterError) {
+      console.error('❌ Filter error detected:', filterError);
+    }
+  }, [filterError]);
+  
+  useEffect(() => {
+    if (churchesError) {
+      console.error('❌ Churches error detected:', churchesError);
+    }
+  }, [churchesError]);
+  
+  // Smart filter logic: When county is selected, auto-populate region
+  useEffect(() => {
+    if (selectedCountyId && filterOptions?.counties && !isAutoPopulating) {
+      const selectedCounty = filterOptions.counties.find((c: any) => c.id.toString() === selectedCountyId);
+      if (selectedCounty && selectedCounty.rccpRegionId.toString() !== selectedRegionId) {
+        console.log('🤖 Auto-populating region from county:', selectedCounty.rccpRegionId);
+        setIsAutoPopulating(true);
+        setSelectedRegionId(selectedCounty.rccpRegionId.toString());
+        setTimeout(() => setIsAutoPopulating(false), 100);
+      }
+    }
+  }, [selectedCountyId, filterOptions, selectedRegionId, isAutoPopulating]);
+  
+  // Smart filter logic: When region is selected, clear county if it doesn't belong to region
+  useEffect(() => {
+    if (selectedRegionId && selectedCountyId && filterOptions?.counties && !isAutoPopulating) {
+      const selectedCounty = filterOptions.counties.find((c: any) => c.id.toString() === selectedCountyId);
+      if (selectedCounty && selectedCounty.rccpRegionId.toString() !== selectedRegionId) {
+        console.log('🤖 Clearing county as it does not belong to selected region');
+        setSelectedCountyId('');
+      }
+    }
+  }, [selectedRegionId, selectedCountyId, filterOptions, isAutoPopulating]);
 
   const handleChurchSelect = (church: Church) => {
     setSelectedChurch(church);
@@ -102,22 +158,46 @@ export default function MapView() {
     setIsAddingChurch(false);
   };
 
-  const filteredChurches = (churches || []).filter((church: Church) => church.isActive);
+  const filteredChurches = churches.filter((church: Church) => church.isActive);
   const displayedCount = filteredChurches.length;
-  const totalCount = (churches || []).length;
+  const totalCount = churches.length;
 
-  const engagementLevels = [
-    { level: 'high', label: 'Actively Engaged', color: 'bg-green-500' },
-    { level: 'medium', label: 'Partnership Established', color: 'bg-blue-500' },
-    { level: 'low', label: 'Initial Contact', color: 'bg-yellow-500' },
-    { level: 'new', label: 'Not Contacted', color: 'bg-gray-500' },
-  ];
 
   const getInitials = (firstName: string | null, lastName: string | null) => {
     const first = firstName?.[0] || "";
     const last = lastName?.[0] || "";
     return (first + last).toUpperCase() || "U";
   };
+
+  // Add error boundary and loading states
+  if (filterError || churchesError) {
+    console.error('❌ Render error:', { filterError, churchesError });
+    return (
+      <div className="h-full w-full flex items-center justify-center bg-gray-50">
+        <div className="text-center p-8">
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">Something went wrong</h2>
+          <p className="text-gray-600 mb-4">
+            {filterError ? 'Failed to load filter options' : 'Failed to load churches'}
+          </p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-[#2E5BBA] text-white rounded-lg hover:bg-blue-700"
+          >
+            Reload Page
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  console.log('🔄 MapView render:', { 
+    searchQuery, 
+    selectedCountyId, 
+    selectedRegionId, 
+    churchesCount: churches.length,
+    filterLoading,
+    churchesLoading
+  });
 
   return (
     <div className="h-full w-full relative">
@@ -157,7 +237,6 @@ export default function MapView() {
             searchQuery={searchQuery}
             selectedCountyId={selectedCountyId}
             selectedRegionId={selectedRegionId}
-            selectedEngagementLevel={selectedEngagementLevel}
             selectedChurch={selectedChurch}
             onChurchSelect={handleChurchSelect}
             onChurchEdit={handleChurchEdit}
@@ -166,18 +245,6 @@ export default function MapView() {
           />
         </div>
 
-        {/* Permanent Legend - Bottom Left */}
-        <div className="absolute bottom-4 left-4 z-20 bg-white rounded-lg shadow-lg border border-gray-200 p-3">
-          <h3 className="text-sm font-semibold text-gray-900 mb-2">Engagement Levels</h3>
-          <div className="space-y-2">
-            {engagementLevels.map((item) => (
-              <div key={item.level} className="flex items-center space-x-2">
-                <div className={`w-3 h-3 rounded-full ${item.color}`}></div>
-                <span className="text-xs text-gray-700">{item.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
 
         {/* Floating Action Buttons - Bottom Right of map */}
         <div className="absolute bottom-4 right-4 z-20 flex flex-col space-y-3">
@@ -247,10 +314,14 @@ export default function MapView() {
                 <select
                   value={selectedRegionId}
                   onChange={(e) => {
+                    console.log('🔄 Region changed:', e.target.value);
                     setSelectedRegionId(e.target.value);
-                    setSelectedCountyId(''); // Clear county when region changes
+                    if (!isAutoPopulating) {
+                      setSelectedCountyId(''); // Clear county when region changes manually
+                    }
                   }}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                  disabled={filterLoading}
                 >
                   <option value="">All Regions</option>
                   {filterOptions?.regions?.map((region: any) => (
@@ -259,6 +330,11 @@ export default function MapView() {
                     </option>
                   ))}
                 </select>
+                {selectedCountyId && selectedRegionId && (
+                  <p className="text-xs text-blue-600 mt-1">
+                    ✓ Region auto-selected based on county
+                  </p>
+                )}
               </div>
 
               {/* County Filter */}
@@ -268,8 +344,11 @@ export default function MapView() {
                   value={selectedCountyId}
                   onChange={(e) => setSelectedCountyId(e.target.value)}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                  disabled={filterLoading}
                 >
-                  <option value="">All Counties</option>
+                  <option value="">
+                    {selectedRegionId ? 'All Counties in Region' : 'All Counties'}
+                  </option>
                   {filterOptions?.counties
                     ?.filter((county: any) => !selectedRegionId || county.rccpRegionId.toString() === selectedRegionId)
                     ?.map((county: any) => (
@@ -278,23 +357,13 @@ export default function MapView() {
                     </option>
                   ))}
                 </select>
+                {selectedRegionId && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Showing counties in selected region only
+                  </p>
+                )}
               </div>
               
-              {/* Engagement Level Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Filter by Engagement</label>
-                <select
-                  value={selectedEngagementLevel}
-                  onChange={(e) => setSelectedEngagementLevel(e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
-                >
-                  <option value="">All Engagement Levels</option>
-                  <option value="high">Actively Engaged</option>
-                  <option value="medium">Partnership Established</option>
-                  <option value="low">Initial Contact</option>
-                  <option value="new">Not Contacted</option>
-                </select>
-              </div>
             </div>
             
             {/* Apply Button */}
@@ -307,10 +376,11 @@ export default function MapView() {
               </button>
               <button 
                 onClick={() => {
+                  console.log('🧹 Clearing all filters');
                   setSearchQuery('');
                   setSelectedCountyId('');
                   setSelectedRegionId('');
-                  setSelectedEngagementLevel('');
+                  setIsAutoPopulating(false);
                 }}
                 className="px-6 bg-gray-200 hover:bg-gray-300 text-gray-700 py-3 rounded-lg font-medium transition-colors duration-200"
               >

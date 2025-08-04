@@ -72,13 +72,15 @@ export default function ChurchPopup({ church, onClose, onEdit, onViewDetails }: 
       <div className="px-4 py-2">
         <button 
           onClick={openDirections}
-          className="flex items-start space-x-2 text-gray-600 hover:text-[#2E5BBA] transition-colors w-full text-left group"
+          className="flex items-center space-x-2 text-gray-600 hover:text-[#2E5BBA] transition-colors w-full text-left group"
         >
-          <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
+          <MapPin className="h-4 w-4 flex-shrink-0" />
           <span className="text-sm flex-1">
             {church.address}, {church.city}, {church.county}
           </span>
-          <Navigation className="h-4 w-4 mt-0.5 flex-shrink-0 opacity-60 group-hover:opacity-100" />
+          <div className="w-8 h-8 bg-[#2E5BBA] hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors flex-shrink-0">
+            <Navigation className="h-4 w-4 text-white" />
+          </div>
         </button>
         {church.pastor && (
           <div className="mt-2 text-sm text-gray-600">

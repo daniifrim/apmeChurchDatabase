@@ -99,7 +99,6 @@ export default function Dashboard() {
               searchQuery={searchQuery}
               selectedCountyId={selectedCountyId}
               selectedRegionId=""
-              selectedEngagementLevel={selectedEngagementLevel}
               selectedChurch={selectedChurch}
               onChurchSelect={handleChurchSelect}
             />

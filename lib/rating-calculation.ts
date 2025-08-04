@@ -1,6 +1,6 @@
 import { CreateRatingRequest, CalculatedRating } from "@shared/schema";
-import { withCalculationErrorHandling, RatingCalculationError } from "@/lib/rating-error-handler";
-import { logger } from "@/lib/logger";
+import { withCalculationErrorHandling, RatingCalculationError } from "./rating-error-handler";
+import { logger } from "./logger";
 
 /**
  * Service for calculating church visit ratings using weighted formula (Version 2.0)

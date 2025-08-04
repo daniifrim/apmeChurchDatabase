@@ -76,26 +76,26 @@ export const mockVisits = [
   {
     id: 1,
     churchId: 1,
-    missionaryId: 3,
+    visitedBy: '3',
     visitDate: new Date('2024-01-15'),
     purpose: "Initial contact",
-    outcome: "Positive reception",
-    followUpNeeded: true,
-    followUpDate: new Date('2024-02-15'),
     notes: "Great first meeting with the pastor",
+    followUpRequired: true,
+    attendeesCount: 80,
+    isRated: true,
     createdAt: new Date('2024-01-15'),
     updatedAt: new Date('2024-01-15')
   },
   {
     id: 2,
     churchId: 2,
-    missionaryId: 3,
+    visitedBy: '3',
     visitDate: new Date('2024-01-20'),
     purpose: "Follow-up meeting",
-    outcome: "Scheduled presentation",
-    followUpNeeded: true,
-    followUpDate: new Date('2024-02-20'),
     notes: "Pastor interested in APME partnership",
+    followUpRequired: true,
+    attendeesCount: 120,
+    isRated: false,
     createdAt: new Date('2024-01-20'),
     updatedAt: new Date('2024-01-20')
   }
@@ -281,7 +281,7 @@ export const testRatingCalculationInputs = {
 export const testConfiguration = {
   baseUrl: 'http://localhost:3000',
   testChurchId: 1,
-  testUserId: 3,
+  testUserId: '3',
   timeout: 5000,
   retries: 3
 };

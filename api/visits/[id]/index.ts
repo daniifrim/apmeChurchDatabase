@@ -90,6 +90,10 @@ async function handleUpdateVisit(
   visitId: number
 ) {
   logServerlessFunction('visit-update', 'PUT', userId, { visitId });
+  console.log('=== DEBUG: handleUpdateVisit ===');
+  console.log('visitId:', visitId);
+  console.log('userId:', userId);
+  console.log('req.body:', req.body);
 
   try {
     // Check if visit exists
@@ -135,10 +139,23 @@ async function handleUpdateVisit(
     return res.status(200).json(updatedVisit);
 
   } catch (error) {
+    console.error('=== ERROR in handleUpdateVisit ===');
+    console.error('Error:', error);
+    console.error('Stack:', error instanceof Error ? error.stack : 'No stack');
     logServerlessFunction('visit-update', 'PUT', userId, { 
       visitId,
       error: error instanceof Error ? error.message : 'Unknown error' 
     });
+    
+    // In development, return detailed error
+    if (process.env.NODE_ENV === 'development') {
+      return res.status(500).json({
+        success: false,
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined
+      });
+    }
+    
     return handleServerlessError(error, res);
   }
 }
