@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
+import { useChurchBatchData } from "@/lib/church-api-batch";
 import { 
   Calendar, 
   Edit, 
@@ -48,6 +49,7 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
     address: church.address,
     city: church.city,
     county: church.county,
+    countyId: church.countyId,
     pastor: church.pastor || "",
     phone: church.phone || "",
     email: church.email || "",
@@ -67,19 +69,23 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
     queryFn: () => fetch('/api/filters').then(res => res.json()).then(data => data.data)
   });
 
-  // Fetch church star rating
-  const { data: churchRating, isLoading: ratingLoading } = useQuery({
-    queryKey: ["church-star-rating", church.id],
-    queryFn: () => apiRequest('GET', `/api/churches/${church.id}/star-rating`).then(res => res.json()),
+  // Use batched API call for church data, rating, and visits
+  const batchOptions = useChurchBatchData(church.id, {
+    includeStarRating: true,
+    includeVisits: true,
+    includeRatingHistory: false
+  });
+
+  const { data: batchedData, isLoading: batchLoading } = useQuery({
+    ...batchOptions,
     enabled: !!church.id,
   });
 
-  // Fetch visits for rating buttons
-  const { data: visits, isLoading: visitsLoading } = useQuery({
-    queryKey: ["church-visits", church.id],
-    queryFn: () => apiRequest('GET', `/api/churches/${church.id}/visits`).then(res => res.json()),
-    enabled: !!church.id,
-  });
+  // Extract individual data from batched response
+  const churchRating = batchedData?.starRating;
+  const visits = batchedData?.visits;
+  const ratingLoading = batchLoading;
+  const visitsLoading = batchLoading;
 
   const addNoteMutation = useMutation({
     mutationFn: async (noteText: string) => {
@@ -207,7 +213,7 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
     window.open(googleMapsUrl, '_blank');
   };
 
-  const handleFormChange = (field: string, value: string) => {
+  const handleFormChange = (field: string, value: string | number) => {
     setEditForm(prev => ({ ...prev, [field]: value }));
   };
 
@@ -298,14 +304,7 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
           {/* Church Header / Edit Form */}
           {!isEditing ? (
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">{church.name}</h2>
-              <div className="flex items-center space-x-2 mb-3">
-                <Badge
-                  className={`text-white px-3 py-1 ${getEngagementColor(church.engagementLevel)}`}
-                >
-                  {getEngagementLabel(church.engagementLevel)}
-                </Badge>
-              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">{church.name}</h2>
               <div className="flex items-start space-x-2 text-gray-600 mb-2">
                 <MapPin className="h-5 w-5 mt-0.5 flex-shrink-0" />
                 <button 
@@ -355,29 +354,23 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">County</label>
                 <select
-                  value={editForm.county}
-                  onChange={(e) => handleFormChange('county', e.target.value)}
+                  value={editForm.countyId || ''}
+                  onChange={(e) => {
+                    const selectedCountyId = parseInt(e.target.value);
+                    const selectedCounty = filterOptions?.counties?.find((c: any) => c.id === selectedCountyId);
+                    handleFormChange('countyId', selectedCountyId);
+                    if (selectedCounty) {
+                      handleFormChange('county', selectedCounty.name);
+                    }
+                  }}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
                 >
                   <option value="">Select a county</option>
                   {filterOptions?.counties?.map((county: any) => (
-                    <option key={county.id} value={county.name}>
+                    <option key={county.id} value={county.id}>
                       {county.name} ({county.abbreviation})
                     </option>
                   ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Engagement Level</label>
-                <select
-                  value={editForm.engagementLevel}
-                  onChange={(e) => handleFormChange('engagementLevel', e.target.value)}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
-                >
-                  <option value="high">Actively Engaged</option>
-                  <option value="medium">Partnership Established</option>
-                  <option value="low">Initial Contact</option>
-                  <option value="new">Not Contacted</option>
                 </select>
               </div>
             </div>
@@ -394,17 +387,6 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
                     <span className="text-gray-600">Pastor:</span>
                     <span className="font-medium text-gray-900">{church.pastor || "N/A"}</span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Members:</span>
-                    <span className="flex items-center font-medium text-gray-900">
-                      <Users className="h-4 w-4 mr-2 text-gray-500" />
-                      {church.memberCount || "N/A"}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Founded:</span>
-                    <span className="font-medium text-gray-900">{church.foundedYear || "N/A"}</span>
-                  </div>
                   {church.phone && (
                     <div className="flex items-center justify-between">
                       <span className="text-gray-600">Phone:</span>
@@ -416,6 +398,13 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
                       </span>
                     </div>
                   )}
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600">Members:</span>
+                    <span className="flex items-center font-medium text-gray-900">
+                      <Users className="h-4 w-4 mr-2 text-gray-500" />
+                      {church.memberCount || "N/A"}
+                    </span>
+                  </div>
                   {church.email && (
                     <div className="flex items-center justify-between">
                       <span className="text-gray-600">Email:</span>
@@ -518,27 +507,15 @@ export default function ChurchDetailsPanel({ church, onClose }: ChurchDetailsPan
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Member Count</label>
-                    <input
-                      type="number"
-                      value={editForm.memberCount}
-                      onChange={(e) => handleFormChange('memberCount', e.target.value)}
-                      placeholder="Number of members"
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Founded Year</label>
-                    <input
-                      type="number"
-                      value={editForm.foundedYear}
-                      onChange={(e) => handleFormChange('foundedYear', e.target.value)}
-                      placeholder="Year founded"
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
-                    />
-                  </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Member Count</label>
+                  <input
+                    type="number"
+                    value={editForm.memberCount}
+                    onChange={(e) => handleFormChange('memberCount', e.target.value)}
+                    placeholder="Number of members"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#2E5BBA] focus:border-transparent"
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>

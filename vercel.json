@@ -9,63 +9,77 @@
       }
     }
   ],
-  "routes": [
+  "headers": [
     {
-      "src": "/api/auth/login",
-      "dest": "/api/auth/login.ts"
+      "source": "/(.*).html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
     },
     {
-      "src": "/api/auth/register",
-      "dest": "/api/auth/register.ts"
+      "source": "/sw.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        },
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
+        }
+      ]
     },
     {
-      "src": "/api/auth/user",
-      "dest": "/api/auth/user.ts"
+      "source": "/workbox-*.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
     },
     {
-      "src": "/api/auth/logout",
-      "dest": "/api/auth/logout.ts"
+      "source": "/manifest.webmanifest",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/manifest+json"
+        }
+      ]
     },
     {
-      "src": "/api/churches/([^/]+)/visits",
-      "dest": "/api/churches/[id]/visits.ts?id=$1"
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
-      "src": "/api/churches/([^/]+)/activities",
-      "dest": "/api/churches/[id]/activities.ts?id=$1"
-    },
-    {
-      "src": "/api/churches/([^/]+)",
-      "dest": "/api/churches/[id].ts?id=$1"
-    },
-    {
-      "src": "/api/churches",
-      "dest": "/api/churches/index.ts"
-    },
-    {
-      "src": "/api/analytics",
-      "dest": "/api/analytics.ts"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/dist/public/index.html"
+      "source": "/icons/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ],
-  "functions": {
-    "api/**/*.ts": {
-      "runtime": "nodejs18.x"
+  "rewrites": [
+    {
+      "source": "/((?!api).*)",
+      "destination": "/index.html"
     }
-  },
-  "env": {
-    "SUPABASE_URL": "@supabase-url",
-    "SUPABASE_ANON_KEY": "@supabase-anon-key",
-    "SUPABASE_SERVICE_ROLE_KEY": "@supabase-service-role-key",
-    "SESSION_SECRET": "@session-secret"
-  },
+  ],
   "build": {
     "env": {
       "VITE_SUPABASE_URL": "@supabase-url",
-      "VITE_SUPABASE_ANON_KEY": "@supabase-anon-key"
+      "VITE_SUPABASE_ANON_KEY": "@supabase-anon-key",
+      "VITE_API_BASE_URL": "@api-base-url"
     }
   }
 }

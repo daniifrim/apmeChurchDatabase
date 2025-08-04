@@ -143,22 +143,27 @@ export const visitRatings = pgTable("visit_ratings", {
   index("idx_ratings_missionary").on(table.missionaryId),
 ]);
 
-// Church star ratings - aggregated ratings per church
+// Church star ratings - aggregated ratings per church (Version 2.0)
 export const churchStarRatings = pgTable("church_star_ratings", {
   id: serial("id").primaryKey(),
   churchId: integer("church_id").references(() => churches.id, { onDelete: "cascade" }).notNull().unique(),
   
-  // Overall metrics
+  // Overall Star Rating (Average of all visit ratings)
   averageStars: decimal("average_stars", { precision: 2, scale: 1 }),
+  
+  // Church-Level Attribute (Displayed as a separate badge)
+  missionarySupportCount: integer("missionary_support_count").default(0).notNull(),
+  
+  // Visit Statistics
   totalVisits: integer("total_visits").default(0).notNull(),
   visitsLast30Days: integer("visits_last_30_days").default(0).notNull(),
   visitsLast90Days: integer("visits_last_90_days").default(0).notNull(),
   
-  // Rating breakdowns
+  // Rating Breakdown (Reflects the visit experience)
   avgMissionOpenness: decimal("avg_mission_openness", { precision: 3, scale: 2 }),
   avgHospitality: decimal("avg_hospitality", { precision: 3, scale: 2 }),
   avgFinancialGenerosity: decimal("avg_financial_generosity", { precision: 3, scale: 2 }),
-  avgMissionarySupport: decimal("avg_missionary_support", { precision: 3, scale: 2 }),
+  // Note: avgMissionarySupport removed - now tracked as missionarySupportCount
   
   // Financial summary
   totalOfferingsCollected: decimal("total_offerings_collected", { precision: 12, scale: 2 }).default("0.00").notNull(),
@@ -342,29 +347,30 @@ export type InsertVisitRating = z.infer<typeof insertVisitRatingSchema>;
 export type CreateRatingRequest = z.infer<typeof createRatingRequestSchema>;
 export type ChurchStarRating = typeof churchStarRatings.$inferSelect;
 
-// Calculated rating response type
+// Calculated rating response type (Version 2.0)
 export type CalculatedRating = {
   starRating: number;
   financialScore: number;
-  missionaryBonus: number;
+  missionaryBonus: number; // Deprecated in v2.0 - kept for backward compatibility
   breakdown: {
     missionOpenness: number;
     hospitality: number;
     financial: number;
-    missionaryBonus: number;
+    missionaryBonus: number; // Deprecated in v2.0 - kept for backward compatibility
   };
 };
 
-// Church rating summary type
+// Church rating summary type (Version 2.0)
 export type ChurchRatingSummary = {
   averageStars: number;
+  missionarySupportCount: number; // Separate church-level attribute
   totalVisits: number;
   lastVisitDate?: Date;
   ratingBreakdown: {
     missionOpenness: number;
     hospitality: number;
     financialGenerosity: number;
-    missionarySupport: number;
+    // missionarySupport removed - now tracked separately as missionarySupportCount
   };
   totalOfferings: number;
   averageOfferingsPerVisit: number;

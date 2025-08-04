@@ -518,7 +518,17 @@ export default function VisitDetailsModal({ visitId, onClose, onUpdate }: VisitD
                 <div className="text-2xl font-bold text-blue-700 mb-1">
                   {rating.starRating}/5 Stars
                 </div>
-                <div className="text-sm text-blue-600">Overall Church Rating</div>
+                <div className="text-sm text-blue-600 mb-2">Overall Visit Rating</div>
+                
+                {/* Missionary Support Badge - Version 2.0 Separate Indicator */}
+                {rating.missionarySupportCount !== undefined && rating.missionarySupportCount > 0 && (
+                  <div className="flex justify-center">
+                    <div className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                      <Users className="w-4 h-4 mr-2" />
+                      Susține {rating.missionarySupportCount} misionari
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Rating Components */}
@@ -551,7 +561,7 @@ export default function VisitDetailsModal({ visitId, onClose, onUpdate }: VisitD
               </div>
 
               {/* Financial Information */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {rating.offeringsAmount !== undefined && rating.offeringsAmount > 0 && (
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <div className="flex items-center mb-2">
@@ -567,20 +577,6 @@ export default function VisitDetailsModal({ visitId, onClose, onUpdate }: VisitD
                   </div>
                 )}
 
-                {rating.missionarySupportCount !== undefined && rating.missionarySupportCount > 0 && (
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <div className="flex items-center mb-2">
-                      <Users className="h-5 w-5 text-orange-600 mr-2" />
-                      <span className="font-medium text-gray-900">Missionaries</span>
-                    </div>
-                    <div className="text-lg font-bold text-gray-900">
-                      {rating.missionarySupportCount}
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      Bonus: +{rating.missionaryBonus} stars
-                    </div>
-                  </div>
-                )}
 
                 {rating.visitDurationMinutes && (
                   <div className="bg-gray-50 p-4 rounded-lg">

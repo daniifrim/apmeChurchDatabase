@@ -1,16 +1,18 @@
 import { withAuth } from '../../../lib/auth';
 import { serverlessStorage } from '../../../lib/storage';
 import { handleServerlessError, validateRequestBody } from '../../../lib/errorHandler';
+import { handleRatingError, withDatabaseErrorHandling } from '../../../lib/rating-error-handler';
+import { createVisitRatingSchema, validateRequest, sanitizeInput } from '../../../lib/rating-validation';
+import { withRateLimit, rateLimiters } from '../../../lib/rate-limiter';
+import { triggerRatingRecalculation, withAutoRecalculation } from '../../../lib/rating-triggers';
 import { handleCors, logServerlessFunction } from '../../../lib/utils';
 import { createRatingRequestSchema } from '@shared/schema';
 import { RatingCalculationService } from '../../../lib/rating-calculation';
-import { RatingValidationService } from '../../../lib/rating-validation';
 import type { NextApiRequest, NextApiResponse } from '../../../lib/types';
 import type { JWTPayload } from '../../../lib/auth';
 import type { VisitRating, CreateRatingRequest } from '@shared/schema';
 
 const ratingCalculator = new RatingCalculationService();
-const ratingValidator = new RatingValidationService();
 
 interface RatingResponse {
   success?: boolean;
@@ -24,29 +26,67 @@ async function handler(
   req: NextApiRequest & { user: JWTPayload },
   res: NextApiResponse<RatingResponse | VisitRating>
 ) {
-  // Handle CORS
-  if (handleCors(req, res)) return;
+  try {
+    // Handle CORS
+    if (handleCors(req, res)) return;
 
-  const userId = req.user.sub;
-  const visitId = parseInt(req.query.id as string);
+    const userId = req.user.sub;
+    const visitId = parseInt(req.query.id as string);
 
-  if (isNaN(visitId)) {
-    return res.status(400).json({
-      success: false,
-      message: 'Invalid visit ID'
-    });
-  }
-
-  switch (req.method) {
-    case 'GET':
-      return handleGetVisitRating(req, res, userId, visitId);
-    case 'POST':
-      return handleCreateVisitRating(req, res, userId, visitId);
-    default:
-      return res.status(405).json({ 
-        success: false, 
-        message: `Method ${req.method} not allowed. Allowed methods: GET, POST` 
+    if (isNaN(visitId) || visitId <= 0) {
+      return res.status(400).json({
+        success: false,
+        code: 'INVALID_VISIT_ID',
+        message: 'Invalid visit ID',
+        messageRo: 'ID vizită invalid'
       });
+    }
+
+    // Apply rate limiting based on method
+    let rateLimitResult;
+    if (req.method === 'GET') {
+      rateLimitResult = rateLimiters.rating.check(req);
+    } else if (req.method === 'POST') {
+      rateLimitResult = rateLimiters.admin.check(req); // More restrictive for creating ratings
+    } else {
+      rateLimitResult = rateLimiters.default.check(req);
+    }
+
+    // Set rate limit headers
+    Object.entries(rateLimitResult.headers).forEach(([key, value]) => {
+      res.setHeader(key, value);
+    });
+
+    if (!rateLimitResult.allowed) {
+      return res.status(429).json({
+        success: false,
+        code: 'RATE_LIMIT_EXCEEDED',
+        message: 'Too many requests, please try again later',
+        messageRo: 'Prea multe cereri, vă rugăm să încercați din nou mai târziu',
+        retryAfter: rateLimitResult.headers['Retry-After']
+      });
+    }
+
+    switch (req.method) {
+      case 'GET':
+        return handleGetVisitRating(req, res, userId, visitId);
+      case 'POST':
+        return handleCreateVisitRating(req, res, userId, visitId);
+      default:
+        return res.status(405).json({ 
+          success: false,
+          code: 'METHOD_NOT_ALLOWED',
+          message: `Method ${req.method} not allowed. Allowed methods: GET, POST`,
+          messageRo: `Metoda ${req.method} nu este permisă. Metode permise: GET, POST`
+        });
+    }
+  } catch (error) {
+    return handleRatingError(error, res, {
+      endpoint: 'visit-rating',
+      method: req.method,
+      visitId: req.query.id,
+      userId: req.user?.sub
+    });
   }
 }
 
@@ -59,7 +99,12 @@ async function handleGetVisitRating(
   logServerlessFunction('visit-rating-get', 'GET', userId, { visitId });
 
   try {
-    const rating = await serverlessStorage.getVisitRating(visitId);
+    // Get visit rating with database error handling
+    const rating = await withDatabaseErrorHandling(
+      () => serverlessStorage.getVisitRating(visitId),
+      'get visit rating',
+      { visitId, userId }
+    );
 
     if (!rating) {
       return res.status(404).json({
@@ -74,22 +119,25 @@ async function handleGetVisitRating(
       starRating: rating.calculatedStarRating
     });
 
-    // Return rating with additional context
+    // Sanitize and return rating with additional context
+    const sanitizedRating = {
+      ...rating,
+      notes: sanitizeInput(rating.notes || ''),
+      breakdown: {
+        missionOpenness: rating.missionOpennessRating,
+        hospitality: rating.hospitalityRating,
+        financial: Math.max(0, Number(rating.financialScore)),
+        missionaryBonus: Math.max(0, Number(rating.missionaryBonus))
+      },
+      descriptions: {
+        missionOpenness: ratingCalculator.getMissionOpennessDescription(rating.missionOpennessRating),
+        hospitality: ratingCalculator.getHospitalityDescription(rating.hospitalityRating)
+      }
+    };
+
     return res.status(200).json({
       success: true,
-      data: {
-        ...rating,
-        breakdown: {
-          missionOpenness: rating.missionOpennessRating,
-          hospitality: rating.hospitalityRating,
-          financial: Number(rating.financialScore),
-          missionaryBonus: Number(rating.missionaryBonus)
-        },
-        descriptions: {
-          missionOpenness: ratingCalculator.getMissionOpennessDescription(rating.missionOpennessRating),
-          hospitality: ratingCalculator.getHospitalityDescription(rating.hospitalityRating)
-        }
-      }
+      data: sanitizedRating
     });
 
   } catch (error) {
@@ -97,7 +145,11 @@ async function handleGetVisitRating(
       visitId,
       error: error instanceof Error ? error.message : 'Unknown error' 
     });
-    return handleServerlessError(error, res);
+    return handleRatingError(error, res, {
+      operation: 'get-visit-rating',
+      visitId,
+      userId
+    });
   }
 }
 
@@ -110,8 +162,12 @@ async function handleCreateVisitRating(
   logServerlessFunction('visit-rating-create', 'POST', userId, { visitId });
 
   try {
-    // Get visit details
-    const visit = await serverlessStorage.getVisitById(visitId);
+    // Get visit details with database error handling
+    const visit = await withDatabaseErrorHandling(
+      () => serverlessStorage.getVisitById(visitId),
+      'get visit by ID',
+      { visitId, userId }
+    );
     if (!visit) {
       return res.status(404).json({
         success: false,
@@ -120,8 +176,12 @@ async function handleCreateVisitRating(
       });
     }
 
-    // Check if visit is already rated
-    const existingRating = await serverlessStorage.getVisitRating(visitId);
+    // Check if visit is already rated with database error handling
+    const existingRating = await withDatabaseErrorHandling(
+      () => serverlessStorage.getVisitRating(visitId),
+      'check existing visit rating',
+      { visitId, userId }
+    );
     if (existingRating) {
       return res.status(409).json({
         success: false,
@@ -130,81 +190,98 @@ async function handleCreateVisitRating(
       });
     }
 
-    // Validate request body
-    const ratingData = validateRequestBody(req.body, createRatingRequestSchema);
+    // Validate request body with enhanced validation
+    const ratingData = validateRequest(
+      createVisitRatingSchema,
+      {
+        ...req.body,
+        visitId,
+        missionaryId: userId
+      },
+      'Invalid visit rating data'
+    );
 
     // Use attendees count from visit if not provided in rating
     const attendeesCount = ratingData.attendeesCount || visit.attendeesCount || 1;
 
-    // Validate visit can be rated
-    const visitValidation = ratingValidator.validateVisitForRating(
-      visitId,
-      visit.isRated || false,
-      userId,
-      visit.visitedBy
+    // Additional business logic validation
+    if (visit.isRated) {
+      return res.status(409).json({
+        success: false,
+        code: 'VISIT_ALREADY_RATED',
+        message: 'This visit has already been rated',
+        messageRo: 'Această vizită a fost deja evaluată'
+      });
+    }
+
+    // Check if user can rate this visit (same user or admin)
+    if (visit.visitedBy !== userId && req.user.role !== 'administrator') {
+      return res.status(403).json({
+        success: false,
+        code: 'UNAUTHORIZED_RATING',
+        message: 'You can only rate visits you conducted',
+        messageRo: 'Puteți evalua doar vizitele pe care le-ați efectuat'
+      });
+    }
+
+    // Wrap the entire rating creation process with auto-recalculation
+    const result = await withAutoRecalculation(
+      async () => {
+        // Calculate rating
+        const calculatedRating = ratingCalculator.calculateVisitRating({
+          ...ratingData,
+          attendeesCount
+        });
+
+        // Create rating with database error handling
+        const newRating = await withDatabaseErrorHandling(
+          () => serverlessStorage.createVisitRating({
+            visitId,
+            missionaryId: userId,
+            missionOpennessRating: ratingData.missionOpennessRating,
+            hospitalityRating: ratingData.hospitalityRating,
+            missionarySupportCount: ratingData.missionarySupportCount,
+            offeringsAmount: ratingData.offeringsAmount,
+            churchMembers: ratingData.churchMembers,
+            visitDurationMinutes: ratingData.visitDurationMinutes,
+            notes: sanitizeInput(ratingData.notes || ''),
+            attendeesCount
+          }, calculatedRating),
+          'create visit rating',
+          { visitId, userId, churchId: visit.churchId }
+        );
+
+        // Create activity for rating creation with database error handling
+        await withDatabaseErrorHandling(
+          () => serverlessStorage.createActivity({
+            churchId: visit.churchId,
+            userId,
+            type: 'visit',
+            title: 'Visit rated',
+            description: sanitizeInput(`Visit rated with ${calculatedRating.starRating} stars`),
+            activityDate: new Date(),
+          }),
+          'create visit rating activity',
+          { visitId, userId, churchId: visit.churchId }
+        );
+
+        return { newRating, calculatedRating };
+      },
+      {
+        churchId: visit.churchId,
+        operationType: 'create',
+        visitId,
+        userId,
+        reason: 'visit rating created'
+      }
     );
 
-    if (!visitValidation.isValid) {
-      return res.status(400).json({
-        success: false,
-        message: 'Cannot rate this visit',
-        messageRo: 'Nu se poate evalua această vizită',
-        errors: visitValidation.errors.map(e => ({
-          field: e.field,
-          message: e.messageRo || e.message
-        }))
-      });
-    }
-
-    // Validate rating data
-    const dataValidation = ratingValidator.validateRatingData({
-      ...ratingData,
-      attendeesCount
-    });
-
-    if (!dataValidation.isValid) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid rating data',
-        messageRo: 'Date de evaluare invalide',
-        errors: dataValidation.errors.map(e => ({
-          field: e.field,
-          message: e.messageRo || e.message
-        }))
-      });
-    }
-
-    // Calculate rating
-    const calculatedRating = ratingCalculator.calculateVisitRating({
-      ...ratingData,
-      attendeesCount
-    });
-
-    // Create rating
-    const newRating = await serverlessStorage.createVisitRating({
-      visitId,
-      missionaryId: userId,
-      missionOpennessRating: ratingData.missionOpennessRating,
-      hospitalityRating: ratingData.hospitalityRating,
-      missionarySupportCount: ratingData.missionarySupportCount,
-      offeringsAmount: ratingData.offeringsAmount,
-      churchMembers: ratingData.churchMembers,
-      visitDurationMinutes: ratingData.visitDurationMinutes,
-      notes: ratingData.notes,
-    }, calculatedRating);
-
-    // Create activity for rating creation
-    await serverlessStorage.createActivity({
-      churchId: visit.churchId,
-      userId,
-      type: 'visit',
-      title: 'Visit rated',
-      description: `Visit rated with ${calculatedRating.starRating} stars`,
-      activityDate: new Date(),
-    });
-
-    // Get updated church rating
-    const churchRating = await serverlessStorage.getChurchStarRating(visit.churchId);
+    // Get updated church rating with database error handling
+    const churchRating = await withDatabaseErrorHandling(
+      () => serverlessStorage.getChurchStarRating(visit.churchId),
+      'get updated church star rating',
+      { churchId: visit.churchId, visitId, userId }
+    );
 
     logServerlessFunction('visit-rating-create', 'POST', userId, { 
       visitId,
@@ -212,16 +289,30 @@ async function handleCreateVisitRating(
       churchId: visit.churchId
     });
 
+    // Sanitize response data
+    const responseData = {
+      rating: {
+        ...result.newRating,
+        notes: sanitizeInput(result.newRating.notes || '')
+      },
+      calculatedStarRating: Math.max(1, Math.min(5, result.calculatedRating.starRating)),
+      churchAverageStars: churchRating ? 
+        Math.max(0, Math.min(5, Number(churchRating.averageStars))) : 
+        result.calculatedRating.starRating,
+      breakdown: {
+        missionOpenness: Math.max(1, Math.min(5, result.calculatedRating.breakdown.missionOpenness)),
+        hospitality: Math.max(1, Math.min(5, result.calculatedRating.breakdown.hospitality)),
+        financial: Math.max(0, Math.min(5, result.calculatedRating.breakdown.financial)),
+        missionaryBonus: Math.max(0, result.calculatedRating.breakdown.missionaryBonus)
+      },
+      autoRecalculationTriggered: true
+    };
+
     return res.status(201).json({
       success: true,
-      message: 'Rating created successfully',
-      messageRo: 'Evaluarea a fost creată cu succes',
-      data: {
-        rating: newRating,
-        calculatedStarRating: calculatedRating.starRating,
-        churchAverageStars: churchRating?.averageStars || calculatedRating.starRating,
-        breakdown: calculatedRating.breakdown
-      }
+      message: 'Rating created successfully and church rating updated',
+      messageRo: 'Evaluarea a fost creată cu succes și evaluarea bisericii a fost actualizată',
+      data: responseData
     });
 
   } catch (error) {
@@ -229,7 +320,11 @@ async function handleCreateVisitRating(
       visitId,
       error: error instanceof Error ? error.message : 'Unknown error' 
     });
-    return handleServerlessError(error, res);
+    return handleRatingError(error, res, {
+      operation: 'create-visit-rating',
+      visitId,
+      userId
+    });
   }
 }
 

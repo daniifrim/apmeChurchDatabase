@@ -184,7 +184,7 @@ export default function VisitForm({ church, onClose, onSuccess }: VisitFormProps
     setShowChurchDropdown(false);
   };
 
-  // Calculate real-time star rating preview
+  // Calculate real-time star rating preview using Version 2.0 dynamic weighting
   const calculatePreviewRating = () => {
     if (ratingData.missionOpennessRating === 0 || ratingData.hospitalityRating === 0) {
       return null;
@@ -193,24 +193,41 @@ export default function VisitForm({ church, onClose, onSuccess }: VisitFormProps
     const attendees = parseInt(formData.attendeesCount) || 1;
     const offeringsAmount = parseFloat(ratingData.offeringsAmount as string) || 0;
     
-    // Calculate financial score based on per-attendee ratio
-    const perAttendeeRatio = attendees > 0 ? offeringsAmount / attendees : 0;
-    
-    let financialScore = 1;
-    if (perAttendeeRatio >= 100) financialScore = 5;
-    else if (perAttendeeRatio >= 50) financialScore = 4;
-    else if (perAttendeeRatio >= 25) financialScore = 3;
-    else if (perAttendeeRatio >= 10) financialScore = 2;
-    
-    // Missionary support bonus (0.5 points per missionary, max 2 points)
-    const missionaryBonus = Math.min(ratingData.missionarySupportCount * 0.5, 2);
-    
-    // Weighted calculation (mission openness 35%, hospitality 25%, financial 25%, missionary bonus 15%)
+    // Base weights for Version 2.0
+    const baseWeights = {
+      missionOpenness: 0.40,
+      hospitality: 0.30,
+      financial: 0.30,
+    };
+
+    let financialScore = 0;
+    let finalWeights = { ...baseWeights };
+
+    const isFinancialApplicable = offeringsAmount && offeringsAmount > 0;
+
+    if (isFinancialApplicable) {
+      // Calculate financial score based on per-attendee ratio
+      const perAttendeeRatio = attendees > 0 ? offeringsAmount / attendees : 0;
+      
+      if (perAttendeeRatio >= 100) financialScore = 5;
+      else if (perAttendeeRatio >= 50) financialScore = 4;
+      else if (perAttendeeRatio >= 25) financialScore = 3;
+      else if (perAttendeeRatio >= 10) financialScore = 2;
+      else financialScore = 1;
+    } else {
+      // Dynamic weight redistribution when no offering is made
+      const financialWeight = finalWeights.financial;
+      finalWeights.financial = 0; // Remove financial weight
+      // Distribute the unused weight proportionally (55%/45% split)
+      finalWeights.missionOpenness += financialWeight * 0.55;
+      finalWeights.hospitality += financialWeight * 0.45;
+    }
+
+    // Version 2.0 weighted calculation (missionary support is NOT part of rating)
     const weightedScore = (
-      ratingData.missionOpennessRating * 0.35 +
-      ratingData.hospitalityRating * 0.25 +
-      financialScore * 0.25 +
-      missionaryBonus * 0.15
+      ratingData.missionOpennessRating * finalWeights.missionOpenness +
+      ratingData.hospitalityRating * finalWeights.hospitality +
+      financialScore * finalWeights.financial
     );
     
     return Math.round(Math.min(Math.max(weightedScore, 1), 5));
@@ -400,27 +417,39 @@ export default function VisitForm({ church, onClose, onSuccess }: VisitFormProps
           {showRating && (
             <div className="bg-gray-50 p-4 rounded-lg space-y-4">
               <div className="text-sm text-gray-600 mb-4">
-                Rate the church using Romanian-specific criteria. All rating fields are optional.
+                <strong>Version 2.0 Rating System:</strong> Rate this specific visit experience. Missionary support is tracked separately as a church-level attribute.
               </div>
 
               {/* Real-time Rating Preview */}
               {previewRating && (
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm font-medium text-blue-700">Calculated Rating:</span>
-                    <div className="flex items-center">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star
-                          key={star}
-                          className={`w-4 h-4 ${
-                            star <= previewRating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                          }`}
-                        />
-                      ))}
-                      <span className="ml-2 text-sm font-medium text-blue-700">
-                        {previewRating}/5 stars
-                      </span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm font-medium text-blue-700">Visit Rating:</span>
+                      <div className="flex items-center">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`w-4 h-4 ${
+                              star <= previewRating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                            }`}
+                          />
+                        ))}
+                        <span className="ml-2 text-sm font-medium text-blue-700">
+                          {previewRating}/5 stars
+                        </span>
+                      </div>
                     </div>
+                    {ratingData.missionarySupportCount > 0 && (
+                      <div className="bg-blue-100 px-2 py-1 rounded-full">
+                        <span className="text-xs font-medium text-blue-800">
+                          Susține {ratingData.missionarySupportCount} misionari
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-xs text-blue-600 mt-2">
+                    Version 2.0: Missionary support displayed separately as church attribute
                   </div>
                 </div>
               )}

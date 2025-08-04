@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Star, User, Calendar, DollarSign, Clock, MessageSquare, Filter } from 'lucide-react';
+import { FixedSizeList as List } from 'react-window';
+import { Star, User, Calendar, DollarSign, Clock, MessageSquare, Filter, Loader2, RefreshCw } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { useChurchRatingHistory } from '@/hooks/useChurchRating';
 
 interface RatingHistoryProps {
   churchId: number;
@@ -124,24 +126,35 @@ function RatingCard({ rating }: { rating: VisitRating }) {
           <StarDisplay rating={rating.calculatedStarRating} size="md" />
         </div>
 
-        {/* Rating Breakdown */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="flex items-center justify-between p-2 bg-blue-50 rounded">
-            <span className="text-xs text-blue-700">Deschidere Misiune</span>
+        {/* Missionary Support Badge - Version 2.0 Separate Indicator */}
+        {rating.missionarySupportCount > 0 && (
+          <div className="flex justify-center mb-4">
+            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+              <User className="w-3 h-3 mr-1" />
+              Susține {rating.missionarySupportCount} misionari
+            </Badge>
+          </div>
+        )}
+
+        {/* Rating Breakdown - Version 2.0: Only visit-specific metrics */}
+        <div className="grid grid-cols-1 gap-3">
+          <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+            <span className="text-sm text-blue-700 font-medium">Deschidere Misiune</span>
             <StarDisplay rating={rating.missionOpennessRating} />
           </div>
-          <div className="flex items-center justify-between p-2 bg-purple-50 rounded">
-            <span className="text-xs text-purple-700">Ospitalitate</span>
+          <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+            <span className="text-sm text-purple-700 font-medium">Ospitalitate</span>
             <StarDisplay rating={rating.hospitalityRating} />
           </div>
-          <div className="flex items-center justify-between p-2 bg-green-50 rounded">
-            <span className="text-xs text-green-700">Susținere Misionari</span>
-            <span className="text-xs font-medium">{rating.missionarySupportCount}</span>
-          </div>
-          <div className="flex items-center justify-between p-2 bg-yellow-50 rounded">
-            <span className="text-xs text-yellow-700">Ofrande</span>
-            <span className="text-xs font-medium">{formatCurrency(rating.offeringsAmount)}</span>
-          </div>
+          {rating.offeringsAmount > 0 && (
+            <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+              <span className="text-sm text-yellow-700 font-medium">Generozitate Financiară</span>
+              <div className="text-right">
+                <div className="text-sm font-medium">{formatCurrency(rating.offeringsAmount)}</div>
+                <div className="text-xs text-yellow-600">Scor: {rating.breakdown?.financial?.toFixed(1) || 'N/A'}/5</div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Additional Details */}
@@ -175,26 +188,33 @@ function RatingCard({ rating }: { rating: VisitRating }) {
   );
 }
 
+// Virtualized wrapper component for react-window
+interface VirtualizedRatingCardProps {
+  index: number;
+  style: React.CSSProperties;
+  data: VisitRating[];
+}
+
+const VirtualizedRatingCard: React.FC<VirtualizedRatingCardProps> = ({ index, style, data }) => {
+  const rating = data[index];
+  return (
+    <div style={style} className="px-1">
+      <RatingCard rating={rating} />
+    </div>
+  );
+};
+
 export function RatingHistory({ churchId, churchName }: RatingHistoryProps) {
   const [sortBy, setSortBy] = useState<'date' | 'rating'>('date');
   const [filterRating, setFilterRating] = useState<string>('all');
   const [limit, setLimit] = useState(10);
 
-  const { data, isLoading, error, refetch } = useQuery<RatingHistoryData>({
-    queryKey: ['church-rating-history', churchId, limit],
-    queryFn: async () => {
-      const response = await fetch(`/api/churches/${churchId}/star-rating/history?limit=${limit}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch rating history');
-      }
-      return response.json();
-    },
-  });
+  const { data, isLoading, error, refetch, isFetching } = useChurchRatingHistory(churchId, limit);
 
-  const filteredAndSortedRatings = React.useMemo(() => {
+  const filteredAndSortedRatings = useMemo(() => {
     if (!data?.ratings) return [];
 
-    let filtered = data.ratings;
+    let filtered = [...data.ratings]; // Create a shallow copy to avoid mutating original array
 
     // Filter by rating
     if (filterRating !== 'all') {
@@ -275,16 +295,35 @@ export function RatingHistory({ churchId, churchName }: RatingHistoryProps) {
   }
 
   return (
-    <Card>
+    <Card className="relative">
       <CardHeader>
         <div className="flex items-start justify-between">
-          <div>
-            <CardTitle>Istoric Evaluări</CardTitle>
-            <CardDescription>{churchName} - {data.ratings.length} evaluări</CardDescription>
+          <div className="flex items-center gap-2">
+            <div>
+              <CardTitle>Istoric Evaluări</CardTitle>
+              <CardDescription>{churchName} - {data.ratings.length} evaluări</CardDescription>
+            </div>
+            {isFetching && !isLoading && (
+              <div className="flex items-center gap-1 text-blue-600">
+                <Loader2 className="w-3 h-3 animate-spin" />
+                <span className="text-xs">Actualizare...</span>
+              </div>
+            )}
           </div>
           
           {/* Filters */}
           <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => refetch()}
+              disabled={isFetching}
+              className="h-9 w-9 p-0"
+              title="Reîmprospătează datele"
+            >
+              <RefreshCw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
+            </Button>
+            
             <Select value={sortBy} onValueChange={(value: 'date' | 'rating') => setSortBy(value)}>
               <SelectTrigger className="w-32">
                 <SelectValue />
@@ -314,39 +353,63 @@ export function RatingHistory({ churchId, churchName }: RatingHistoryProps) {
       </CardHeader>
       
       <CardContent>
-        <div className="space-y-4">
-          {filteredAndSortedRatings.map((rating) => (
-            <RatingCard key={rating.id} rating={rating} />
-          ))}
-          
-          {/* Load More */}
-          {data.pagination.hasMore && (
-            <div className="text-center pt-4">
-              <Button 
-                variant="outline" 
-                onClick={() => setLimit(prev => prev + 10)}
+        {/* Virtualized List for Performance */}
+        {filteredAndSortedRatings.length > 0 ? (
+          <div>
+            <div className="h-96 mb-4"> {/* Fixed height container for virtualization */}
+              <List
+                height={384} // 24rem in pixels
+                width="100%" // Required property for FixedSizeList
+                itemCount={filteredAndSortedRatings.length}
+                itemSize={200} // Approximate height of each RatingCard
+                itemData={filteredAndSortedRatings}
               >
-                Încarcă mai multe
-              </Button>
+                {VirtualizedRatingCard}
+              </List>
             </div>
-          )}
-          
-          {filteredAndSortedRatings.length === 0 && data.ratings.length > 0 && (
-            <div className="text-center py-8">
-              <p className="text-gray-600">Nu există evaluări care să corespundă filtrelor</p>
-              <Button 
-                variant="outline" 
-                onClick={() => {
-                  setFilterRating('all');
-                  setSortBy('date');
-                }}
-                className="mt-2"
-              >
-                Resetează filtrele
-              </Button>
-            </div>
-          )}
-        </div>
+            
+            {/* Load More */}
+            {data.pagination.hasMore && (
+              <div className="text-center pt-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setLimit(prev => prev + 10)}
+                  disabled={isFetching}
+                  className="min-w-32"
+                >
+                  {isFetching ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Se încarcă...
+                    </>
+                  ) : (
+                    'Încarcă mai multe'
+                  )}
+                </Button>
+              </div>
+            )}
+          </div>
+        ) : data.ratings.length > 0 ? (
+          <div className="text-center py-8">
+            <p className="text-gray-600">Nu există evaluări care să corespundă filtrelor</p>
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setFilterRating('all');
+                setSortBy('date');
+              }}
+              className="mt-2"
+            >
+              Resetează filtrele
+            </Button>
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <Star className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+            <p className="text-gray-600 mb-2">Nu există evaluări pentru această biserică</p>
+            <p className="text-sm text-gray-500">Evaluările vor apărea aici după ce vor fi create</p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

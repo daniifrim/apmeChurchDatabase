@@ -130,8 +130,6 @@ export default function ListView() {
         <div className="p-4">
           <div className="space-y-4">
             {filteredChurches.map((church: Church) => {
-              const badge = getEngagementBadge(church.engagementLevel);
-              
               return (
                 <div 
                   key={church.id}
@@ -146,7 +144,7 @@ export default function ListView() {
                       <div className="flex items-center space-x-4 text-sm text-gray-600 mb-2">
                         <div className="flex items-center">
                           <MapPinIcon className="h-4 w-4 mr-1" />
-                          {church.address}
+                          {church.city}
                         </div>
                         {church.pastor && (
                           <div className="flex items-center">
@@ -156,19 +154,13 @@ export default function ListView() {
                         )}
                       </div>
                     </div>
-                    <div className="ml-4 flex flex-col items-end space-y-2">
-                      <span className={cn(
-                        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
-                        badge.color
-                      )}>
-                        {badge.label}
-                      </span>
-                      {church.engagementLevel === 'high' && (
-                        <span className="text-xs text-gray-500">
-                          {formatLastVisit(church.updatedAt)}
+                    {church.memberCount && (
+                      <div className="ml-4">
+                        <span className="text-sm text-gray-500">
+                          {church.memberCount} members
                         </span>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               );
