@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
@@ -8,6 +9,7 @@ import { X, Calendar, Users, FileText, Star, MapPin, Clock, DollarSign, Edit, Tr
 
 interface Visit {
   id: number;
+  churchId: number;
   visitDate: string;
   notes?: string;
   attendeesCount?: number;
@@ -51,6 +53,7 @@ export default function VisitDetailsModal({ visitId, onClose, onUpdate }: VisitD
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [, setLocation] = useLocation();
 
   // Fetch visit details
   const { data: visit, isLoading: visitLoading } = useQuery({
@@ -137,13 +140,24 @@ export default function VisitDetailsModal({ visitId, onClose, onUpdate }: VisitD
     const updatedData = {
       visitDate: editForm.visitDate,
       notes: editForm.notes || undefined,
-      attendeesCount: editForm.attendeesCount ? parseInt(editForm.attendeesCount) : undefined,
+      // Note: attendeesCount temporarily disabled due to schema mismatch
+      // attendeesCount: editForm.attendeesCount ? parseInt(editForm.attendeesCount) : undefined,
     };
     updateVisitMutation.mutate(updatedData);
   };
 
   const handleDelete = () => {
     deleteVisitMutation.mutate();
+  };
+
+  const handleChurchClick = () => {
+    if (visit?.churchId) {
+      // Navigate to list view with selected church
+      // We'll store the church ID in localStorage to pre-select it
+      localStorage.setItem('selectedChurchId', visit.churchId.toString());
+      setLocation('/list');
+      onClose();
+    }
   };
 
   const startEdit = () => {
@@ -237,7 +251,13 @@ export default function VisitDetailsModal({ visitId, onClose, onUpdate }: VisitD
             <h2 className="text-xl font-semibold text-gray-900">
               {isEditing ? 'Edit Visit' : 'Visit Details'}
             </h2>
-            <p className="text-sm text-gray-600 mt-1">{visit.churchName}</p>
+            <button
+              onClick={handleChurchClick}
+              className="inline-flex items-center px-3 py-1 mt-2 text-sm font-medium text-blue-700 bg-blue-100 rounded-full hover:bg-blue-200 hover:text-blue-800 transition-colors cursor-pointer"
+            >
+              <MapPin className="h-3 w-3 mr-1" />
+              {visit.churchName}
+            </button>
           </div>
           <div className="flex items-center space-x-2">
             {!isEditing && !visit.isRated && (
@@ -498,7 +518,17 @@ export default function VisitDetailsModal({ visitId, onClose, onUpdate }: VisitD
                 <div className="text-2xl font-bold text-blue-700 mb-1">
                   {rating.starRating}/5 Stars
                 </div>
-                <div className="text-sm text-blue-600">Overall Church Rating</div>
+                <div className="text-sm text-blue-600 mb-2">Overall Visit Rating</div>
+                
+                {/* Missionary Support Badge - Version 2.0 Separate Indicator */}
+                {rating.missionarySupportCount !== undefined && rating.missionarySupportCount > 0 && (
+                  <div className="flex justify-center">
+                    <div className="inline-flex items-center px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                      <Users className="w-4 h-4 mr-2" />
+                      Susține {rating.missionarySupportCount} misionari
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Rating Components */}
@@ -531,7 +561,7 @@ export default function VisitDetailsModal({ visitId, onClose, onUpdate }: VisitD
               </div>
 
               {/* Financial Information */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {rating.offeringsAmount !== undefined && rating.offeringsAmount > 0 && (
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <div className="flex items-center mb-2">
@@ -547,20 +577,6 @@ export default function VisitDetailsModal({ visitId, onClose, onUpdate }: VisitD
                   </div>
                 )}
 
-                {rating.missionarySupportCount !== undefined && rating.missionarySupportCount > 0 && (
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <div className="flex items-center mb-2">
-                      <Users className="h-5 w-5 text-orange-600 mr-2" />
-                      <span className="font-medium text-gray-900">Missionaries</span>
-                    </div>
-                    <div className="text-lg font-bold text-gray-900">
-                      {rating.missionarySupportCount}
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      Bonus: +{rating.missionaryBonus} stars
-                    </div>
-                  </div>
-                )}
 
                 {rating.visitDurationMinutes && (
                   <div className="bg-gray-50 p-4 rounded-lg">

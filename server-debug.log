@@ -1,0 +1,3488 @@
+
+> rest-express@1.0.0 dev:api
+> NODE_ENV=development tsx server/dev-serverless.ts
+
+🚀 Serverless development server running on port 3000
+📡 API endpoints available at http://localhost:3000/api/*
+🔍 Health check: http://localhost:3000/health
+
+Available API endpoints:
+  POST /api/auth/login
+  POST /api/auth/register
+  GET  /api/auth/user
+  POST /api/auth/logout
+  GET  /api/churches
+  POST /api/churches
+  GET  /api/churches/:id
+  PUT  /api/churches/:id
+  DELETE /api/churches/:id
+  GET  /api/churches/:id/visits
+  POST /api/churches/:id/visits
+  GET  /api/churches/:id/activities
+  POST /api/churches/:id/activities
+  GET  /api/analytics
+[2025-08-02T22:15:24.398Z] GET /api/churches/47/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-02T22:15:24.699Z] visits-get - GET { userId: 'dev-user-123', churchId: 47 }
+[2025-08-02T22:15:25.200Z] visits-get - GET { userId: 'dev-user-123', churchId: 47, visitCount: 1 }
+[2025-08-02T22:15:50.711Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:15:50.747Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:15:50.972Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:15:51.718Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:15:51.722Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:15:51.939Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:15:53.245Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-02T22:15:53.251Z] user - GET { userId: 'dev-user-123' }
+[2025-08-02T22:15:53.554Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-02T22:15:53.567Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:15:53.569Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:15:53.578Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-02T22:15:53.586Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:15:53.719Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-02T22:15:53.750Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:15:54.758Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:15:54.761Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:15:54.919Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:15:57.120Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-02T22:15:57.135Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-02T22:15:57.212Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-02T22:16:00.096Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:16:00.097Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:16:00.247Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: 's',
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:16:00.854Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:16:00.855Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:16:01.005Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 1,
+  filters: {
+    search: 'stanca',
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:16:01.920Z] GET /api/churches/47/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-02T22:16:01.921Z] GET /api/churches/47/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-02T22:16:01.922Z] visits-get - GET { userId: 'dev-user-123', churchId: 47 }
+[2025-08-02T22:16:01.927Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 47 }
+[2025-08-02T22:16:02.196Z] visits-get - GET { userId: 'dev-user-123', churchId: 47, visitCount: 1 }
+[2025-08-02T22:17:17.359Z] GET /api/visits/9
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/index.ts
+[2025-08-02T22:17:17.367Z] visit-get - GET { userId: 'dev-user-123', visitId: 9 }
+[2025-08-02T22:17:17.508Z] visit-get - GET { userId: 'dev-user-123', visitId: 9, churchId: 47 }
+[2025-08-02T22:17:47.972Z] PUT /api/visits/9
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/index.ts
+[2025-08-02T22:17:47.974Z] visit-update - PUT { userId: 'dev-user-123', visitId: 9 }
+[2025-08-02T22:17:48.308Z] visit-update - PUT { userId: 'dev-user-123', visitId: 9, error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'updated_at' column of 'visits' in the schema cache"
+  }
+}
+[2025-08-02T22:18:14.628Z] GET /api/churches/47
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T22:18:14.630Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:18:14.631Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:18:14.636Z] church-get - GET { userId: 'dev-user-123', churchId: 47 }
+[2025-08-02T22:18:14.844Z] church-get - GET {
+  userId: 'dev-user-123',
+  churchId: 47,
+  churchName: 'Bis Pent Stânca Vieții'
+}
+[2025-08-02T22:18:14.978Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:18:36.966Z] POST /api/churches/47/activities
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/activities.ts
+[2025-08-02T22:18:36.990Z] activities-create - POST { userId: 'dev-user-123', churchId: 47 }
+[2025-08-02T22:18:37.350Z] activities-create - POST {
+  userId: 'dev-user-123',
+  churchId: 47,
+  activityId: 33,
+  activityType: 'note',
+  activityTitle: 'Note added'
+}
+[2025-08-02T22:18:50.181Z] PUT /api/churches/47
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T22:18:50.185Z] church-update - PUT { userId: 'dev-user-123', churchId: 47 }
+[2025-08-02T22:18:50.425Z] church-update - PUT { userId: 'dev-user-123', churchId: 47, error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'engagementLevel' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T22:22:37.464Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:22:37.479Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-02T22:22:37.491Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:22:37.497Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:22:37.908Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:22:37.958Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-02T22:22:40.953Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-02T22:22:40.974Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-02T22:22:41.128Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-02T22:22:41.375Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-02T22:22:41.377Z] user - GET { userId: 'dev-user-123' }
+[2025-08-02T22:22:41.615Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-02T22:22:41.638Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:22:41.640Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:22:41.646Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-02T22:22:41.647Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:22:41.747Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-02T22:22:41.833Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:22:44.237Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-02T22:22:44.267Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-02T22:22:44.354Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-02T22:22:45.619Z] GET /api/visits/9
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/index.ts
+[2025-08-02T22:22:45.621Z] visit-get - GET { userId: 'dev-user-123', visitId: 9 }
+[2025-08-02T22:22:45.699Z] visit-get - GET { userId: 'dev-user-123', visitId: 9, churchId: 47 }
+[2025-08-02T22:22:47.357Z] PUT /api/visits/9
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/index.ts
+[2025-08-02T22:22:47.357Z] visit-update - PUT { userId: 'dev-user-123', visitId: 9 }
+[2025-08-02T22:22:47.517Z] visit-update - PUT { userId: 'dev-user-123', visitId: 9, error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'updated_at' column of 'visits' in the schema cache"
+  }
+}
+[2025-08-02T22:22:54.729Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:22:54.739Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:22:54.921Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:22:56.330Z] GET /api/churches/50/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-02T22:22:56.332Z] GET /api/churches/50/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-02T22:22:56.332Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 50 }
+[2025-08-02T22:22:56.333Z] visits-get - GET { userId: 'dev-user-123', churchId: 50 }
+[2025-08-02T22:22:56.629Z] visits-get - GET { userId: 'dev-user-123', churchId: 50, visitCount: 0 }
+[2025-08-02T22:23:02.411Z] GET /api/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/analytics.ts
+[2025-08-02T22:23:02.416Z] analytics - GET { userId: 'dev-user-123' }
+[2025-08-02T22:23:03.038Z] analytics - GET {
+  userId: 'dev-user-123',
+  totalChurches: 36,
+  activeChurches: 0,
+  pendingVisits: 0,
+  newThisMonth: 36
+}
+[2025-08-02T22:37:41.595Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-02T22:37:41.597Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-02T22:37:41.924Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-02T22:37:43.009Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:37:43.011Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:37:43.296Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:40:21.977Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:40:21.984Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:40:22.476Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:40:23.792Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:40:23.794Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:40:23.798Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-02T22:40:23.800Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:40:23.958Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-02T22:40:23.993Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:40:36.429Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:40:36.431Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:40:36.645Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 1,
+  filters: {
+    search: 'bea',
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:40:37.058Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:40:37.059Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:40:37.196Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 5,
+  filters: {
+    search: 'betani',
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:40:41.285Z] GET /api/churches/26/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-02T22:40:41.287Z] GET /api/churches/26/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-02T22:40:41.288Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 26 }
+[2025-08-02T22:40:41.292Z] visits-get - GET { userId: 'dev-user-123', churchId: 26 }
+[2025-08-02T22:40:41.545Z] visits-get - GET { userId: 'dev-user-123', churchId: 26, visitCount: 0 }
+[2025-08-02T22:40:51.560Z] GET /api/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/analytics.ts
+[2025-08-02T22:40:51.566Z] analytics - GET { userId: 'dev-user-123' }
+[2025-08-02T22:40:52.417Z] analytics - GET {
+  userId: 'dev-user-123',
+  totalChurches: 36,
+  activeChurches: 0,
+  pendingVisits: 0,
+  newThisMonth: 36
+}
+[2025-08-02T22:40:54.061Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:40:54.062Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:40:54.205Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:42:01.843Z] GET /api/visits/10
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/index.ts
+[2025-08-02T22:42:01.851Z] visit-get - GET { userId: 'dev-user-123', visitId: 10 }
+[2025-08-02T22:42:02.042Z] visit-get - GET { userId: 'dev-user-123', visitId: 10, churchId: 44 }
+[2025-08-02T22:42:03.328Z] GET /api/churches/44
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T22:42:03.333Z] church-get - GET { userId: 'dev-user-123', churchId: 44 }
+[2025-08-02T22:42:03.336Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:42:03.352Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:42:03.563Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:42:03.642Z] church-get - GET {
+  userId: 'dev-user-123',
+  churchId: 44,
+  churchName: 'Bis Pent Betania'
+}
+[2025-08-02T22:42:03.653Z] GET /api/churches/44/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-02T22:42:03.654Z] GET /api/churches/44/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-02T22:42:03.655Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 44 }
+[2025-08-02T22:42:03.655Z] visits-get - GET { userId: 'dev-user-123', churchId: 44 }
+[2025-08-02T22:42:03.862Z] visits-get - GET { userId: 'dev-user-123', churchId: 44, visitCount: 1 }
+[2025-08-02T22:42:07.324Z] GET /api/visits/9
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/index.ts
+[2025-08-02T22:42:07.326Z] visit-get - GET { userId: 'dev-user-123', visitId: 9 }
+[2025-08-02T22:42:07.402Z] visit-get - GET { userId: 'dev-user-123', visitId: 9, churchId: 47 }
+[2025-08-02T22:56:39.720Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-02T22:56:39.733Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-02T22:56:40.470Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-02T22:56:45.547Z] GET /api/visits/9
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/index.ts
+[2025-08-02T22:56:45.549Z] visit-get - GET { userId: 'dev-user-123', visitId: 9 }
+[2025-08-02T22:56:45.743Z] visit-get - GET { userId: 'dev-user-123', visitId: 9, churchId: 47 }
+[2025-08-02T22:56:51.016Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-02T22:56:51.019Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:56:51.034Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:56:51.072Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:56:51.304Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-02T22:56:51.343Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:56:53.533Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T22:56:53.537Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T22:56:53.782Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T22:57:00.596Z] GET /api/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/analytics.ts
+[2025-08-02T22:57:00.597Z] analytics - GET { userId: 'dev-user-123' }
+[2025-08-02T22:57:01.497Z] analytics - GET {
+  userId: 'dev-user-123',
+  totalChurches: 36,
+  activeChurches: 0,
+  pendingVisits: 0,
+  newThisMonth: 36
+}
+[2025-08-02T23:07:17.570Z] GET /api/counties
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/counties/index.ts
+[2025-08-02T23:07:17.597Z] counties-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:07:17.905Z] counties-get - GET { userId: 'dev-user-123', count: 41, filters: { regionId: undefined } }
+[2025-08-02T23:07:17.914Z] GET /api/counties
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/counties/index.ts
+[2025-08-02T23:07:17.915Z] counties-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:07:17.998Z] counties-get - GET { userId: 'dev-user-123', count: 41, filters: { regionId: undefined } }
+[2025-08-02T23:07:18.000Z] GET /api/counties
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/counties/index.ts
+[2025-08-02T23:07:18.001Z] counties-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:07:18.139Z] counties-get - GET { userId: 'dev-user-123', count: 41, filters: { regionId: undefined } }
+[2025-08-02T23:08:42.052Z] GET /api/counties
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/counties/index.ts
+[2025-08-02T23:08:42.055Z] counties-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:08:42.207Z] counties-get - GET { userId: 'dev-user-123', count: 41, filters: { regionId: undefined } }
+[2025-08-02T23:09:24.762Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-02T23:09:24.764Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-02T23:09:25.247Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-02T23:09:25.633Z] GET /api/counties
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/counties/index.ts
+[2025-08-02T23:09:25.634Z] counties-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:09:25.706Z] counties-get - GET { userId: 'dev-user-123', count: 41, filters: { regionId: undefined } }
+[2025-08-02T23:09:25.709Z] GET /api/counties
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/counties/index.ts
+[2025-08-02T23:09:25.710Z] counties-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:09:25.776Z] counties-get - GET { userId: 'dev-user-123', count: 41, filters: { regionId: undefined } }
+[2025-08-02T23:09:25.779Z] GET /api/counties
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/counties/index.ts
+[2025-08-02T23:09:25.779Z] counties-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:09:25.847Z] counties-get - GET { userId: 'dev-user-123', count: 41, filters: { regionId: undefined } }
+[2025-08-02T23:09:25.850Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:25.851Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:25.917Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:09:25.921Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:25.921Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:25.982Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:09:25.986Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:25.987Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:26.051Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:09:26.054Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:26.054Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:26.114Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:09:26.117Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:26.118Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:26.180Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:09:26.183Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:26.184Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:26.245Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:09:26.247Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:26.248Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:26.309Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:09:26.311Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:26.314Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:26.377Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:09:26.378Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:26.383Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:26.445Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:09:26.447Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:26.448Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:26.510Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:09:26.512Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:26.513Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:26.571Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:09:26.573Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:26.573Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:26.637Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:09:26.638Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:26.639Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:26.700Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:09:26.702Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:26.704Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:26.776Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:09:26.778Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:26.778Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:26.848Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:09:26.849Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:26.850Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:26.913Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:09:26.914Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:26.915Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:26.977Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:09:26.980Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:26.981Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:27.045Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:09:44.950Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-02T23:09:44.953Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-02T23:09:45.074Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-02T23:09:45.397Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:09:45.398Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:09:45.466Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:10:02.599Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-02T23:10:02.601Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-02T23:10:02.728Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-02T23:10:03.016Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:10:03.019Z] churches-create - POST { userId: 'dev-user-123' }
+[WARN] Request validation failed {
+  errors: [
+    {
+      code: 'invalid_type',
+      expected: 'string',
+      received: 'number',
+      path: [Array],
+      message: 'Expected string, received number'
+    },
+    {
+      code: 'invalid_type',
+      expected: 'string',
+      received: 'number',
+      path: [Array],
+      message: 'Expected string, received number'
+    }
+  ]
+}
+[2025-08-02T23:10:03.026Z] churches-create - POST {
+  userId: 'dev-user-123',
+  error: '[\n' +
+    '  {\n' +
+    '    "code": "invalid_type",\n' +
+    '    "expected": "string",\n' +
+    '    "received": "number",\n' +
+    '    "path": [\n' +
+    '      "latitude"\n' +
+    '    ],\n' +
+    '    "message": "Expected string, received number"\n' +
+    '  },\n' +
+    '  {\n' +
+    '    "code": "invalid_type",\n' +
+    '    "expected": "string",\n' +
+    '    "received": "number",\n' +
+    '    "path": [\n' +
+    '      "longitude"\n' +
+    '    ],\n' +
+    '    "message": "Expected string, received number"\n' +
+    '  }\n' +
+    ']'
+}
+[ERROR] Serverless function error {
+  error: '[\n' +
+    '  {\n' +
+    '    "code": "invalid_type",\n' +
+    '    "expected": "string",\n' +
+    '    "received": "number",\n' +
+    '    "path": [\n' +
+    '      "latitude"\n' +
+    '    ],\n' +
+    '    "message": "Expected string, received number"\n' +
+    '  },\n' +
+    '  {\n' +
+    '    "code": "invalid_type",\n' +
+    '    "expected": "string",\n' +
+    '    "received": "number",\n' +
+    '    "path": [\n' +
+    '      "longitude"\n' +
+    '    ],\n' +
+    '    "message": "Expected string, received number"\n' +
+    '  }\n' +
+    ']',
+  stack: 'ZodError: [\n' +
+    '  {\n' +
+    '    "code": "invalid_type",\n' +
+    '    "expected": "string",\n' +
+    '    "received": "number",\n' +
+    '    "path": [\n' +
+    '      "latitude"\n' +
+    '    ],\n' +
+    '    "message": "Expected string, received number"\n' +
+    '  },\n' +
+    '  {\n' +
+    '    "code": "invalid_type",\n' +
+    '    "expected": "string",\n' +
+    '    "received": "number",\n' +
+    '    "path": [\n' +
+    '      "longitude"\n' +
+    '    ],\n' +
+    '    "message": "Expected string, received number"\n' +
+    '  }\n' +
+    ']\n' +
+    '    at get error (file:///Users/danifrim/Documents/Coding/apme-churches-app/node_modules/zod/lib/index.mjs:587:31)\n' +
+    '    at ZodObject.parse (file:///Users/danifrim/Documents/Coding/apme-churches-app/node_modules/zod/lib/index.mjs:663:22)\n' +
+    '    at validateRequestBody (/Users/danifrim/Documents/Coding/apme-churches-app/lib/errorHandler.ts:97:19)\n' +
+    '    at handleCreateChurch (/Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts:88:24)\n' +
+    '    at handler (/Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts:31:14)\n' +
+    '    at <anonymous> (/Users/danifrim/Documents/Coding/apme-churches-app/lib/auth.ts:70:14)\n' +
+    '    at executeServerlessFunction (/Users/danifrim/Documents/Coding/apme-churches-app/server/dev-serverless.ts:75:11)\n' +
+    '    at async <anonymous> (/Users/danifrim/Documents/Coding/apme-churches-app/server/dev-serverless.ts:185:3)'
+}
+[2025-08-02T23:10:10.976Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-02T23:10:10.977Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-02T23:10:11.082Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-02T23:10:11.368Z] POST /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:10:11.369Z] churches-create - POST { userId: 'dev-user-123' }
+[2025-08-02T23:10:11.456Z] churches-create - POST { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'county' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:10:28.801Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:10:28.803Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:10:28.972Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T23:11:08.871Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:11:08.873Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:11:09.395Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T23:11:14.392Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:11:14.393Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:11:14.628Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T23:11:53.762Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-02T23:11:53.765Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-02T23:11:53.977Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-02T23:11:54.292Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:11:54.294Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:11:54.433Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T23:11:54.539Z] PUT /api/churches/32
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:11:54.546Z] church-update - PUT { userId: 'dev-user-123', churchId: 32 }
+[2025-08-02T23:11:54.738Z] church-update - PUT { userId: 'dev-user-123', churchId: 32, error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'memberCount' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:11:55.145Z] PUT /api/churches/44
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:11:55.146Z] church-update - PUT { userId: 'dev-user-123', churchId: 44 }
+[2025-08-02T23:11:55.335Z] church-update - PUT { userId: 'dev-user-123', churchId: 44, error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'memberCount' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:11:55.440Z] PUT /api/churches/48
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:11:55.440Z] church-update - PUT { userId: 'dev-user-123', churchId: 48 }
+[2025-08-02T23:11:55.634Z] church-update - PUT { userId: 'dev-user-123', churchId: 48, error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'memberCount' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:11:55.737Z] PUT /api/churches/24
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:11:55.738Z] church-update - PUT { userId: 'dev-user-123', churchId: 24 }
+[2025-08-02T23:11:56.055Z] church-update - PUT {
+  userId: 'dev-user-123',
+  churchId: 24,
+  churchName: 'Bis Pent Philadelphia'
+}
+[2025-08-02T23:11:56.159Z] PUT /api/churches/48
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:11:56.161Z] church-update - PUT { userId: 'dev-user-123', churchId: 48 }
+[2025-08-02T23:11:56.346Z] church-update - PUT { userId: 'dev-user-123', churchId: 48, error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'memberCount' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:11:56.450Z] PUT /api/churches/44
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:11:56.451Z] church-update - PUT { userId: 'dev-user-123', churchId: 44 }
+[2025-08-02T23:11:56.637Z] church-update - PUT { userId: 'dev-user-123', churchId: 44, error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'memberCount' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:11:56.741Z] PUT /api/churches/44
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:11:56.742Z] church-update - PUT { userId: 'dev-user-123', churchId: 44 }
+[2025-08-02T23:11:56.925Z] church-update - PUT { userId: 'dev-user-123', churchId: 44, error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'memberCount' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:11:57.029Z] PUT /api/churches/43
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:11:57.029Z] church-update - PUT { userId: 'dev-user-123', churchId: 43 }
+[2025-08-02T23:11:57.220Z] church-update - PUT { userId: 'dev-user-123', churchId: 43, error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'memberCount' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:11:57.324Z] PUT /api/churches/45
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:11:57.325Z] church-update - PUT { userId: 'dev-user-123', churchId: 45 }
+[2025-08-02T23:11:57.510Z] church-update - PUT { userId: 'dev-user-123', churchId: 45, error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'memberCount' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:11:57.612Z] PUT /api/churches/48
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:11:57.613Z] church-update - PUT { userId: 'dev-user-123', churchId: 48 }
+[2025-08-02T23:11:57.828Z] church-update - PUT { userId: 'dev-user-123', churchId: 48, error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'memberCount' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:11:58.234Z] PUT /api/churches/50
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:11:58.235Z] church-update - PUT { userId: 'dev-user-123', churchId: 50 }
+[2025-08-02T23:11:58.492Z] church-update - PUT {
+  userId: 'dev-user-123',
+  churchId: 50,
+  churchName: 'Bis Pent Sfânta Treime'
+}
+[2025-08-02T23:12:21.770Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-02T23:12:21.772Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-02T23:12:21.872Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-02T23:12:22.222Z] PUT /api/churches/24
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:12:22.223Z] church-update - PUT { userId: 'dev-user-123', churchId: 24 }
+[2025-08-02T23:12:22.496Z] church-update - PUT {
+  userId: 'dev-user-123',
+  churchId: 24,
+  churchName: 'Bis Pent Philadelphia'
+}
+[2025-08-02T23:12:32.536Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-02T23:12:32.538Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-02T23:12:32.641Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-02T23:12:32.909Z] PUT /api/churches/32
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:12:32.910Z] church-update - PUT { userId: 'dev-user-123', churchId: 32 }
+[2025-08-02T23:12:33.109Z] church-update - PUT { userId: 'dev-user-123', churchId: 32, error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: 'PGRST204',
+    details: null,
+    hint: null,
+    message: "Could not find the 'memberCount' column of 'churches' in the schema cache"
+  }
+}
+[2025-08-02T23:12:42.779Z] GET /api/churches/32
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:12:42.781Z] church-get - GET { userId: 'dev-user-123', churchId: 32 }
+[2025-08-02T23:12:42.955Z] church-get - GET {
+  userId: 'dev-user-123',
+  churchId: 32,
+  churchName: 'Bis Pent Betezda'
+}
+[2025-08-02T23:12:51.552Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-02T23:12:51.554Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-02T23:12:51.662Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-02T23:12:51.921Z] PUT /api/churches/32
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:12:51.923Z] church-update - PUT { userId: 'dev-user-123', churchId: 32 }
+[2025-08-02T23:12:52.199Z] church-update - PUT {
+  userId: 'dev-user-123',
+  churchId: 32,
+  churchName: 'Bis Pent Betezda'
+}
+[2025-08-02T23:13:08.651Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-02T23:13:08.653Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-02T23:13:08.753Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-02T23:13:09.021Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:13:09.022Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:13:09.166Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T23:13:09.273Z] PUT /api/churches/32
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:13:09.274Z] church-update - PUT { userId: 'dev-user-123', churchId: 32 }
+[2025-08-02T23:13:09.537Z] church-update - PUT {
+  userId: 'dev-user-123',
+  churchId: 32,
+  churchName: 'Bis Pent Betezda'
+}
+[2025-08-02T23:13:09.945Z] PUT /api/churches/44
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:13:09.945Z] church-update - PUT { userId: 'dev-user-123', churchId: 44 }
+[2025-08-02T23:13:10.205Z] church-update - PUT {
+  userId: 'dev-user-123',
+  churchId: 44,
+  churchName: 'Bis Pent Betania'
+}
+[2025-08-02T23:13:10.309Z] PUT /api/churches/48
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:13:10.310Z] church-update - PUT { userId: 'dev-user-123', churchId: 48 }
+[2025-08-02T23:13:10.572Z] church-update - PUT { userId: 'dev-user-123', churchId: 48, churchName: 'Bis Pent Betel' }
+[2025-08-02T23:13:10.676Z] PUT /api/churches/24
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:13:10.677Z] church-update - PUT { userId: 'dev-user-123', churchId: 24 }
+[2025-08-02T23:13:10.945Z] church-update - PUT {
+  userId: 'dev-user-123',
+  churchId: 24,
+  churchName: 'Bis Pent Philadelphia'
+}
+[2025-08-02T23:13:11.049Z] PUT /api/churches/48
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:13:11.049Z] church-update - PUT { userId: 'dev-user-123', churchId: 48 }
+[2025-08-02T23:13:11.302Z] church-update - PUT { userId: 'dev-user-123', churchId: 48, churchName: 'Bis Pent Betel' }
+[2025-08-02T23:13:11.406Z] PUT /api/churches/44
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:13:11.406Z] church-update - PUT { userId: 'dev-user-123', churchId: 44 }
+[2025-08-02T23:13:11.667Z] church-update - PUT {
+  userId: 'dev-user-123',
+  churchId: 44,
+  churchName: 'Bis Pent Betania'
+}
+[2025-08-02T23:13:11.770Z] PUT /api/churches/44
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:13:11.771Z] church-update - PUT { userId: 'dev-user-123', churchId: 44 }
+[2025-08-02T23:13:12.024Z] church-update - PUT {
+  userId: 'dev-user-123',
+  churchId: 44,
+  churchName: 'Bis Pent Betania'
+}
+[2025-08-02T23:13:12.131Z] PUT /api/churches/43
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:13:12.133Z] church-update - PUT { userId: 'dev-user-123', churchId: 43 }
+[2025-08-02T23:13:12.395Z] church-update - PUT { userId: 'dev-user-123', churchId: 43, churchName: 'Bis Pent Smirna' }
+[2025-08-02T23:13:12.498Z] PUT /api/churches/45
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:13:12.498Z] church-update - PUT { userId: 'dev-user-123', churchId: 45 }
+[2025-08-02T23:13:12.753Z] church-update - PUT {
+  userId: 'dev-user-123',
+  churchId: 45,
+  churchName: 'Bis Pent Filadelfia'
+}
+[2025-08-02T23:13:12.857Z] PUT /api/churches/48
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:13:12.857Z] church-update - PUT { userId: 'dev-user-123', churchId: 48 }
+[2025-08-02T23:13:13.161Z] church-update - PUT { userId: 'dev-user-123', churchId: 48, churchName: 'Bis Pent Betel' }
+[2025-08-02T23:13:13.264Z] PUT /api/churches/32
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-02T23:13:13.264Z] church-update - PUT { userId: 'dev-user-123', churchId: 32 }
+[2025-08-02T23:13:13.537Z] church-update - PUT {
+  userId: 'dev-user-123',
+  churchId: 32,
+  churchName: 'Bis Pent Betezda'
+}
+[2025-08-02T23:13:50.676Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:13:50.704Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-02T23:13:50.716Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:13:50.731Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:13:51.177Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T23:13:51.228Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-02T23:13:53.132Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-02T23:13:53.134Z] user - GET { userId: 'dev-user-123' }
+[2025-08-02T23:13:53.367Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-02T23:13:54.934Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-02T23:13:54.941Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-02T23:13:55.033Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-02T23:13:55.268Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-02T23:13:55.270Z] user - GET { userId: 'dev-user-123' }
+[2025-08-02T23:13:55.478Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-02T23:13:55.497Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:13:55.499Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:13:55.503Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-02T23:13:55.505Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:13:55.617Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-02T23:13:55.628Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T23:13:57.035Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:13:57.038Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:13:57.169Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T23:14:01.372Z] GET /api/churches/32/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-02T23:14:01.373Z] GET /api/churches/32/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-02T23:14:01.378Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 32 }
+[2025-08-02T23:14:01.379Z] visits-get - GET { userId: 'dev-user-123', churchId: 32 }
+[2025-08-02T23:14:01.837Z] visits-get - GET { userId: 'dev-user-123', churchId: 32, visitCount: 0 }
+[2025-08-02T23:14:11.480Z] GET /api/churches/36/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-02T23:14:11.482Z] GET /api/churches/36/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-02T23:14:11.482Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 36 }
+[2025-08-02T23:14:11.482Z] visits-get - GET { userId: 'dev-user-123', churchId: 36 }
+[2025-08-02T23:14:11.714Z] visits-get - GET { userId: 'dev-user-123', churchId: 36, visitCount: 0 }
+[2025-08-02T23:30:55.896Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:30:55.908Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-02T23:30:55.911Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:30:55.912Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:30:56.414Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-02T23:30:56.551Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T23:30:58.071Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-02T23:30:58.079Z] user - GET { userId: 'dev-user-123' }
+[2025-08-02T23:30:58.418Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-02T23:30:58.549Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:30:58.579Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-02T23:30:58.617Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:30:58.617Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:30:58.770Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-02T23:30:58.842Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T23:31:00.498Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-02T23:31:00.502Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-02T23:31:00.595Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-02T23:31:02.409Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:31:02.411Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:31:02.549Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T23:31:07.304Z] GET /api/churches/45/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-02T23:31:07.309Z] GET /api/churches/45/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-02T23:31:07.309Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 45 }
+[2025-08-02T23:31:07.312Z] visits-get - GET { userId: 'dev-user-123', churchId: 45 }
+[2025-08-02T23:31:07.668Z] visits-get - GET { userId: 'dev-user-123', churchId: 45, visitCount: 0 }
+[2025-08-02T23:59:45.287Z] GET /api/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/analytics.ts
+[2025-08-02T23:59:45.302Z] analytics - GET { userId: 'dev-user-123' }
+[2025-08-02T23:59:47.021Z] analytics - GET {
+  userId: 'dev-user-123',
+  totalChurches: 36,
+  activeChurches: 0,
+  pendingVisits: 0,
+  newThisMonth: 36
+}
+[2025-08-02T23:59:48.458Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-02T23:59:48.459Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-02T23:59:48.559Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-02T23:59:50.227Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:59:50.238Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:59:50.420Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T23:59:51.315Z] GET /api/churches/45/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-02T23:59:51.316Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-02T23:59:51.317Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:59:51.320Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 45 }
+[2025-08-02T23:59:51.321Z] GET /api/churches/45/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-02T23:59:51.322Z] visits-get - GET { userId: 'dev-user-123', churchId: 45 }
+[2025-08-02T23:59:51.716Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-02T23:59:51.919Z] visits-get - GET { userId: 'dev-user-123', churchId: 45, visitCount: 0 }
+[2025-08-02T23:59:54.337Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:59:54.338Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:59:54.484Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T23:59:57.563Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-02T23:59:57.567Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-02T23:59:57.757Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-02T23:59:58.012Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-02T23:59:58.013Z] user - GET { userId: 'dev-user-123' }
+[2025-08-02T23:59:58.229Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-02T23:59:58.246Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-02T23:59:58.248Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:59:58.255Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-02T23:59:58.259Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-02T23:59:58.380Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-02T23:59:58.438Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-02T23:59:59.266Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-02T23:59:59.269Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-02T23:59:59.339Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-03T00:00:01.070Z] GET /api/visits/9
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/index.ts
+[2025-08-03T00:00:01.071Z] visit-get - GET { userId: 'dev-user-123', visitId: 9 }
+[2025-08-03T00:00:01.133Z] visit-get - GET { userId: 'dev-user-123', visitId: 9, churchId: 47 }
+[2025-08-03T00:00:06.513Z] GET /api/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/analytics.ts
+[2025-08-03T00:00:06.518Z] analytics - GET { userId: 'dev-user-123' }
+[2025-08-03T00:00:07.212Z] analytics - GET {
+  userId: 'dev-user-123',
+  totalChurches: 36,
+  activeChurches: 0,
+  pendingVisits: 0,
+  newThisMonth: 36
+}
+[2025-08-03T00:00:09.361Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-03T00:00:09.364Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-03T00:00:09.556Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-03T00:05:05.372Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-03T00:05:05.379Z] user - GET { userId: 'dev-user-123' }
+[2025-08-03T00:05:06.185Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-03T00:05:12.685Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-03T00:05:12.689Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-03T00:05:12.889Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-03T00:05:13.163Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-03T00:05:13.164Z] user - GET { userId: 'dev-user-123' }
+[2025-08-03T00:05:13.359Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-03T00:05:13.383Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-03T00:05:13.386Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-03T00:05:13.393Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-03T00:05:13.395Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-03T00:05:13.516Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-03T00:05:13.613Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-03T00:05:14.530Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-03T00:05:14.532Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-03T00:05:14.668Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-03T00:05:43.025Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-03T00:05:43.034Z] user - GET { userId: 'dev-user-123' }
+[2025-08-03T00:05:43.368Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-03T00:05:43.394Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-03T00:05:43.396Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-03T00:05:43.612Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-03T00:06:08.618Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-03T00:06:08.623Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-03T00:06:08.763Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-03T00:06:09.013Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-03T00:06:09.015Z] user - GET { userId: 'dev-user-123' }
+[2025-08-03T00:06:09.216Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-03T00:06:09.246Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-03T00:06:09.248Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-03T00:06:09.258Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-03T00:06:09.261Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-03T00:06:09.380Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-03T00:06:09.384Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-03T00:06:10.167Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-03T00:06:10.175Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-03T00:06:10.347Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-03T00:06:33.247Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-03T00:06:33.258Z] user - GET { userId: 'dev-user-123' }
+[2025-08-03T00:06:33.529Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-03T00:06:33.547Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-03T00:06:33.549Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-03T00:06:33.712Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-03T00:06:44.244Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-03T00:06:44.292Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-03T00:06:44.419Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-03T00:06:44.682Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-03T00:06:44.684Z] user - GET { userId: 'dev-user-123' }
+[2025-08-03T00:06:44.984Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-03T00:06:45.085Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-03T00:06:45.086Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-03T00:06:45.087Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-03T00:06:45.088Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-03T00:06:45.264Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-03T00:06:45.280Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-03T00:06:46.036Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-03T00:06:46.037Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-03T00:06:46.181Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-03T00:06:57.385Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-03T00:06:57.400Z] user - GET { userId: 'dev-user-123' }
+[2025-08-03T00:06:57.832Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-03T00:06:57.865Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-03T00:06:57.866Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-03T00:06:58.017Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-03T00:07:46.524Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-03T00:07:46.528Z] GET /api/churches/45/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-03T00:07:46.529Z] GET /api/churches/45/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-03T00:07:46.533Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-03T00:07:46.534Z] visits-get - GET { userId: 'dev-user-123', churchId: 45 }
+[2025-08-03T00:07:46.539Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 45 }
+[2025-08-03T00:07:46.760Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-03T00:07:46.918Z] visits-get - GET { userId: 'dev-user-123', churchId: 45, visitCount: 0 }
+[2025-08-03T20:36:54.841Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-03T20:36:54.854Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-03T20:36:56.278Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-03T20:36:58.552Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-03T20:36:58.555Z] user - GET { userId: 'dev-user-123' }
+[2025-08-03T20:37:00.009Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-03T20:37:00.040Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-03T20:37:00.041Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-03T20:37:00.056Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-03T20:37:00.057Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-03T20:37:00.680Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-03T20:37:00.974Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-03T20:37:02.095Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-03T20:37:02.098Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-03T20:37:02.729Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-03T20:37:04.612Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-03T20:37:04.615Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-03T20:37:05.393Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-03T20:37:08.034Z] GET /api/churches/45/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-03T20:37:08.036Z] GET /api/churches/45/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-03T20:37:08.036Z] visits-get - GET { userId: 'dev-user-123', churchId: 45 }
+[2025-08-03T20:37:08.041Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 45 }
+[2025-08-03T20:37:09.117Z] visits-get - GET { userId: 'dev-user-123', churchId: 45, visitCount: 0 }
+[2025-08-03T21:11:53.659Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-03T21:11:53.670Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-03T21:11:54.944Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-04T09:43:32.512Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T09:43:32.524Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T09:43:33.367Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-04T09:43:33.369Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-04T09:43:33.872Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-04T09:43:34.232Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T09:43:34.312Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T09:43:34.313Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T09:43:34.325Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T09:43:34.326Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T09:43:34.443Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T09:43:34.444Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T09:43:34.668Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T09:43:34.684Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T09:43:34.921Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T09:49:58.598Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T09:49:58.601Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T09:49:59.348Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T09:49:59.364Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T09:49:59.366Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T09:49:59.370Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T09:49:59.372Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T09:49:59.531Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T09:49:59.653Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T09:50:11.342Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T09:50:11.365Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T09:50:11.743Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T09:50:13.469Z] GET /api/churches/32/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T09:50:13.470Z] GET /api/churches/32/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-04T09:50:13.471Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 32 }
+[2025-08-04T09:50:13.473Z] visits-get - GET { userId: 'dev-user-123', churchId: 32 }
+[2025-08-04T09:50:13.866Z] visits-get - GET { userId: 'dev-user-123', churchId: 32, visitCount: 0 }
+[2025-08-04T09:54:02.457Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-04T09:54:02.466Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-04T09:54:02.889Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-04T09:54:03.476Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T09:54:03.478Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T09:54:03.828Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T09:54:03.858Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T09:54:03.859Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T09:54:03.864Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T09:54:03.866Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T09:54:04.040Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T09:54:04.069Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T09:54:05.031Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-04T09:54:05.035Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-04T09:54:05.133Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-04T09:54:06.259Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T09:54:06.261Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T09:54:06.431Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T09:54:07.114Z] GET /api/churches/32/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T09:54:07.115Z] GET /api/churches/32/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-04T09:54:07.116Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 32 }
+[2025-08-04T09:54:07.119Z] visits-get - GET { userId: 'dev-user-123', churchId: 32 }
+[2025-08-04T09:54:07.424Z] visits-get - GET { userId: 'dev-user-123', churchId: 32, visitCount: 0 }
+[2025-08-04T09:54:29.275Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T09:54:29.288Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T09:54:29.565Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T10:35:46.709Z] GET /api/churches/24/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T10:35:46.720Z] GET /api/churches/24/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-04T10:35:46.735Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 24 }
+[2025-08-04T10:35:46.754Z] visits-get - GET { userId: 'dev-user-123', churchId: 24 }
+[2025-08-04T10:35:47.919Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-04T10:35:47.928Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-04T10:35:48.149Z] visits-get - GET { userId: 'dev-user-123', churchId: 24, visitCount: 0 }
+[2025-08-04T10:35:48.239Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-04T10:35:48.827Z] GET /api/visits/10
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/index.ts
+[2025-08-04T10:35:48.832Z] visit-get - GET { userId: 'dev-user-123', visitId: 10 }
+[2025-08-04T10:35:48.953Z] visit-get - GET { userId: 'dev-user-123', visitId: 10, churchId: 44 }
+[2025-08-04T10:35:54.298Z] GET /api/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/analytics.ts
+[2025-08-04T10:35:54.301Z] analytics - GET { userId: 'dev-user-123' }
+[2025-08-04T10:35:55.338Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T10:35:55.340Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T10:35:55.461Z] analytics - GET {
+  userId: 'dev-user-123',
+  totalChurches: 36,
+  activeChurches: 0,
+  pendingVisits: 0,
+  newThisMonth: 36
+}
+[2025-08-04T10:35:55.663Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T10:48:08.701Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-04T10:48:08.713Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-04T10:48:09.199Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-04T10:48:09.892Z] GET /api/visits/9
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/index.ts
+[2025-08-04T10:48:09.895Z] visit-get - GET { userId: 'dev-user-123', visitId: 9 }
+[2025-08-04T10:48:10.070Z] visit-get - GET { userId: 'dev-user-123', visitId: 9, churchId: 47 }
+[2025-08-04T10:48:11.478Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T10:48:11.480Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T10:48:11.686Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T10:48:12.186Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T10:48:12.188Z] GET /api/churches/45/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-04T10:48:12.192Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T10:48:12.192Z] visits-get - GET { userId: 'dev-user-123', churchId: 45 }
+[2025-08-04T10:48:12.198Z] GET /api/churches/45/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T10:48:12.200Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 45 }
+[2025-08-04T10:48:12.358Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T10:48:12.520Z] visits-get - GET { userId: 'dev-user-123', churchId: 45, visitCount: 0 }
+[2025-08-04T10:48:13.889Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T10:48:13.890Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T10:48:14.063Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T10:49:58.530Z] GET /api/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/analytics.ts
+[2025-08-04T10:49:58.539Z] analytics - GET { userId: 'dev-user-123' }
+[2025-08-04T10:49:59.831Z] analytics - GET {
+  userId: 'dev-user-123',
+  totalChurches: 36,
+  activeChurches: 0,
+  pendingVisits: 0,
+  newThisMonth: 36
+}
+[2025-08-04T10:50:00.918Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T10:50:00.920Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T10:50:01.100Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T10:50:01.379Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T10:50:01.381Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T10:50:01.590Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T10:52:34.435Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T10:52:34.441Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T10:52:35.247Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T10:52:35.413Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T10:52:35.414Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T10:52:35.446Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T10:52:35.448Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T10:52:35.646Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T10:52:35.651Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T10:57:19.466Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-04T10:57:19.483Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-04T10:57:19.965Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-04T10:57:20.486Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T10:57:20.489Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T10:57:20.944Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T10:57:20.973Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T10:57:20.974Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T10:57:20.981Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T10:57:20.983Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T10:57:21.135Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T10:57:21.141Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T10:57:21.897Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T10:57:21.899Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T10:57:22.079Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T10:57:22.821Z] GET /api/churches/32/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-04T10:57:22.822Z] GET /api/churches/32/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T10:57:22.824Z] visits-get - GET { userId: 'dev-user-123', churchId: 32 }
+[2025-08-04T10:57:22.825Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 32 }
+[2025-08-04T10:57:23.087Z] visits-get - GET { userId: 'dev-user-123', churchId: 32, visitCount: 0 }
+[2025-08-04T10:57:25.989Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-04T10:57:25.993Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-04T10:57:26.087Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-04T10:57:27.104Z] GET /api/visits/9
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/index.ts
+[2025-08-04T10:57:27.106Z] visit-get - GET { userId: 'dev-user-123', visitId: 9 }
+[2025-08-04T10:57:27.182Z] visit-get - GET { userId: 'dev-user-123', visitId: 9, churchId: 47 }
+[2025-08-04T10:57:30.900Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T10:57:30.901Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T10:57:31.067Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T11:01:50.951Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T11:01:50.956Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T11:01:51.637Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T11:01:51.649Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-04T11:01:51.651Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-04T11:01:51.765Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-04T11:01:54.137Z] GET /api/visits/9
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/index.ts
+[2025-08-04T11:01:54.139Z] visit-get - GET { userId: 'dev-user-123', visitId: 9 }
+[2025-08-04T11:01:54.240Z] visit-get - GET { userId: 'dev-user-123', visitId: 9, churchId: 47 }
+[2025-08-04T11:02:01.096Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T11:02:01.109Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T11:02:01.390Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T11:02:02.695Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T11:02:02.696Z] GET /api/churches/45/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:02:02.697Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T11:02:02.700Z] GET /api/churches/45/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-04T11:02:02.701Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 45 }
+[2025-08-04T11:02:02.706Z] visits-get - GET { userId: 'dev-user-123', churchId: 45 }
+[2025-08-04T11:02:02.869Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T11:02:03.054Z] visits-get - GET { userId: 'dev-user-123', churchId: 45, visitCount: 0 }
+[2025-08-04T11:02:03.746Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T11:02:03.748Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T11:02:03.946Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T11:09:51.270Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T11:09:51.297Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T11:09:51.306Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T11:09:51.323Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T11:09:51.797Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T11:09:51.849Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T11:10:38.132Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T11:10:38.179Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T11:10:38.537Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T11:10:38.989Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-04T11:10:38.991Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-04T11:10:39.161Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-04T11:13:03.791Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:13:03.801Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:13:04.268Z] PUT /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:13:04.278Z] church-star-rating-recalculate - PUT { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:13:04.464Z] GET /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:13:04.487Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:13:04.599Z] GET /api/churches/99999/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:13:04.601Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 99999 }
+[2025-08-04T11:13:04.686Z] GET /api/churches/invalid/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:13:04.690Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:13:04.692Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:13:04.785Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:13:04.789Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:13:04.951Z] GET /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:13:04.952Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:13:05.048Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:13:05.050Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:13:05.141Z] GET /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:13:05.142Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:16:37.587Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T11:16:37.592Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T11:16:37.992Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-04T11:16:37.996Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-04T11:16:38.092Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T11:16:38.164Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-04T11:17:05.533Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T11:17:05.547Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T11:17:05.552Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T11:17:05.555Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T11:17:05.975Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T11:17:06.031Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T11:18:43.519Z] GET /api/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/analytics.ts
+[2025-08-04T11:18:43.524Z] analytics - GET { userId: 'dev-user-123' }
+[2025-08-04T11:18:44.665Z] analytics - GET {
+  userId: 'dev-user-123',
+  totalChurches: 36,
+  activeChurches: 0,
+  pendingVisits: 0,
+  newThisMonth: 36
+}
+[2025-08-04T11:19:46.915Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T11:19:46.953Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T11:19:47.336Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T11:19:47.596Z] GET /api/churches/48/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:19:47.597Z] GET /api/churches/48/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-04T11:19:47.598Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 48 }
+[2025-08-04T11:19:47.599Z] visits-get - GET { userId: 'dev-user-123', churchId: 48 }
+[2025-08-04T11:19:48.172Z] visits-get - GET { userId: 'dev-user-123', churchId: 48, visitCount: 0 }
+[2025-08-04T11:19:52.381Z] GET /api/churches/32/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-04T11:19:52.382Z] GET /api/churches/32/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:19:52.383Z] visits-get - GET { userId: 'dev-user-123', churchId: 32 }
+[2025-08-04T11:19:52.387Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 32 }
+[2025-08-04T11:19:52.682Z] visits-get - GET { userId: 'dev-user-123', churchId: 32, visitCount: 0 }
+[2025-08-04T11:22:08.968Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:08.977Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:09.308Z] GET /api/churches/999999/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:09.310Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 999999 }
+[2025-08-04T11:22:09.428Z] PUT /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:09.430Z] church-star-rating-recalculate - PUT { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:09.518Z] GET /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:22:09.521Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:09.622Z] GET /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:22:09.623Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:09.715Z] GET /api/visits/1/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:22:09.758Z] visit-rating-get - GET { userId: 'dev-user-123', visitId: 1 }
+[2025-08-04T11:22:09.845Z] POST /api/visits/1/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:22:09.846Z] visit-rating-create - POST { userId: 'dev-user-123', visitId: 1 }
+[2025-08-04T11:22:09.931Z] POST /api/visits/1/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:22:09.932Z] visit-rating-create - POST { userId: 'dev-user-123', visitId: 1 }
+[2025-08-04T11:22:10.020Z] POST /api/visits/1/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:22:10.021Z] visit-rating-create - POST { userId: 'dev-user-123', visitId: 1 }
+[2025-08-04T11:22:10.099Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:22:10.116Z] ratings-analytics-top - GET { userId: 'dev-user-123' }
+[2025-08-04T11:22:10.197Z] ratings-analytics-top - GET { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: '42703',
+    details: null,
+    hint: 'Perhaps you meant to reference the column "churches_1.country".',
+    message: 'column churches_1.county does not exist'
+  }
+}
+[2025-08-04T11:22:10.203Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:22:10.205Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:22:10.298Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:22:10.319Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:22:10.324Z] ratings-analytics-recent - GET { userId: 'dev-user-123' }
+[2025-08-04T11:22:10.409Z] ratings-analytics-recent - GET { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: '42703',
+    details: null,
+    hint: 'Perhaps you meant to reference the column "churches_1.country".',
+    message: 'column churches_1.county does not exist'
+  }
+}
+[2025-08-04T11:22:10.411Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:22:10.415Z] DELETE /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:10.418Z] PATCH /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+SyntaxError: Unexpected token 'j', "{"invalid": json" is not valid JSON
+    at JSON.parse (<anonymous>)
+    at parse (/Users/danifrim/Documents/Coding/apme-churches-app/node_modules/body-parser/lib/types/json.js:92:19)
+    at /Users/danifrim/Documents/Coding/apme-churches-app/node_modules/body-parser/lib/read.js:128:18
+    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)
+    at invokeCallback (/Users/danifrim/Documents/Coding/apme-churches-app/node_modules/raw-body/index.js:238:16)
+    at done (/Users/danifrim/Documents/Coding/apme-churches-app/node_modules/raw-body/index.js:227:7)
+    at IncomingMessage.onEnd (/Users/danifrim/Documents/Coding/apme-churches-app/node_modules/raw-body/index.js:287:7)
+    at IncomingMessage.emit (node:events:518:28)
+    at endReadableNT (node:internal/streams/readable:1698:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+[2025-08-04T11:22:10.430Z] GET /api/churches/abc/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:10.433Z] POST /api/visits/1/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:22:10.434Z] visit-rating-create - POST { userId: 'dev-user-123', visitId: 1 }
+[2025-08-04T11:22:10.513Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:10.514Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:10.600Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:10.602Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:10.685Z] PUT /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:10.686Z] church-star-rating-recalculate - PUT { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:10.771Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:10.772Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:10.774Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:10.774Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:10.775Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:10.777Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:10.778Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:10.780Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:10.782Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:10.783Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:10.787Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:10.790Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:10.792Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:10.793Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:10.794Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:10.796Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:10.796Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:10.796Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:10.799Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:10.799Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:11.108Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:22:11.109Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:11.191Z] GET /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:22:11.197Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:22:11.283Z] GET /api/visits/1/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:22:11.285Z] visit-rating-get - GET { userId: 'dev-user-123', visitId: 1 }
+[2025-08-04T11:22:11.365Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:22:11.367Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:22:11.452Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:24:57.917Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:24:57.923Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:24:58.605Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:24:58.606Z] GET /api/visits/5/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:24:58.607Z] GET /api/visits/4/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:24:58.607Z] GET /api/visits/4/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:24:58.608Z] GET /api/visits/2/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:24:58.608Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:24:58.609Z] visit-rating-get - GET { userId: 'dev-user-123', visitId: 5 }
+[2025-08-04T11:24:58.609Z] visit-rating-get - GET { userId: 'dev-user-123', visitId: 4 }
+[2025-08-04T11:24:58.609Z] visit-rating-get - GET { userId: 'dev-user-123', visitId: 4 }
+[2025-08-04T11:24:58.619Z] visit-rating-get - GET { userId: 'dev-user-123', visitId: 2 }
+[2025-08-04T11:24:58.793Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:24:59.296Z] GET /api/churches/4/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:24:59.301Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 4 }
+[2025-08-04T11:24:59.726Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:24:59.727Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:24:59.766Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:24:59.768Z] ratings-analytics-top - GET { userId: 'dev-user-123' }
+[2025-08-04T11:24:59.770Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:24:59.771Z] ratings-analytics-top - GET { userId: 'dev-user-123' }
+[2025-08-04T11:24:59.823Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:24:59.829Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:24:59.831Z] ratings-analytics-recent - GET { userId: 'dev-user-123' }
+[2025-08-04T11:24:59.867Z] ratings-analytics-top - GET { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: '42703',
+    details: null,
+    hint: 'Perhaps you meant to reference the column "churches_1.country".',
+    message: 'column churches_1.county does not exist'
+  }
+}
+[2025-08-04T11:24:59.877Z] ratings-analytics-top - GET { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: '42703',
+    details: null,
+    hint: 'Perhaps you meant to reference the column "churches_1.country".',
+    message: 'column churches_1.county does not exist'
+  }
+}
+[2025-08-04T11:24:59.895Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:24:59.896Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:24:59.976Z] ratings-analytics-recent - GET { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: '42703',
+    details: null,
+    hint: 'Perhaps you meant to reference the column "churches_1.country".',
+    message: 'column churches_1.county does not exist'
+  }
+}
+[2025-08-04T11:24:59.996Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:25:02.496Z] POST /api/visits/3/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:25:02.499Z] visit-rating-create - POST { userId: 'dev-user-123', visitId: 3 }
+[2025-08-04T11:25:02.686Z] GET /api/churches/2/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:25:02.688Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 2 }
+[2025-08-04T11:25:02.895Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:02.897Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:02.991Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:25:03.077Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:03.081Z] ratings-analytics-top - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:03.224Z] ratings-analytics-top - GET { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: '42703',
+    details: null,
+    hint: 'Perhaps you meant to reference the column "churches_1.country".',
+    message: 'column churches_1.county does not exist'
+  }
+}
+[2025-08-04T11:25:03.327Z] GET /api/churches/2/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:25:03.328Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 2 }
+[2025-08-04T11:25:03.496Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:25:03.498Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:25:03.726Z] GET /api/churches/2/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:25:03.729Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 2 }
+[2025-08-04T11:25:03.781Z] GET /api/churches/5/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:25:03.784Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 5 }
+[2025-08-04T11:25:04.086Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:04.088Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:04.177Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:25:04.327Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:04.328Z] ratings-analytics-recent - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:04.417Z] GET /api/churches/5/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:25:04.420Z] ratings-analytics-recent - GET { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: '42703',
+    details: null,
+    hint: 'Perhaps you meant to reference the column "churches_1.country".',
+    message: 'column churches_1.county does not exist'
+  }
+}
+[2025-08-04T11:25:04.421Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 5 }
+[2025-08-04T11:25:07.776Z] POST /api/visits/3/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:25:07.778Z] visit-rating-create - POST { userId: 'dev-user-123', visitId: 3 }
+[2025-08-04T11:25:07.841Z] POST /api/visits/3/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:25:07.844Z] visit-rating-create - POST { userId: 'dev-user-123', visitId: 3 }
+[2025-08-04T11:25:08.091Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:08.093Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:08.191Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:25:08.583Z] GET /api/visits/2/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:25:08.586Z] visit-rating-get - GET { userId: 'dev-user-123', visitId: 2 }
+[2025-08-04T11:25:08.695Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:25:08.697Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:25:08.766Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:08.768Z] ratings-analytics-recent - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:08.856Z] ratings-analytics-recent - GET { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: '42703',
+    details: null,
+    hint: 'Perhaps you meant to reference the column "churches_1.country".',
+    message: 'column churches_1.county does not exist'
+  }
+}
+[2025-08-04T11:25:09.298Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:09.300Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:09.359Z] GET /api/churches/5/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:25:09.361Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 5 }
+[2025-08-04T11:25:09.395Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:25:09.676Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:09.678Z] ratings-analytics-recent - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:09.781Z] ratings-analytics-recent - GET { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: '42703',
+    details: null,
+    hint: 'Perhaps you meant to reference the column "churches_1.country".',
+    message: 'column churches_1.county does not exist'
+  }
+}
+[2025-08-04T11:25:09.953Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:09.957Z] ratings-analytics-top - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:10.046Z] ratings-analytics-top - GET { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: '42703',
+    details: null,
+    hint: 'Perhaps you meant to reference the column "churches_1.country".',
+    message: 'column churches_1.county does not exist'
+  }
+}
+[2025-08-04T11:25:13.044Z] GET /api/visits/5/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:25:13.045Z] visit-rating-get - GET { userId: 'dev-user-123', visitId: 5 }
+[2025-08-04T11:25:13.094Z] POST /api/visits/5/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:25:13.095Z] visit-rating-create - POST { userId: 'dev-user-123', visitId: 5 }
+[2025-08-04T11:25:13.475Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:25:13.480Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:25:14.131Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:14.132Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:14.224Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:25:14.283Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:14.286Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:14.382Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:25:14.388Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:14.389Z] ratings-analytics-top - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:14.467Z] ratings-analytics-top - GET { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: '42703',
+    details: null,
+    hint: 'Perhaps you meant to reference the column "churches_1.country".',
+    message: 'column churches_1.county does not exist'
+  }
+}
+[2025-08-04T11:25:14.580Z] GET /api/churches/3/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:25:14.582Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 3 }
+[2025-08-04T11:25:14.885Z] GET /api/churches/4/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:25:14.887Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 4 }
+[2025-08-04T11:25:14.970Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:25:14.971Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:25:15.480Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:15.482Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:15.564Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:15.566Z] ratings-analytics-recent - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:15.579Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:25:15.653Z] ratings-analytics-recent - GET { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: '42703',
+    details: null,
+    hint: 'Perhaps you meant to reference the column "churches_1.country".',
+    message: 'column churches_1.county does not exist'
+  }
+}
+[2025-08-04T11:25:16.387Z] GET /api/visits/5/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:25:16.390Z] visit-rating-get - GET { userId: 'dev-user-123', visitId: 5 }
+[2025-08-04T11:25:17.215Z] GET /api/visits/4/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:25:17.218Z] visit-rating-get - GET { userId: 'dev-user-123', visitId: 4 }
+[2025-08-04T11:25:17.481Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:17.483Z] ratings-analytics-recent - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:17.571Z] ratings-analytics-recent - GET { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: '42703',
+    details: null,
+    hint: 'Perhaps you meant to reference the column "churches_1.country".',
+    message: 'column churches_1.county does not exist'
+  }
+}
+[2025-08-04T11:25:17.767Z] GET /api/churches/4/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:25:17.770Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 4 }
+[2025-08-04T11:25:18.305Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:18.307Z] ratings-analytics-top - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:18.391Z] ratings-analytics-top - GET { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: '42703',
+    details: null,
+    hint: 'Perhaps you meant to reference the column "churches_1.country".',
+    message: 'column churches_1.county does not exist'
+  }
+}
+[2025-08-04T11:25:18.869Z] GET /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:25:18.871Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:25:19.708Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:19.710Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:19.895Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:25:20.399Z] GET /api/churches/4/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:25:20.401Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 4 }
+[2025-08-04T11:25:20.571Z] POST /api/visits/1/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:25:20.573Z] visit-rating-create - POST { userId: 'dev-user-123', visitId: 1 }
+[2025-08-04T11:25:20.636Z] GET /api/visits/3/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:25:20.638Z] visit-rating-get - GET { userId: 'dev-user-123', visitId: 3 }
+[2025-08-04T11:25:20.994Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:20.996Z] ratings-analytics-top - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:21.090Z] ratings-analytics-top - GET { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: '42703',
+    details: null,
+    hint: 'Perhaps you meant to reference the column "churches_1.country".',
+    message: 'column churches_1.county does not exist'
+  }
+}
+[2025-08-04T11:25:21.604Z] GET /api/churches/2/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:25:21.606Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 2 }
+[2025-08-04T11:25:21.830Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:21.832Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:21.927Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:25:22.707Z] GET /api/churches/5/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:25:22.709Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 5 }
+[2025-08-04T11:25:23.634Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:23.640Z] ratings-analytics-top - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:23.738Z] ratings-analytics-top - GET { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: '42703',
+    details: null,
+    hint: 'Perhaps you meant to reference the column "churches_1.country".',
+    message: 'column churches_1.county does not exist'
+  }
+}
+[2025-08-04T11:25:24.172Z] POST /api/visits/5/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:25:24.175Z] visit-rating-create - POST { userId: 'dev-user-123', visitId: 5 }
+[2025-08-04T11:25:24.242Z] GET /api/churches/4/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:25:24.247Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 4 }
+[2025-08-04T11:25:24.630Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:24.632Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:24.716Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:25:24.862Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:24.863Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:24.951Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:25:25.219Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:25:25.223Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:25:25.842Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:25:25.845Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:25:25.935Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:25:26.395Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:25:26.396Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:25:27.281Z] GET /api/churches/2/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:25:27.284Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 2 }
+[2025-08-04T11:25:27.486Z] GET /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:25:27.487Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:25:28.381Z] GET /api/churches/2/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:25:28.382Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 2 }
+[2025-08-04T11:27:09.195Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:27:09.199Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:27:09.582Z] GET /api/churches/999999/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:27:09.584Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 999999 }
+[2025-08-04T11:27:09.755Z] GET /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:27:09.757Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:27:09.861Z] GET /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:27:09.864Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:27:09.963Z] GET /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:27:09.964Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:27:10.071Z] GET /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:27:10.073Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:27:10.177Z] GET /api/visits/1/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:27:10.181Z] visit-rating-get - GET { userId: 'dev-user-123', visitId: 1 }
+[2025-08-04T11:27:10.282Z] POST /api/visits/1/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:27:10.284Z] visit-rating-create - POST { userId: 'dev-user-123', visitId: 1 }
+[2025-08-04T11:27:10.386Z] POST /api/visits/1/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:27:10.387Z] visit-rating-create - POST { userId: 'dev-user-123', visitId: 1 }
+[2025-08-04T11:27:10.510Z] POST /api/visits/1/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:27:10.513Z] visit-rating-create - POST { userId: 'dev-user-123', visitId: 1 }
+[2025-08-04T11:27:10.633Z] POST /api/visits/1/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:27:10.635Z] visit-rating-create - POST { userId: 'dev-user-123', visitId: 1 }
+[2025-08-04T11:27:10.741Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:27:10.743Z] ratings-analytics-top - GET { userId: 'dev-user-123' }
+[2025-08-04T11:27:10.843Z] ratings-analytics-top - GET { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: '42703',
+    details: null,
+    hint: 'Perhaps you meant to reference the column "churches_1.country".',
+    message: 'column churches_1.county does not exist'
+  }
+}
+[2025-08-04T11:27:10.847Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:27:10.850Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:27:10.964Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:27:10.967Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:27:10.968Z] ratings-analytics-recent - GET { userId: 'dev-user-123' }
+[2025-08-04T11:27:11.068Z] ratings-analytics-recent - GET { userId: 'dev-user-123', error: 'Unknown error' }
+[ERROR] Unknown error occurred {
+  error: {
+    code: '42703',
+    details: null,
+    hint: 'Perhaps you meant to reference the column "churches_1.country".',
+    message: 'column churches_1.county does not exist'
+  }
+}
+[2025-08-04T11:27:11.071Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:27:11.073Z] POST /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:27:11.075Z] DELETE /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:27:11.077Z] PATCH /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:27:11.079Z] POST /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:27:11.081Z] PUT /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:27:11.082Z] DELETE /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:27:11.084Z] PATCH /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:27:11.085Z] PUT /api/visits/1/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:27:11.087Z] DELETE /api/visits/1/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:27:11.090Z] PATCH /api/visits/1/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:27:11.094Z] GET /api/churches/abc/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:27:11.096Z] GET /api/churches/0/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:27:11.098Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 0 }
+[2025-08-04T11:27:11.198Z] GET /api/churches/-1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:27:11.199Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: -1 }
+[2025-08-04T11:27:11.296Z] GET /api/churches/null/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:27:11.298Z] GET /api/churches//star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id].ts
+[2025-08-04T11:27:11.301Z] GET /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:27:11.301Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:27:11.402Z] GET /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:27:11.403Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:27:11.494Z] GET /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:27:11.495Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:27:11.592Z] GET /api/churches/1/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:27:11.594Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:27:11.709Z] GET /api/churches/1/star-rating/history
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating/history.ts
+[2025-08-04T11:27:11.710Z] church-rating-history - GET { userId: 'dev-user-123', churchId: 1 }
+[2025-08-04T11:27:11.810Z] GET /api/visits/1/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:27:11.811Z] visit-rating-get - GET { userId: 'dev-user-123', visitId: 1 }
+[2025-08-04T11:27:11.935Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T11:27:11.936Z] ratings-analytics-stats - GET { userId: 'dev-user-123' }
+[2025-08-04T11:27:12.085Z] ratings-analytics-stats - GET { userId: 'dev-user-123', totalRatedChurches: 0, averageRating: 0 }
+[2025-08-04T11:27:12.087Z] GET /api/churches/999999/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T11:27:12.089Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 999999 }
+[2025-08-04T11:27:12.203Z] GET /api/visits/999999/rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/rating.ts
+[2025-08-04T11:27:12.204Z] visit-rating-get - GET { userId: 'dev-user-123', visitId: 999999 }
+[2025-08-04T11:27:12.315Z] GET /api/ratings/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/ratings/analytics.ts
+[2025-08-04T12:14:10.214Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-04T12:14:10.228Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-04T12:14:11.059Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-04T12:14:12.051Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T12:14:12.054Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T12:14:12.492Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T12:14:12.533Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T12:14:12.538Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:14:12.592Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T12:14:12.599Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:14:12.752Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T12:14:12.857Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T12:14:13.633Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T12:14:13.634Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:14:13.890Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T12:14:14.710Z] GET /api/churches/32/star-rating
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/star-rating.ts
+[2025-08-04T12:14:14.712Z] GET /api/churches/32/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/[id]/visits.ts
+[2025-08-04T12:14:14.714Z] church-star-rating-get - GET { userId: 'dev-user-123', churchId: 32 }
+[2025-08-04T12:14:14.718Z] visits-get - GET { userId: 'dev-user-123', churchId: 32 }
+[2025-08-04T12:14:15.083Z] visits-get - GET { userId: 'dev-user-123', churchId: 32, visitCount: 0 }
+[2025-08-04T12:14:17.892Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T12:14:17.893Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:14:18.063Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T12:14:27.065Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-04T12:14:27.067Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-04T12:14:27.389Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-04T12:14:28.186Z] GET /api/visits/10
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/[id]/index.ts
+[2025-08-04T12:14:28.192Z] visit-get - GET { userId: 'dev-user-123', visitId: 10 }
+[2025-08-04T12:14:28.379Z] visit-get - GET { userId: 'dev-user-123', visitId: 10, churchId: 44 }
+[2025-08-04T12:23:35.551Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T12:23:35.615Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T12:23:36.636Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T12:26:39.606Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-04T12:26:39.616Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-04T12:26:40.071Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-04T12:26:40.630Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T12:26:40.633Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T12:26:40.996Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T12:26:41.046Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T12:26:41.048Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:26:41.053Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T12:26:41.055Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:26:41.222Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T12:26:41.253Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T12:26:42.071Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T12:26:42.074Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:26:42.265Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T12:26:50.717Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T12:26:50.721Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T12:26:51.063Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T12:27:11.037Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-04T12:27:11.052Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-04T12:27:11.204Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-04T12:27:11.527Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T12:27:11.528Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T12:27:11.782Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T12:27:11.798Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T12:27:11.810Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:27:11.816Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T12:27:11.818Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:27:11.992Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T12:27:12.033Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T12:27:17.296Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T12:27:17.297Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:27:17.622Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T12:27:19.038Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T12:27:19.041Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T12:27:19.290Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T12:27:19.321Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T12:27:19.322Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:27:19.505Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T12:28:27.953Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-04T12:28:27.962Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-04T12:28:28.280Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-04T12:28:28.722Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T12:28:28.725Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T12:28:28.995Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T12:28:29.026Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T12:28:29.029Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T12:28:29.030Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:28:29.038Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:28:29.211Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T12:28:29.248Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T12:33:04.646Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T12:33:04.653Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T12:33:05.386Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T12:33:27.427Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-04T12:33:27.439Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-04T12:33:27.617Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-04T12:33:30.673Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T12:33:30.677Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:33:30.929Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T12:33:50.424Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T12:33:50.431Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:33:50.444Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T12:33:50.447Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:33:50.672Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T12:33:50.726Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T12:33:54.335Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-04T12:33:54.338Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-04T12:33:54.432Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-04T12:33:54.733Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T12:33:54.734Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T12:33:55.016Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T12:33:55.036Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T12:33:55.037Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:33:55.046Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T12:33:55.046Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:33:55.202Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T12:33:55.266Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T12:34:16.615Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T12:34:16.620Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T12:34:16.998Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T12:34:18.279Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-04T12:34:18.280Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-04T12:34:18.386Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-04T12:34:18.761Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T12:34:18.762Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T12:34:19.057Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T12:34:19.071Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T12:34:19.073Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:34:19.090Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T12:34:19.093Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:34:19.236Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T12:34:19.282Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T12:36:13.536Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-04T12:36:13.540Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-04T12:36:14.035Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-04T12:39:32.143Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T12:39:32.153Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T12:39:32.952Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T12:39:41.247Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-04T12:39:41.250Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-04T12:39:41.447Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-04T12:39:41.779Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T12:39:41.780Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T12:39:42.060Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T12:39:42.086Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T12:39:42.089Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:39:42.097Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T12:39:42.110Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T12:39:42.281Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T12:39:42.292Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T12:43:20.297Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T12:43:20.303Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T12:43:20.903Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T13:56:46.065Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-04T13:56:46.083Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-04T13:56:47.056Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-04T13:56:48.139Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T13:56:48.141Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T13:56:48.596Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T13:56:48.641Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T13:56:48.643Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T13:56:48.655Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T13:56:48.657Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T13:56:48.856Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T13:56:48.867Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T14:12:42.717Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T14:12:42.734Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T14:12:43.457Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T14:12:43.915Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T14:12:43.922Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T14:12:43.937Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T14:12:43.939Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T14:12:44.151Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T14:12:44.249Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T14:12:53.835Z] GET /api/analytics
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/analytics.ts
+[2025-08-04T14:12:53.868Z] analytics - GET { userId: 'dev-user-123' }
+[2025-08-04T14:12:55.122Z] analytics - GET {
+  userId: 'dev-user-123',
+  totalChurches: 36,
+  activeChurches: 0,
+  pendingVisits: 0,
+  newThisMonth: 36
+}
+[2025-08-04T14:13:04.716Z] GET /api/visits
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/visits/index.ts
+[2025-08-04T14:13:04.718Z] visits-get-all - GET { userId: 'dev-user-123' }
+[2025-08-04T14:13:04.868Z] visits-get-all - GET { userId: 'dev-user-123', visitCount: 2 }
+[2025-08-04T14:14:11.392Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T14:14:11.401Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T14:14:11.877Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T14:14:24.166Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T14:14:24.174Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T14:14:24.771Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T14:14:37.445Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-04T14:14:37.448Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-04T14:14:38.010Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-04T14:14:38.429Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T14:14:38.431Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T14:14:38.799Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T14:14:38.809Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T14:14:38.810Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T14:14:38.815Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T14:14:38.817Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T14:14:38.973Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T14:14:39.011Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}
+[2025-08-04T14:14:43.262Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T14:14:43.265Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T14:14:43.607Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T14:15:35.521Z] POST /api/auth/login
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/login.ts
+[2025-08-04T14:15:35.526Z] login - POST { userId: undefined, email: 'office@apme.ro' }
+[2025-08-04T14:15:35.758Z] login - POST { userId: 'admin-user-1', fallback: true }
+[2025-08-04T14:15:36.243Z] GET /api/auth/user
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/auth/user.ts
+[2025-08-04T14:15:36.244Z] user - GET { userId: 'dev-user-123' }
+[2025-08-04T14:15:36.560Z] user - GET { userId: 'dev-user-123', success: true }
+[2025-08-04T14:15:36.583Z] GET /api/churches
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/churches/index.ts
+[2025-08-04T14:15:36.584Z] churches-get - GET { userId: 'dev-user-123' }
+[2025-08-04T14:15:36.591Z] GET /api/filters
+Executing serverless function: /Users/danifrim/Documents/Coding/apme-churches-app/api/filters/index.ts
+[2025-08-04T14:15:36.592Z] filters-get - GET { userId: 'dev-user-123' }
+[2025-08-04T14:15:36.739Z] filters-get - GET {
+  userId: 'dev-user-123',
+  counties: 41,
+  regions: 10,
+  engagementLevels: 4
+}
+[2025-08-04T14:15:36.860Z] churches-get - GET {
+  userId: 'dev-user-123',
+  count: 36,
+  filters: {
+    search: undefined,
+    county: undefined,
+    countyId: undefined,
+    regionId: undefined,
+    engagementLevel: undefined
+  }
+}

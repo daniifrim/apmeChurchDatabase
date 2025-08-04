@@ -461,12 +461,37 @@ export class ServerlessStorage implements IServerlessStorage {
   async getVisitsByChurch(churchId: number): Promise<Visit[]> {
     const { data, error } = await supabase
       .from('visits')
-      .select('*')
+      .select(`
+        *,
+        churches (
+          id,
+          name,
+          address,
+          city,
+          county_id
+        )
+      `)
       .eq('church_id', churchId)
       .order('visit_date', { ascending: false });
     
     if (error) throw error;
-    return data as Visit[];
+    
+    // Transform the data to normalize field names
+    return data.map((visit: any) => ({
+      ...visit,
+      visitDate: visit.visit_date,
+      attendeesCount: visit.attendees_count,
+      followUpRequired: visit.follow_up_required,
+      isRated: visit.is_rated,
+      createdAt: visit.created_at,
+      updatedAt: visit.updated_at,
+      visitedBy: visit.visited_by,
+      churchId: visit.church_id,
+      churchName: visit.churches?.name,
+      churchAddress: visit.churches?.address,
+      churchCity: visit.churches?.city,
+      churchCountyId: visit.churches?.county_id,
+    })) as Visit[];
   }
 
   async getAllVisitsWithChurches(): Promise<any[]> {
@@ -569,9 +594,7 @@ export class ServerlessStorage implements IServerlessStorage {
 
   async updateVisit(id: number, visit: Partial<InsertVisit>): Promise<Visit> {
     // Map camelCase to snake_case for database
-    const dbVisit: any = {
-      updated_at: new Date().toISOString(),
-    };
+    const dbVisit: any = {};
 
     if (visit.churchId !== undefined) dbVisit.church_id = visit.churchId;
     if (visit.visitedBy !== undefined) dbVisit.visited_by = visit.visitedBy;
@@ -579,7 +602,8 @@ export class ServerlessStorage implements IServerlessStorage {
     if (visit.purpose !== undefined) dbVisit.purpose = visit.purpose;
     if (visit.notes !== undefined) dbVisit.notes = visit.notes;
     if (visit.followUpRequired !== undefined) dbVisit.follow_up_required = visit.followUpRequired;
-    if (visit.attendeesCount !== undefined) dbVisit.attendees_count = visit.attendeesCount;
+    // Note: attendees_count and updated_at columns don't exist in current database schema
+    // Skipping attendeesCount until schema is updated
 
     const { data, error } = await supabase
       .from('visits')

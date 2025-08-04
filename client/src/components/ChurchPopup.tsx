@@ -51,16 +51,13 @@ export default function ChurchPopup({ church, onClose, onEdit, onViewDetails }: 
             <h3 className="text-lg font-semibold text-gray-900 truncate">
               {church.name}
             </h3>
-            <div className="flex items-center space-x-2 mt-1">
-              <Badge className={`text-white text-xs px-2 py-1 ${getEngagementColor(church.engagementLevel)}`}>
-                {getEngagementLabel(church.engagementLevel)}
-              </Badge>
-              {church.memberCount && (
+            {church.memberCount && (
+              <div className="mt-1">
                 <span className="text-sm text-gray-500">
                   {church.memberCount} members
                 </span>
-              )}
-            </div>
+              </div>
+            )}
           </div>
           <button
             onClick={onClose}
@@ -73,12 +70,16 @@ export default function ChurchPopup({ church, onClose, onEdit, onViewDetails }: 
 
       {/* Address */}
       <div className="px-4 py-2">
-        <div className="flex items-start space-x-2 text-gray-600">
+        <button 
+          onClick={openDirections}
+          className="flex items-start space-x-2 text-gray-600 hover:text-[#2E5BBA] transition-colors w-full text-left group"
+        >
           <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
-          <span className="text-sm">
+          <span className="text-sm flex-1">
             {church.address}, {church.city}, {church.county}
           </span>
-        </div>
+          <Navigation className="h-4 w-4 mt-0.5 flex-shrink-0 opacity-60 group-hover:opacity-100" />
+        </button>
         {church.pastor && (
           <div className="mt-2 text-sm text-gray-600">
             Pastor: {church.pastor}
@@ -90,16 +91,8 @@ export default function ChurchPopup({ church, onClose, onEdit, onViewDetails }: 
       <div className="px-4 py-3 border-t border-gray-100">
         <div className="flex space-x-2">
           <button
-            onClick={openDirections}
-            className="flex-1 bg-[#2E5BBA] hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center space-x-2 transition-colors"
-          >
-            <Navigation className="h-4 w-4" />
-            <span>Directions</span>
-          </button>
-          
-          <button
             onClick={onEdit}
-            className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center space-x-2 transition-colors"
+            className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center space-x-2 transition-colors"
           >
             <Edit className="h-4 w-4" />
             <span>Edit</span>
@@ -108,7 +101,7 @@ export default function ChurchPopup({ church, onClose, onEdit, onViewDetails }: 
           {church.phone && (
             <button
               onClick={callPastor}
-              className="bg-green-100 hover:bg-green-200 text-green-700 px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center space-x-2 transition-colors"
+              className="flex-1 bg-green-100 hover:bg-green-200 text-green-700 px-4 py-2 rounded-lg text-sm font-medium flex items-center justify-center space-x-2 transition-colors"
             >
               <Phone className="h-4 w-4" />
               <span>Call</span>
