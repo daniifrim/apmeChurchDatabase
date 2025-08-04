@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Search, Plus } from "lucide-react";
 import type { Church } from "@/types";
+import ChurchList from "./ChurchList";
 
 interface SidebarProps {
   searchQuery: string;
@@ -190,55 +191,24 @@ export default function Sidebar({
             </Button>
           </div>
           
-          {churchesLoading ? (
-            <div className="flex justify-center py-8">
-              <div className="loading-spinner"></div>
-            </div>
-          ) : churches.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              <p className="text-sm">No churches found</p>
-              <p className="text-xs mt-1">Try adjusting your filters</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {churches.map((church) => (
-                <Card
-                  key={church.id}
-                  className={`cursor-pointer transition-all hover:shadow-md ${
-                    selectedChurchId === church.id ? 'ring-2 ring-ministry-blue' : ''
-                  }`}
-                  onClick={() => onChurchSelect(church)}
-                >
-                  <CardContent className="p-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-dark-blue-grey text-sm truncate">
-                          {church.name}
-                        </h4>
-                        <p className="text-xs text-gray-500 mt-1 truncate">
-                          {church.address}, {church.city}
-                        </p>
-                        <div className="flex items-center space-x-2 mt-2">
-                          <Badge
-                            variant="secondary"
-                            className={`text-white text-xs ${getEngagementColor(church.engagementLevel)}`}
-                          >
-                            {getEngagementLabel(church.engagementLevel)}
-                          </Badge>
-                          <span className="text-xs text-gray-400">
-                            {formatLastActivity(church.updatedAt)}
-                          </span>
-                        </div>
-                      </div>
-                      <div 
-                        className={`w-3 h-3 rounded-full ml-2 flex-shrink-0 ${getEngagementColor(church.engagementLevel)}`}
-                      ></div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
+          {
+            churchesLoading ? (
+              <div className="flex justify-center py-8">
+                <div className="loading-spinner"></div>
+              </div>
+            ) : churches.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                <p className="text-sm">No churches found</p>
+                <p className="text-xs mt-1">Try adjusting your filters</p>
+              </div>
+            ) : (
+              <ChurchList 
+                churches={churches} 
+                onChurchSelect={onChurchSelect} 
+                selectedChurchId={selectedChurchId} 
+              />
+            )
+          }
         </div>
       </div>
     </div>
