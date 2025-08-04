@@ -38,6 +38,8 @@ export default function MapView() {
       }
       const result = await response.json();
       console.log('✅ Filter options loaded:', result.data);
+      console.log('🔍 Counties sample:', result.data?.counties?.slice(0, 3));
+      console.log('🔍 Regions sample:', result.data?.regions?.slice(0, 3));
       return result.data;
     },
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes
@@ -82,10 +84,11 @@ export default function MapView() {
   useEffect(() => {
     if (selectedCountyId && filterOptions?.counties && !isAutoPopulating) {
       const selectedCounty = filterOptions.counties.find((c: any) => c.id.toString() === selectedCountyId);
-      if (selectedCounty && selectedCounty.rccpRegionId.toString() !== selectedRegionId) {
-        console.log('🤖 Auto-populating region from county:', selectedCounty.rccpRegionId);
+      const regionId = selectedCounty?.rccp_region_id || selectedCounty?.rccpRegionId;
+      if (selectedCounty && regionId && regionId.toString() !== selectedRegionId) {
+        console.log('🤖 Auto-populating region from county:', regionId);
         setIsAutoPopulating(true);
-        setSelectedRegionId(selectedCounty.rccpRegionId.toString());
+        setSelectedRegionId(regionId.toString());
         setTimeout(() => setIsAutoPopulating(false), 100);
       }
     }
@@ -95,7 +98,8 @@ export default function MapView() {
   useEffect(() => {
     if (selectedRegionId && selectedCountyId && filterOptions?.counties && !isAutoPopulating) {
       const selectedCounty = filterOptions.counties.find((c: any) => c.id.toString() === selectedCountyId);
-      if (selectedCounty && selectedCounty.rccpRegionId.toString() !== selectedRegionId) {
+      const regionId = selectedCounty?.rccp_region_id || selectedCounty?.rccpRegionId;
+      if (selectedCounty && regionId && regionId.toString() !== selectedRegionId) {
         console.log('🤖 Clearing county as it does not belong to selected region');
         setSelectedCountyId('');
       }
@@ -349,13 +353,29 @@ export default function MapView() {
                   <option value="">
                     {selectedRegionId ? 'All Counties in Region' : 'All Counties'}
                   </option>
-                  {filterOptions?.counties
-                    ?.filter((county: any) => !selectedRegionId || county.rccpRegionId.toString() === selectedRegionId)
-                    ?.map((county: any) => (
-                    <option key={county.id} value={county.id}>
-                      {county.name} ({county.abbreviation})
-                    </option>
-                  ))}
+                  {(() => {
+                    console.log('🔍 Debug county filtering:', {
+                      selectedRegionId,
+                      totalCounties: filterOptions?.counties?.length,
+                      sampleCounty: filterOptions?.counties?.[0],
+                      allKeys: filterOptions?.counties?.[0] ? Object.keys(filterOptions.counties[0]) : [],
+                      filteredCounties: filterOptions?.counties?.filter((county: any) => !selectedRegionId || ((county.rccp_region_id || county.rccpRegionId) && (county.rccp_region_id || county.rccpRegionId).toString() === selectedRegionId))
+                    });
+                    
+                    return filterOptions?.counties
+                      ?.filter((county: any) => {
+                        if (!selectedRegionId) return true;
+                        const regionId = county.rccp_region_id || county.rccpRegionId;
+                        const matches = regionId && regionId.toString() === selectedRegionId;
+                        console.log(`County ${county.name}: rccp_region_id=${county.rccp_region_id}, rccpRegionId=${county.rccpRegionId}, selectedRegionId=${selectedRegionId}, matches=${matches}`);
+                        return matches;
+                      })
+                      ?.map((county: any) => (
+                        <option key={county.id} value={county.id}>
+                          {county.name} ({county.abbreviation})
+                        </option>
+                      ));
+                  })()}
                 </select>
                 {selectedRegionId && (
                   <p className="text-xs text-gray-500 mt-1">

@@ -122,15 +122,26 @@ async function handleCreateVisit(
   churchId: number
 ) {
   logServerlessFunction('visits-create', 'POST', userId, { churchId });
-  console.log('=== DEBUG: handleCreateVisit ===');
-  console.log('churchId:', churchId);
-  console.log('userId:', userId);
-  console.log('req.body:', req.body);
+  console.log('🚀🚀🚀 POST /api/churches/[id]/visits - DETAILED DEBUG 🚀🚀🚀');
+  console.log('🚀 Church ID:', churchId, '(type:', typeof churchId, ')');
+  console.log('🚀 User ID:', userId, '(type:', typeof userId, ')');
+  console.log('🚀 User role:', req.user.role);
+  console.log('🚀 Request body RAW:', JSON.stringify(req.body, null, 2));
+  console.log('🚀 Request headers:', JSON.stringify(req.headers, null, 2));
+  console.log('🚀 Request method:', req.method);
+  console.log('🚀 Request query:', JSON.stringify(req.query, null, 2));
 
   try {
     // Verify church exists
+    console.log('🚀 Verifying church exists with ID:', churchId);
     const church = await serverlessStorage.getChurchById(churchId);
+    console.log('🚀 Church found:', !!church);
+    if (church) {
+      console.log('🚀 Church data:', JSON.stringify({ id: church.id, name: church.name }, null, 2));
+    }
+    
     if (!church) {
+      console.log('🚀 ERROR: Church not found for ID:', churchId);
       logServerlessFunction('visits-create', 'POST', userId, { churchId, error: 'Church not found' });
       return res.status(404).json({ 
         success: false, 
@@ -139,14 +150,22 @@ async function handleCreateVisit(
     }
 
     // Extract rating data if provided
+    console.log('🚀 Extracting rating data from body');
     const { rating, ...visitPayload } = req.body;
+    console.log('🚀 Rating data:', JSON.stringify(rating, null, 2));
+    console.log('🚀 Visit payload:', JSON.stringify(visitPayload, null, 2));
     
     // Validate and parse visit data
-    const visitData = validateRequestBody({
+    console.log('🚀 About to validate visit data with schema');
+    const dataToValidate = {
       ...visitPayload,
       churchId,
       visitedBy: userId,
-    }, insertVisitSchema);
+    };
+    console.log('🚀 Data to validate:', JSON.stringify(dataToValidate, null, 2));
+    
+    const visitData = validateRequestBody(dataToValidate, insertVisitSchema);
+    console.log('🚀 Validation SUCCESS - processed visit data:', JSON.stringify(visitData, null, 2));
 
     // Create the visit
     const visit = await serverlessStorage.createVisit(visitData);
@@ -244,13 +263,17 @@ async function handleCreateVisit(
     return res.status(201).json(response);
 
   } catch (error) {
-    console.error('=== ERROR in handleCreateVisit ===');
-    console.error('Error type:', typeof error);
-    console.error('Error constructor:', error?.constructor?.name);
-    console.error('Error:', error);
-    console.error('Stack:', error instanceof Error ? error.stack : 'No stack');
-    console.error('String representation:', String(error));
-    console.error('JSON representation:', JSON.stringify(error, null, 2));
+    console.log('🚀🚀🚀 FATAL ERROR in POST /api/churches/[id]/visits 🚀🚀🚀');
+    console.log('🚀 Error type:', typeof error);
+    console.log('🚀 Error instanceof Error:', error instanceof Error);
+    console.log('🚀 Error constructor name:', error?.constructor?.name);
+    if (error instanceof Error) {
+      console.log('🚀 Error message:', error.message);
+      console.log('🚀 Error stack:', error.stack);
+    } else {
+      console.log('🚀 Raw error:', JSON.stringify(error, null, 2));
+    }
+    console.log('🚀 String representation:', String(error));
     
     logServerlessFunction('visits-create', 'POST', userId, { 
       churchId,

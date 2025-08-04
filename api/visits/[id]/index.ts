@@ -90,15 +90,26 @@ async function handleUpdateVisit(
   visitId: number
 ) {
   logServerlessFunction('visit-update', 'PUT', userId, { visitId });
-  console.log('=== DEBUG: handleUpdateVisit ===');
-  console.log('visitId:', visitId);
-  console.log('userId:', userId);
-  console.log('req.body:', req.body);
+  console.log('🔥🔥🔥 PUT /api/visits/[id] - DETAILED DEBUG 🔥🔥🔥');
+  console.log('🔥 Visit ID:', visitId, '(type:', typeof visitId, ')');
+  console.log('🔥 User ID:', userId, '(type:', typeof userId, ')');
+  console.log('🔥 User role:', req.user.role);
+  console.log('🔥 Request body RAW:', JSON.stringify(req.body, null, 2));
+  console.log('🔥 Request headers:', JSON.stringify(req.headers, null, 2));
+  console.log('🔥 Request method:', req.method);
+  console.log('🔥 Request query:', JSON.stringify(req.query, null, 2));
 
   try {
     // Check if visit exists
+    console.log('🔥 Fetching existing visit with ID:', visitId);
     const existingVisit = await serverlessStorage.getVisitById(visitId);
+    console.log('🔥 Existing visit found:', !!existingVisit);
+    if (existingVisit) {
+      console.log('🔥 Existing visit data:', JSON.stringify(existingVisit, null, 2));
+    }
+    
     if (!existingVisit) {
+      console.log('🔥 ERROR: Visit not found for ID:', visitId);
       return res.status(404).json({
         success: false,
         message: 'Visit not found',
@@ -107,6 +118,7 @@ async function handleUpdateVisit(
     }
 
     // Check if user can edit this visit (only the creator or admin)
+    console.log('🔥 Authorization check - visitedBy:', existingVisit.visitedBy, 'userId:', userId, 'role:', req.user.role);
     if (existingVisit.visitedBy !== userId && req.user.role !== 'administrator') {
       return res.status(403).json({
         success: false,
@@ -116,9 +128,13 @@ async function handleUpdateVisit(
     }
 
     // Validate and parse visit data (partial update)
+    console.log('🔥 About to validate request body with schema');
     const visitData = validateRequestBody(req.body, insertVisitSchema.partial());
-
+    console.log('🔥 Validation SUCCESS - processed data:', JSON.stringify(visitData, null, 2));
+    
+    console.log('🔥 About to update visit in database');
     const updatedVisit = await serverlessStorage.updateVisit(visitId, visitData);
+    console.log('🔥 Database update SUCCESS - result:', JSON.stringify(updatedVisit, null, 2));
 
     // Create activity for visit update
     await serverlessStorage.createActivity({
@@ -139,9 +155,16 @@ async function handleUpdateVisit(
     return res.status(200).json(updatedVisit);
 
   } catch (error) {
-    console.error('=== ERROR in handleUpdateVisit ===');
-    console.error('Error:', error);
-    console.error('Stack:', error instanceof Error ? error.stack : 'No stack');
+    console.log('🔥🔥🔥 FATAL ERROR in PUT /api/visits/[id] 🔥🔥🔥');
+    console.log('🔥 Error type:', typeof error);
+    console.log('🔥 Error instanceof Error:', error instanceof Error);
+    console.log('🔥 Error constructor name:', error?.constructor?.name);
+    if (error instanceof Error) {
+      console.log('🔥 Error message:', error.message);
+      console.log('🔥 Error stack:', error.stack);
+    } else {
+      console.log('🔥 Raw error:', JSON.stringify(error, null, 2));
+    }
     logServerlessFunction('visit-update', 'PUT', userId, { 
       visitId,
       error: error instanceof Error ? error.message : 'Unknown error' 
